@@ -1,8 +1,7 @@
 import { UnknownAction } from '@reduxjs/toolkit';
 
 export type Command = Readonly<{
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  action: (params: any) => UnknownAction;
+  action: () => UnknownAction;
   id: string;
   name: string;
   description?: string;
@@ -10,3 +9,6 @@ export type Command = Readonly<{
   icon?: React.ElementType;
   shortcut?: string;
 }>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CommandCreator = (params?: any) => Command;

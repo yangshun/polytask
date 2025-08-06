@@ -17,15 +17,15 @@ export function CommandsInitializer() {
 
   useEffect(() => {
     // Register theme commands
-    registerCommand(themeToggleCommand);
-    registerCommand(themeSetLightCommand);
-    registerCommand(themeSetDarkCommand);
+    registerCommand(themeToggleCommand());
+    registerCommand(themeSetLightCommand());
+    registerCommand(themeSetDarkCommand());
 
     // Cleanup on unmount
     return () => {
-      unregisterCommand(themeToggleCommand.id);
-      unregisterCommand(themeSetLightCommand.id);
-      unregisterCommand(themeSetDarkCommand.id);
+      unregisterCommand(themeToggleCommand().id);
+      unregisterCommand(themeSetLightCommand().id);
+      unregisterCommand(themeSetDarkCommand().id);
     };
   }, [registerCommand, unregisterCommand]);
 

@@ -17,13 +17,34 @@ import { TaskItem } from '~/components/tasks/task-item';
 import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { Todo } from '~/types/todo';
 import { Button } from '~/components/ui/button';
+import { useCommandsRegistry } from '~/components/commands/commands-context';
+import {
+  taskSelectNextCommand,
+  taskSelectPreviousCommand,
+} from './task-commands';
+import { useEffect } from 'react';
 
 export function TaskList() {
+  const { registerCommand, unregisterCommand } = useCommandsRegistry();
+
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectAllTasks);
 
   const selectedTask = useAppSelector(selectSelectedTask);
   const taskCounts = useAppSelector(selectTaskCounts);
+
+  useEffect(() => {
+    const taskSelectNextCommandItem = taskSelectNextCommand();
+    const taskSelectPreviousCommandItem = taskSelectPreviousCommand();
+
+    registerCommand(taskSelectNextCommandItem);
+    registerCommand(taskSelectPreviousCommandItem);
+
+    return () => {
+      unregisterCommand(taskSelectNextCommandItem.id);
+      unregisterCommand(taskSelectPreviousCommandItem.id);
+    };
+  }, [registerCommand, unregisterCommand]);
 
   function handleStatusChange(id: string) {
     dispatch(toggleTaskStatus(id));
@@ -62,7 +83,7 @@ export function TaskList() {
           </div>
         </div>
       </div>
-      <div className={cn('border border-input mb-4 p-1', 'rounded-md')}>
+      <div className={cn('border border-input mb-4 p-1', 'rounded-lg')}>
         <div className="space-y-1">
           {tasks.map((task) => (
             <TaskItem

@@ -140,7 +140,54 @@ export const tasksSlice = createSlice({
     clearSelectedTask: (state) => {
       state.selectedTaskId = null;
     },
-    // Bulk operations
+    selectNextTask: (state) => {
+      if (state.tasks.length === 0) return;
+
+      if (!state.selectedTaskId) {
+        // No task selected, select the first one
+        state.selectedTaskId = state.tasks[0].id;
+        return;
+      }
+
+      const currentIndex = state.tasks.findIndex(
+        (task) => task.id === state.selectedTaskId,
+      );
+      if (currentIndex !== -1 && currentIndex < state.tasks.length - 1) {
+        // Select the next task
+        state.selectedTaskId = state.tasks[currentIndex + 1].id;
+      }
+      // If already at the last task, do nothing (stay at current)
+    },
+    selectPreviousTask: (state) => {
+      if (state.tasks.length === 0) return;
+
+      if (!state.selectedTaskId) {
+        // No task selected, select the last one
+        state.selectedTaskId = state.tasks[state.tasks.length - 1].id;
+        return;
+      }
+
+      const currentIndex = state.tasks.findIndex(
+        (task) => task.id === state.selectedTaskId,
+      );
+      if (currentIndex > 0) {
+        // Select the previous task
+        state.selectedTaskId = state.tasks[currentIndex - 1].id;
+      }
+      // If already at the first task, do nothing (stay at current)
+    },
+    toggleSelectedTaskStatus: (state) => {
+      if (state.selectedTaskId) {
+        const task = state.tasks.find(
+          (task) => task.id === state.selectedTaskId,
+        );
+        if (task) {
+          task.status = task.status === 'done' ? 'todo' : 'done';
+          task.updatedAt = new Date().toISOString();
+        }
+      }
+    },
+    // Loading and error states
     clearCompletedTasks: (state) => {
       state.tasks = state.tasks.filter((task) => task.status !== 'done');
     },
@@ -165,6 +212,9 @@ export const {
   removeTaskLabel,
   setSelectedTask,
   clearSelectedTask,
+  selectNextTask,
+  selectPreviousTask,
+  toggleSelectedTaskStatus,
   clearCompletedTasks,
   resetTasks,
 } = tasksSlice.actions;
