@@ -5,7 +5,7 @@ import { Moon, Sun } from 'lucide-react';
 
 import { Button } from '~/components/ui/button';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { setTheme } from '~/store/reducers/theme-slice';
+import { setTheme } from '~/store/features/theme/theme-slice';
 import { cn } from '~/lib/utils';
 
 export function ThemeToggle() {

@@ -1,0 +1,118 @@
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '~/store/store';
+import { Todo } from '~/types/todo';
+
+// Base selectors
+export const selectTasksState = (state: RootState) => state.tasks;
+export const selectAllTasks = (state: RootState) => state.tasks.tasks;
+export const selectTasksLoading = (state: RootState) => state.tasks.loading;
+export const selectTasksError = (state: RootState) => state.tasks.error;
+
+// Task by ID selector
+export const selectTaskById = (taskId: string) =>
+  createSelector([selectAllTasks], (tasks) =>
+    tasks.find((task) => task.id === taskId),
+  );
+
+// Status-based selectors
+export const selectTasksByStatus = (status: Todo['status']) =>
+  createSelector([selectAllTasks], (tasks) =>
+    tasks.filter((task) => task.status === status),
+  );
+
+export const selectTodoTasks = createSelector([selectAllTasks], (tasks) =>
+  tasks.filter((task) => task.status === 'todo'),
+);
+
+export const selectInProgressTasks = createSelector([selectAllTasks], (tasks) =>
+  tasks.filter((task) => task.status === 'in-progress'),
+);
+
+export const selectDoneTasks = createSelector([selectAllTasks], (tasks) =>
+  tasks.filter((task) => task.status === 'done'),
+);
+
+export const selectCancelledTasks = createSelector([selectAllTasks], (tasks) =>
+  tasks.filter((task) => task.status === 'cancelled'),
+);
+
+// Priority-based selectors
+export const selectTasksByPriority = (priority: Todo['priority']) =>
+  createSelector([selectAllTasks], (tasks) =>
+    tasks.filter((task) => task.priority === priority),
+  );
+
+export const selectUrgentTasks = createSelector([selectAllTasks], (tasks) =>
+  tasks.filter((task) => task.priority === 'urgent'),
+);
+
+export const selectHighPriorityTasks = createSelector(
+  [selectAllTasks],
+  (tasks) => tasks.filter((task) => task.priority === 'high'),
+);
+
+// Assignee-based selectors
+export const selectTasksByAssignee = (assigneeId: string) =>
+  createSelector([selectAllTasks], (tasks) =>
+    tasks.filter((task) => task.assignee?.id === assigneeId),
+  );
+
+export const selectUnassignedTasks = createSelector([selectAllTasks], (tasks) =>
+  tasks.filter((task) => !task.assignee),
+);
+
+// Label-based selectors
+export const selectTasksByLabel = (label: string) =>
+  createSelector([selectAllTasks], (tasks) =>
+    tasks.filter((task) => task.labels?.includes(label)),
+  );
+
+export const selectAllLabels = createSelector([selectAllTasks], (tasks) => {
+  const labels = new Set<string>();
+  tasks.forEach((task) => {
+    task.labels?.forEach((label) => labels.add(label));
+  });
+  return Array.from(labels).sort();
+});
+
+// Statistics selectors
+export const selectTaskCounts = createSelector([selectAllTasks], (tasks) => ({
+  total: tasks.length,
+  todo: tasks.filter((task) => task.status === 'todo').length,
+  inProgress: tasks.filter((task) => task.status === 'in-progress').length,
+  done: tasks.filter((task) => task.status === 'done').length,
+  cancelled: tasks.filter((task) => task.status === 'cancelled').length,
+}));
+
+export const selectPriorityCounts = createSelector(
+  [selectAllTasks],
+  (tasks) => ({
+    urgent: tasks.filter((task) => task.priority === 'urgent').length,
+    high: tasks.filter((task) => task.priority === 'high').length,
+    medium: tasks.filter((task) => task.priority === 'medium').length,
+    low: tasks.filter((task) => task.priority === 'low').length,
+  }),
+);
+
+// Overdue tasks selector
+export const selectOverdueTasks = createSelector([selectAllTasks], (tasks) => {
+  const now = new Date();
+  return tasks.filter((task) => {
+    if (!task.dueDate || task.status === 'done') return false;
+    return new Date(task.dueDate) < now;
+  });
+});
+
+// Recently updated tasks selector
+export const selectRecentlyUpdatedTasks = createSelector(
+  [selectAllTasks],
+  (tasks) => {
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    return tasks
+      .filter((task) => new Date(task.updatedAt) > oneDayAgo)
+      .sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+      );
+  },
+);
