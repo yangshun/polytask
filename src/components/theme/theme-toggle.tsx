@@ -48,6 +48,8 @@ export function ThemeToggle() {
           ? themeSetLightCommandObject.icon
           : themeSetDarkCommandObject.icon
       }
+      shortcut={themeToggleCommandObject.shortcut}
+      tooltip={themeToggleCommandObject.name}
       variant="outline"
       size="icon"
       onClick={handleThemeToggle}>

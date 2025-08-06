@@ -54,6 +54,7 @@ export function TaskToolbar({ selectedTask }: { selectedTask: Todo }) {
       </Button>
       <Button
         tooltip={taskDeleteCommandObj.name}
+        shortcut={taskDeleteCommandObj.shortcut}
         variant="outline"
         size="icon"
         onClick={() => {
@@ -65,6 +66,7 @@ export function TaskToolbar({ selectedTask }: { selectedTask: Todo }) {
       <Button
         variant="outline"
         tooltip={taskSelectNextCommandObj.name}
+        shortcut={taskSelectNextCommandObj.shortcut}
         size="icon"
         onClick={() => {
           dispatch(taskSelectNextCommandObj.action());
@@ -76,6 +78,7 @@ export function TaskToolbar({ selectedTask }: { selectedTask: Todo }) {
       <Button
         variant="outline"
         tooltip={taskSelectPreviousCommandObj.name}
+        shortcut={taskSelectPreviousCommandObj.shortcut}
         size="icon"
         onClick={() => {
           dispatch(taskSelectPreviousCommandObj.action());

@@ -40,6 +40,7 @@ export interface ButtonProps
   asChild?: boolean;
   icon?: React.ElementType;
   tooltip?: string;
+  shortcut?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -51,6 +52,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size,
       asChild = false,
       tooltip,
+      shortcut,
       icon: Icon,
       ...props
     },
@@ -72,7 +74,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       return (
         <Tooltip>
           <TooltipTrigger asChild>{button}</TooltipTrigger>
-          <TooltipContent>{tooltip}</TooltipContent>
+          <TooltipContent>
+            {tooltip}{' '}
+            {shortcut && (
+              <kbd
+                className={cn(
+                  'border border-muted-foreground',
+                  'ml-1',
+                  'px-1 py-0.5',
+                  'rounded',
+                )}>
+                {shortcut.toLocaleUpperCase()}
+              </kbd>
+            )}
+          </TooltipContent>
         </Tooltip>
       );
     }
