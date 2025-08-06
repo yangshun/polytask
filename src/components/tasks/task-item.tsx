@@ -110,7 +110,7 @@ export function TaskItem({
             {getStatusIcon(task.status)}
           </button>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-xs text-muted-foreground font-mono">
+            <span className="text-xs text-muted-foreground font-mono w-14">
               {task.id}
             </span>
             {getPriorityIcon(task.priority)}
