@@ -4,12 +4,14 @@ import { mockTodos } from '~/data/mock-todos';
 
 export interface TasksState {
   tasks: Todo[];
+  selectedTaskId: string | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: TasksState = {
   tasks: mockTodos,
+  selectedTaskId: null,
   loading: false,
   error: null,
 };
@@ -110,6 +112,13 @@ export const tasksSlice = createSlice({
         task.updatedAt = new Date().toISOString();
       }
     },
+    // Task selection operations
+    setSelectedTask: (state, action: PayloadAction<string | null>) => {
+      state.selectedTaskId = action.payload;
+    },
+    clearSelectedTask: (state) => {
+      state.selectedTaskId = null;
+    },
     // Loading and error states
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -123,6 +132,7 @@ export const tasksSlice = createSlice({
     },
     resetTasks: (state) => {
       state.tasks = mockTodos;
+      state.selectedTaskId = null;
       state.loading = false;
       state.error = null;
     },
@@ -139,6 +149,8 @@ export const {
   assignTask,
   addTaskLabel,
   removeTaskLabel,
+  setSelectedTask,
+  clearSelectedTask,
   setLoading,
   setError,
   clearCompletedTasks,

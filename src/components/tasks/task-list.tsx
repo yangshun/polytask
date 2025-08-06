@@ -12,6 +12,7 @@ import {
 import {
   selectAllTasks,
   selectTaskCounts,
+  selectSelectedTaskId,
 } from '~/store/features/tasks/tasks-selectors';
 import { TaskItem } from '~/components/tasks/task-item';
 import { Todo } from '~/types/todo';
@@ -20,6 +21,7 @@ export function TaskList() {
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectAllTasks);
   const taskCounts = useAppSelector(selectTaskCounts);
+  const selectedTaskId = useAppSelector(selectSelectedTaskId);
 
   function handleStatusChange(id: string) {
     dispatch(toggleTaskStatus(id));
@@ -69,6 +71,7 @@ export function TaskList() {
               onStatusChange={handleStatusChange}
               onStatusUpdate={handleStatusUpdate}
               onDelete={handleDeleteTask}
+              isSelected={selectedTaskId === task.id}
             />
           ))}
         </div>

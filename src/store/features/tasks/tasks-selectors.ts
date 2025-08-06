@@ -7,6 +7,17 @@ export const selectTasksState = (state: RootState) => state.tasks;
 export const selectAllTasks = (state: RootState) => state.tasks.tasks;
 export const selectTasksLoading = (state: RootState) => state.tasks.loading;
 export const selectTasksError = (state: RootState) => state.tasks.error;
+export const selectSelectedTaskId = (state: RootState) =>
+  state.tasks.selectedTaskId;
+
+// Selected task selector
+export const selectSelectedTask = createSelector(
+  [selectAllTasks, selectSelectedTaskId],
+  (tasks, selectedTaskId) => {
+    if (!selectedTaskId) return null;
+    return tasks.find((task) => task.id === selectedTaskId) || null;
+  },
+);
 
 // Task by ID selector
 export const selectTaskById = (taskId: string) =>
