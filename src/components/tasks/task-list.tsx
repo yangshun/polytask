@@ -1,15 +1,7 @@
 'use client';
 
-import {
-  CheckCircle2,
-  Circle,
-  Clock,
-  Plus,
-  Trash2,
-  RefreshCw,
-} from 'lucide-react';
+import { CheckCircle2, Circle, Clock, Plus } from 'lucide-react';
 import { cn } from '~/lib/utils';
-import { Button } from '~/components/ui/button';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
   toggleTaskStatus,
@@ -18,19 +10,20 @@ import {
 } from '~/store/features/tasks/tasks-slice';
 import {
   selectAllTasks,
-  selectTaskCounts,
-  selectSelectedTaskId,
   selectSelectedTask,
+  selectTaskCounts,
 } from '~/store/features/tasks/tasks-selectors';
 import { TaskItem } from '~/components/tasks/task-item';
+import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { Todo } from '~/types/todo';
+import { Button } from '~/components/ui/button';
 
 export function TaskList() {
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectAllTasks);
-  const taskCounts = useAppSelector(selectTaskCounts);
-  const selectedTaskId = useAppSelector(selectSelectedTaskId);
+
   const selectedTask = useAppSelector(selectSelectedTask);
+  const taskCounts = useAppSelector(selectTaskCounts);
 
   function handleStatusChange(id: string) {
     dispatch(toggleTaskStatus(id));
@@ -44,48 +37,15 @@ export function TaskList() {
     dispatch(deleteTask(id));
   }
 
-  function handleDeleteSelected() {
-    if (selectedTaskId) {
-      dispatch(deleteTask(selectedTaskId));
-    }
-  }
-
-  function handleToggleSelectedStatus() {
-    if (selectedTaskId) {
-      dispatch(toggleTaskStatus(selectedTaskId));
-    }
-  }
-
   return (
     <div className="flex flex-col gap-4 w-full">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-2">
-          <Button variant="secondary" size="sm" className="justify-start gap-2">
+          <Button variant="default" size="sm" className="justify-start gap-2">
             <Plus className="h-4 w-4" />
             New issue
           </Button>
-          {selectedTask && (
-            <>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleToggleSelectedStatus}
-                className="gap-2">
-                <RefreshCw className="h-4 w-4" />
-                {selectedTask.status === 'done'
-                  ? 'Mark as Todo'
-                  : 'Mark as Done'}
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleDeleteSelected}
-                aria-label="Delete"
-                className="gap-2">
-                <Trash2 className="size-4" />
-              </Button>
-            </>
-          )}
+          {selectedTask && <TaskToolbar selectedTask={selectedTask} />}
         </div>
         <div className="flex items-center gap-6 text-sm text-muted-foreground shrink-0">
           <div className="flex items-center gap-2">
@@ -111,7 +71,7 @@ export function TaskList() {
               onStatusChange={handleStatusChange}
               onStatusUpdate={handleStatusUpdate}
               onDelete={handleDeleteTask}
-              isSelected={selectedTaskId === task.id}
+              isSelected={selectedTask?.id === task.id}
             />
           ))}
         </div>

@@ -40,20 +40,25 @@ export const tasksSlice = createSlice({
     },
     deleteTask: (state, action: PayloadAction<string>) => {
       const taskIdToDelete = action.payload;
-      const currentIndex = state.tasks.findIndex((task) => task.id === taskIdToDelete);
-      
+      const currentIndex = state.tasks.findIndex(
+        (task) => task.id === taskIdToDelete,
+      );
+
       // If the task being deleted is currently selected, select the next task
       if (state.selectedTaskId === taskIdToDelete) {
         if (currentIndex !== -1 && state.tasks.length > 1) {
           // Try to select the next task, or the previous one if this is the last task
-          const nextIndex = currentIndex < state.tasks.length - 1 ? currentIndex + 1 : currentIndex - 1;
+          const nextIndex =
+            currentIndex < state.tasks.length - 1
+              ? currentIndex + 1
+              : currentIndex - 1;
           state.selectedTaskId = state.tasks[nextIndex].id;
         } else {
           // No other tasks available, clear selection
           state.selectedTaskId = null;
         }
       }
-      
+
       // Remove the task from the list
       state.tasks = state.tasks.filter((task) => task.id !== taskIdToDelete);
     },
@@ -135,13 +140,6 @@ export const tasksSlice = createSlice({
     clearSelectedTask: (state) => {
       state.selectedTaskId = null;
     },
-    // Loading and error states
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
-    },
-    setError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload;
-    },
     // Bulk operations
     clearCompletedTasks: (state) => {
       state.tasks = state.tasks.filter((task) => task.status !== 'done');
@@ -167,8 +165,6 @@ export const {
   removeTaskLabel,
   setSelectedTask,
   clearSelectedTask,
-  setLoading,
-  setError,
   clearCompletedTasks,
   resetTasks,
 } = tasksSlice.actions;
