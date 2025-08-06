@@ -4,21 +4,15 @@ import { RefreshCw } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { useCommandsRegistry } from '~/components/commands/commands-context';
-import {
-  toggleTaskStatus,
-  deleteTask,
-  selectNextTask,
-  selectPreviousTask,
-} from '~/store/features/tasks/tasks-slice';
+import { toggleTaskStatus } from '~/store/features/tasks/tasks-slice';
 import {
   selectHasNextTask,
   selectHasPreviousTask,
 } from '~/store/features/tasks/tasks-selectors';
 import {
   taskDeleteCommand,
-  TaskDeleteCommandIcon,
-  TaskSelectNextCommandIcon,
-  TaskSelectPreviousCommandIcon,
+  taskSelectNextCommand,
+  taskSelectPreviousCommand,
   taskUnselectCommand,
 } from './task-commands';
 import { useEffect } from 'react';
@@ -43,6 +37,10 @@ export function TaskToolbar({ selectedTask }: { selectedTask: Todo }) {
     };
   }, [registerCommand, selectedTask.id]);
 
+  const taskDeleteCommandObj = taskDeleteCommand(selectedTask.id);
+  const taskSelectNextCommandObj = taskSelectNextCommand();
+  const taskSelectPreviousCommandObj = taskSelectPreviousCommand();
+
   return (
     <>
       <Button
@@ -51,42 +49,41 @@ export function TaskToolbar({ selectedTask }: { selectedTask: Todo }) {
         onClick={() => {
           dispatch(toggleTaskStatus(selectedTask.id));
         }}
-        className="gap-2">
-        <RefreshCw className="size-4" />
+        icon={RefreshCw}>
         {selectedTask.status === 'done' ? 'Mark as Todo' : 'Mark as Done'}
       </Button>
       <Button
+        tooltip={taskDeleteCommandObj.name}
         variant="outline"
         size="icon"
         onClick={() => {
-          dispatch(deleteTask(selectedTask.id));
+          dispatch(taskDeleteCommandObj.action());
         }}
-        aria-label="Delete"
-        className="gap-2">
-        <TaskDeleteCommandIcon className="size-4" />
-      </Button>
+        aria-label={taskDeleteCommandObj.name}
+        icon={taskDeleteCommandObj.icon}
+      />
       <Button
         variant="outline"
+        tooltip={taskSelectNextCommandObj.name}
         size="icon"
         onClick={() => {
-          dispatch(selectNextTask());
+          dispatch(taskSelectNextCommandObj.action());
         }}
         disabled={!hasNextTask}
-        aria-label="Next task"
-        className="gap-2">
-        <TaskSelectNextCommandIcon className="size-4" />
-      </Button>
+        aria-label={taskSelectNextCommandObj.name}
+        icon={taskSelectNextCommandObj.icon}
+      />
       <Button
         variant="outline"
+        tooltip={taskSelectPreviousCommandObj.name}
         size="icon"
         onClick={() => {
-          dispatch(selectPreviousTask());
+          dispatch(taskSelectPreviousCommandObj.action());
         }}
         disabled={!hasPreviousTask}
-        aria-label="Prev task"
-        className="gap-2">
-        <TaskSelectPreviousCommandIcon className="size-4" />
-      </Button>
+        aria-label={taskSelectPreviousCommandObj.name}
+        icon={taskSelectPreviousCommandObj.icon}
+      />
     </>
   );
 }

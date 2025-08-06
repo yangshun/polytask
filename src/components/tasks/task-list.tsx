@@ -59,8 +59,7 @@ export function TaskList() {
     <div className="flex flex-col gap-4 w-full">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-2">
-          <Button variant="default" size="sm" className="justify-start gap-2">
-            <Plus className="h-4 w-4" />
+          <Button icon={Plus} variant="default" size="sm">
             New issue
           </Button>
           {selectedTask && <TaskToolbar selectedTask={selectedTask} />}
