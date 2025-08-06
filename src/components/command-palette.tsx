@@ -1,7 +1,6 @@
 'use client';
 
-import * as React from 'react';
-import { Moon, Sun, Monitor } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 import {
   CommandDialog,
@@ -13,54 +12,27 @@ import {
   CommandShortcut,
 } from '~/components/ui/command';
 import { useAppDispatch } from '~/store/hooks';
-import { setThemeMode, toggleTheme } from '~/store/reducers/theme-slice';
+import {
+  themeToggleCommand,
+  themeSetLightCommand,
+  themeSetDarkCommand,
+} from './theme/theme-commands';
 
 export function CommandPalette() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
-      }
-
-      // Theme shortcuts
-      if (e.key === 't' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        dispatch(toggleTheme());
-      }
-
-      if (e.key === 'l' && (e.metaKey || e.ctrlKey) && e.shiftKey) {
-        e.preventDefault();
-        dispatch(setThemeMode('light'));
-      }
-
-      if (e.key === 'd' && (e.metaKey || e.ctrlKey) && e.shiftKey) {
-        e.preventDefault();
-        dispatch(setThemeMode('dark'));
       }
     };
 
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
   }, [dispatch]);
-
-  const handleToggleTheme = () => {
-    dispatch(toggleTheme());
-    setOpen(false);
-  };
-
-  const handleSetLightTheme = () => {
-    dispatch(setThemeMode('light'));
-    setOpen(false);
-  };
-
-  const handleSetDarkTheme = () => {
-    dispatch(setThemeMode('dark'));
-    setOpen(false);
-  };
 
   return (
     <>
@@ -73,23 +45,26 @@ export function CommandPalette() {
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Type a command or search..." />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>No results found</CommandEmpty>
           <CommandGroup heading="Theme">
-            <CommandItem onSelect={handleToggleTheme}>
-              <Monitor className="mr-2 h-4 w-4" />
-              <span>Toggle Theme</span>
-              <CommandShortcut>⌘T</CommandShortcut>
-            </CommandItem>
-            <CommandItem onSelect={handleSetLightTheme}>
-              <Sun className="mr-2 h-4 w-4" />
-              <span>Set Light Theme</span>
-              <CommandShortcut>⌘⇧L</CommandShortcut>
-            </CommandItem>
-            <CommandItem onSelect={handleSetDarkTheme}>
-              <Moon className="mr-2 h-4 w-4" />
-              <span>Set Dark Theme</span>
-              <CommandShortcut>⌘⇧D</CommandShortcut>
-            </CommandItem>
+            {[
+              themeToggleCommand,
+              themeSetLightCommand,
+              themeSetDarkCommand,
+            ].map((command) => (
+              <CommandItem
+                key={command.id}
+                onSelect={() => {
+                  dispatch(command.action());
+                  setOpen(false);
+                }}>
+                {command.icon && <command.icon className="mr-2 h-4 w-4" />}
+                <span>{command.name}</span>
+                {command.shortcut && (
+                  <CommandShortcut>{command.shortcut}</CommandShortcut>
+                )}
+              </CommandItem>
+            ))}
           </CommandGroup>
         </CommandList>
       </CommandDialog>

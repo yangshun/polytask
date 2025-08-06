@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { ThemeProvider } from '~/components/theme-provider';
+import { ThemeProvider } from '~/components/theme/theme-provider';
 import { ReduxProvider } from '~/components/providers/redux-provider';
 
 import './globals.css';
