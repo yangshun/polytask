@@ -1,7 +1,7 @@
-import { AppDispatch } from '~/store/store';
+import { UnknownAction } from '@reduxjs/toolkit';
 
 export type Command = Readonly<{
-  action: () => AppDispatch;
+  action: () => UnknownAction;
   id: string;
   name: string;
   description?: string;

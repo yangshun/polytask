@@ -16,13 +16,7 @@ export const themeSlice = createSlice({
       state.mode = action.payload;
     },
     toggleTheme: (state) => {
-      if (state.mode === 'light') {
-        state.mode = 'dark';
-      } else if (state.mode === 'dark') {
-        state.mode = 'system';
-      } else {
-        state.mode = 'light';
-      }
+      state.mode = state.mode === 'light' ? 'dark' : 'light';
     },
     resetTheme: () => {
       return initialState;
