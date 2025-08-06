@@ -4,6 +4,7 @@ import { ThemeProvider } from '~/components/theme-provider';
 import { ReduxProvider } from '~/components/providers/redux-provider';
 
 import './globals.css';
+import { cn } from '~/lib/utils';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        className={cn(geistSans.variable, geistMono.variable, 'antialiased')}>
         <ReduxProvider>
           <ThemeProvider
             attribute="class"

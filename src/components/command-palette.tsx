@@ -12,8 +12,8 @@ import {
   CommandList,
   CommandShortcut,
 } from '~/components/ui/command';
-import { useAppDispatch } from '~/lib/hooks';
-import { setThemeMode, toggleTheme } from '~/lib/features/theme/theme-slice';
+import { useAppDispatch } from '~/store/hooks';
+import { setThemeMode, toggleTheme } from '~/store/reducers/theme-slice';
 
 export function CommandPalette() {
   const [open, setOpen] = React.useState(false);

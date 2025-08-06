@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
 import { Button } from '~/components/ui/button';
-import { useAppDispatch, useAppSelector } from '~/lib/hooks';
-import { setThemeMode } from '~/lib/features/theme/theme-slice';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { setThemeMode } from '~/store/reducers/theme-slice';
 import { cn } from '~/lib/utils';
 
 export function ThemeToggle() {
