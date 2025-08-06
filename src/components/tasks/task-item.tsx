@@ -6,14 +6,23 @@ import {
   Clock,
   AlertTriangle,
   Flame,
-  MoreHorizontal,
   User,
   Calendar,
   ArrowRight,
+  Trash2,
 } from 'lucide-react';
 import { cn } from '~/lib/utils';
 import { Badge } from '~/components/ui/badge';
-import { Button } from '~/components/ui/button';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from '~/components/ui/context-menu';
 import { Todo } from '~/types/todo';
 
 function getStatusIcon(status: Todo['status']) {
@@ -47,73 +56,140 @@ function getPriorityIcon(priority: Todo['priority']) {
 interface TaskItemProps {
   task: Todo;
   onStatusChange: (id: string) => void;
+  onStatusUpdate: (id: string, status: Todo['status']) => void;
+  onDelete: (id: string) => void;
 }
 
-export function TaskItem({ task, onStatusChange }: TaskItemProps) {
+export function TaskItem({
+  task,
+  onStatusChange,
+  onStatusUpdate,
+  onDelete,
+}: TaskItemProps) {
   function handleStatusClick() {
     onStatusChange(task.id);
   }
 
-  return (
-    <div className="group flex items-center gap-3 px-3 py-2 hover:bg-accent/50 rounded-md transition-colors">
-      <button
-        onClick={handleStatusClick}
-        className="flex-shrink-0 hover:scale-110 transition-transform">
-        {getStatusIcon(task.status)}
-      </button>
-      <div className="flex items-center gap-2 flex-shrink-0">
-        <span className="text-xs text-muted-foreground font-mono">
-          {task.id}
-        </span>
-        {getPriorityIcon(task.priority)}
-      </div>
-      <div className="flex-1 min-w-0">
-        <span
-          className={cn(
-            'text-sm',
-            task.status === 'done' && 'line-through text-muted-foreground',
-          )}>
-          {task.title}
-        </span>
-      </div>
+  function handleDelete() {
+    onDelete(task.id);
+  }
 
-      <div className="flex items-center gap-2">
-        {task.labels?.slice(0, 2).map((label) => (
-          <Badge key={label} variant="outline" className="text-xs px-1.5 py-0">
-            {label}
-          </Badge>
-        ))}
-        {task.labels && task.labels.length > 2 && (
-          <Badge variant="outline" className="text-xs px-1.5 py-0">
-            +{task.labels.length - 2}
-          </Badge>
-        )}
-      </div>
-      <div className="flex items-center gap-3 transition-opacity">
-        {task.assignee && (
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <User className="h-3 w-3" />
-            <span>{task.assignee.name.split(' ')[0]}</span>
+  function handleStatusUpdate(status: Todo['status']) {
+    onStatusUpdate(task.id, status);
+  }
+
+  function getStatusText(status: Todo['status']) {
+    switch (status) {
+      case 'todo':
+        return 'To Do';
+      case 'in-progress':
+        return 'In Progress';
+      case 'done':
+        return 'Done';
+      case 'cancelled':
+        return 'Cancelled';
+      default:
+        return 'To Do';
+    }
+  }
+
+  const allStatuses: Todo['status'][] = [
+    'todo',
+    'in-progress',
+    'done',
+    'cancelled',
+  ];
+
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger asChild>
+        <div className="group flex items-center gap-3 px-3 py-2 hover:bg-accent/50 rounded-md transition-colors">
+          <button
+            onClick={handleStatusClick}
+            className="flex-shrink-0 hover:scale-110 transition-transform">
+            {getStatusIcon(task.status)}
+          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="text-xs text-muted-foreground font-mono">
+              {task.id}
+            </span>
+            {getPriorityIcon(task.priority)}
           </div>
-        )}
-        {task.dueDate && (
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Calendar className="h-3 w-3" />
-            <span>
-              {new Date(task.dueDate).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-              })}
+          <div className="flex-1 min-w-0">
+            <span
+              className={cn(
+                'text-sm',
+                task.status === 'done' && 'line-through text-muted-foreground',
+              )}>
+              {task.title}
             </span>
           </div>
-        )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-6 opacity-0 group-hover:opacity-100">
-          <MoreHorizontal className="size-3" />
-        </Button>
-      </div>
-    </div>
+
+          <div className="flex items-center gap-2">
+            {task.labels?.slice(0, 2).map((label) => (
+              <Badge
+                key={label}
+                variant="outline"
+                className="text-xs px-1.5 py-0">
+                {label}
+              </Badge>
+            ))}
+            {task.labels && task.labels.length > 2 && (
+              <Badge variant="outline" className="text-xs px-1.5 py-0">
+                +{task.labels.length - 2}
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-3 transition-opacity">
+            {task.assignee && (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <User className="h-3 w-3" />
+                <span>{task.assignee.name.split(' ')[0]}</span>
+              </div>
+            )}
+            {task.dueDate && (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Calendar className="h-3 w-3" />
+                <span>
+                  {new Date(task.dueDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      </ContextMenuTrigger>
+      <ContextMenuContent className="w-52">
+        <ContextMenuSub>
+          <ContextMenuSubTrigger>
+            {getStatusIcon(task.status)}
+            <span className="ml-2">Status</span>
+          </ContextMenuSubTrigger>
+          <ContextMenuSubContent className="w-48">
+            {allStatuses.map((status) => (
+              <ContextMenuItem
+                key={status}
+                onClick={() => handleStatusUpdate(status)}
+                className={cn('flex items-center')}>
+                {getStatusIcon(status)}
+                <span className="ml-2">{getStatusText(status)}</span>
+                {task.status === status && (
+                  <span className="ml-auto text-xs text-muted-foreground">
+                    Current
+                  </span>
+                )}
+              </ContextMenuItem>
+            ))}
+          </ContextMenuSubContent>
+        </ContextMenuSub>
+        <ContextMenuSeparator />
+        <ContextMenuItem onClick={handleDelete}>
+          <Trash2 className="h-4 w-4" />
+          <span className="ml-2">Delete...</span>
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 }

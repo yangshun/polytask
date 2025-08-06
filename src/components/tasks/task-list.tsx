@@ -4,12 +4,17 @@ import { CheckCircle2, Circle, Clock, Plus } from 'lucide-react';
 import { cn } from '~/lib/utils';
 import { Button } from '~/components/ui/button';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { toggleTaskStatus } from '~/store/features/tasks/tasks-slice';
+import {
+  toggleTaskStatus,
+  deleteTask,
+  updateTaskStatus,
+} from '~/store/features/tasks/tasks-slice';
 import {
   selectAllTasks,
   selectTaskCounts,
 } from '~/store/features/tasks/tasks-selectors';
 import { TaskItem } from '~/components/tasks/task-item';
+import { Todo } from '~/types/todo';
 
 export function TaskList() {
   const dispatch = useAppDispatch();
@@ -18,6 +23,14 @@ export function TaskList() {
 
   function handleStatusChange(id: string) {
     dispatch(toggleTaskStatus(id));
+  }
+
+  function handleStatusUpdate(id: string, status: Todo['status']) {
+    dispatch(updateTaskStatus({ id, status }));
+  }
+
+  function handleDeleteTask(id: string) {
+    dispatch(deleteTask(id));
   }
 
   return (
@@ -54,6 +67,8 @@ export function TaskList() {
               key={task.id}
               task={task}
               onStatusChange={handleStatusChange}
+              onStatusUpdate={handleStatusUpdate}
+              onDelete={handleDeleteTask}
             />
           ))}
         </div>
