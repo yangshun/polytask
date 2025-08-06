@@ -25,24 +25,23 @@ import { useEffect } from 'react';
 import { Todo } from '~/types/todo';
 
 export function TaskToolbar({ selectedTask }: { selectedTask: Todo }) {
-  const { registerCommand, unregisterCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommandsRegistry();
 
   const dispatch = useAppDispatch();
   const hasNextTask = useAppSelector(selectHasNextTask);
   const hasPreviousTask = useAppSelector(selectHasPreviousTask);
 
   useEffect(() => {
-    const taskDeleteCommandItem = taskDeleteCommand(selectedTask.id);
-    const taskUnselectCommandItem = taskUnselectCommand();
-
-    registerCommand(taskDeleteCommandItem);
-    registerCommand(taskUnselectCommandItem);
+    const unregisterTaskDelete = registerCommand(
+      taskDeleteCommand(selectedTask.id),
+    );
+    const unregisterTaskUnselect = registerCommand(taskUnselectCommand());
 
     return () => {
-      unregisterCommand(taskDeleteCommandItem.id);
-      unregisterCommand(taskUnselectCommandItem.id);
+      unregisterTaskDelete();
+      unregisterTaskUnselect();
     };
-  }, [registerCommand, unregisterCommand, selectedTask.id]);
+  }, [registerCommand, selectedTask.id]);
 
   return (
     <>

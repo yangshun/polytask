@@ -25,7 +25,7 @@ import {
 import { useEffect } from 'react';
 
 export function TaskList() {
-  const { registerCommand, unregisterCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommandsRegistry();
 
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectAllTasks);
@@ -34,17 +34,14 @@ export function TaskList() {
   const taskCounts = useAppSelector(selectTaskCounts);
 
   useEffect(() => {
-    const taskSelectNextCommandItem = taskSelectNextCommand();
-    const taskSelectPreviousCommandItem = taskSelectPreviousCommand();
-
-    registerCommand(taskSelectNextCommandItem);
-    registerCommand(taskSelectPreviousCommandItem);
+    const unregisterNext = registerCommand(taskSelectNextCommand());
+    const unregisterPrevious = registerCommand(taskSelectPreviousCommand());
 
     return () => {
-      unregisterCommand(taskSelectNextCommandItem.id);
-      unregisterCommand(taskSelectPreviousCommandItem.id);
+      unregisterNext();
+      unregisterPrevious();
     };
-  }, [registerCommand, unregisterCommand]);
+  }, [registerCommand]);
 
   function handleStatusChange(id: string) {
     dispatch(toggleTaskStatus(id));
@@ -71,11 +68,11 @@ export function TaskList() {
         <div className="flex items-center gap-6 text-sm text-muted-foreground shrink-0">
           <div className="flex items-center gap-2">
             <Circle className="h-4 w-4" />
-            <span>{taskCounts.todo} To Do</span>
+            <span>{taskCounts.todo} Todo</span>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-blue-600" />
-            <span>{taskCounts.inProgress} In Progress</span>
+            <span>{taskCounts.inProgress} In progress</span>
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-green-600" />

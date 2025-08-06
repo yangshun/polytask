@@ -15,7 +15,7 @@ import { commandsRegistry } from './commands-registry';
 interface CommandsContextValue {
   commands: Command[];
   getCommandsByGroup: (group: string) => Command[];
-  registerCommand: (command: Command) => void;
+  registerCommand: (command: Command) => () => void;
   unregisterCommand: (commandId: string) => void;
 }
 
@@ -51,6 +51,10 @@ export function CommandsProvider({ children }: CommandsProviderProps) {
 
   const registerCommand = useCallback((command: Command) => {
     commandsRegistry.register(command);
+
+    return () => {
+      commandsRegistry.unregister(command.id);
+    };
   }, []);
 
   const unregisterCommand = useCallback((commandId: string) => {

@@ -10,24 +10,24 @@ import {
 } from '~/components/theme/theme-commands';
 
 export function CommandsInitializer() {
-  const { registerCommand, unregisterCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommandsRegistry();
 
   // Set up keyboard shortcuts
   useKeyboardShortcuts();
 
   useEffect(() => {
     // Register theme commands
-    registerCommand(themeToggleCommand());
-    registerCommand(themeSetLightCommand());
-    registerCommand(themeSetDarkCommand());
+    const unregisterToggle = registerCommand(themeToggleCommand());
+    const unregisterLight = registerCommand(themeSetLightCommand());
+    const unregisterDark = registerCommand(themeSetDarkCommand());
 
     // Cleanup on unmount
     return () => {
-      unregisterCommand(themeToggleCommand().id);
-      unregisterCommand(themeSetLightCommand().id);
-      unregisterCommand(themeSetDarkCommand().id);
+      unregisterToggle();
+      unregisterLight();
+      unregisterDark();
     };
-  }, [registerCommand, unregisterCommand]);
+  }, [registerCommand]);
 
   return null; // This component doesn't render anything
 }
