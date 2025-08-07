@@ -1,4 +1,10 @@
-import { Ban, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  RiDeleteBinLine,
+  RiForbidLine,
+  RiArrowDownSLine,
+  RiArrowUpSLine,
+} from 'react-icons/ri';
+
 import { CommandCreator } from '~/actions/types';
 import {
   clearSelectedTask,
@@ -10,7 +16,7 @@ import {
 export const taskDeleteCommand: CommandCreator = (id: string) => ({
   id: 'task.delete',
   name: 'Delete task',
-  icon: Trash2,
+  icon: RiDeleteBinLine,
   shortcut: 'd',
   group: 'tasks',
   description: 'Delete the selected task',
@@ -20,7 +26,7 @@ export const taskDeleteCommand: CommandCreator = (id: string) => ({
 export const taskUnselectCommand: CommandCreator = () => ({
   id: 'task.unselect',
   name: 'Unselect task',
-  icon: Ban,
+  icon: RiForbidLine,
   shortcut: 'escape',
   group: 'tasks',
   description: 'Unselect the selected task',
@@ -30,7 +36,7 @@ export const taskUnselectCommand: CommandCreator = () => ({
 export const taskSelectNextCommand: CommandCreator = () => ({
   id: 'task.select.next',
   name: 'Select next task',
-  icon: ChevronDown,
+  icon: RiArrowDownSLine,
   shortcut: 'j',
   group: 'tasks',
   description: 'Navigate to the next task',
@@ -40,7 +46,7 @@ export const taskSelectNextCommand: CommandCreator = () => ({
 export const taskSelectPreviousCommand: CommandCreator = () => ({
   id: 'task.select.prev',
   name: 'Select previous task',
-  icon: ChevronUp,
+  icon: RiArrowUpSLine,
   shortcut: 'k',
   group: 'tasks',
   description: 'Navigate to the previous task',

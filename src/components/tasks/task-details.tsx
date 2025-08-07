@@ -1,6 +1,6 @@
 import { type Todo } from '~/types/todo';
 import { Button } from '~/components/ui/button';
-import { RefreshCw } from 'lucide-react';
+import { RiRefreshLine } from 'react-icons/ri';
 import { useAppDispatch } from '~/store/hooks';
 import { toggleTaskStatus } from '~/store/features/tasks/tasks-slice';
 import { taskDeleteCommand, taskUnselectCommand } from './task-commands';
@@ -38,7 +38,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
           onClick={() => {
             dispatch(toggleTaskStatus(task.id));
           }}
-          icon={RefreshCw}>
+          icon={RiRefreshLine}>
           {task.status === 'done' ? 'Mark as Todo' : 'Mark as Done'}
         </Button>
         <Button

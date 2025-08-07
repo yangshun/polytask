@@ -1,6 +1,6 @@
 'use client';
 
-import { Circle, Plus } from 'lucide-react';
+import { RiAddLine, RiCheckboxBlankCircleLine } from 'react-icons/ri';
 import { cn } from '~/lib/utils';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
@@ -73,7 +73,7 @@ export function TaskList() {
         <div className="flex items-center gap-2">
           <Button
             tooltip="Create new issue"
-            icon={Plus}
+            icon={RiAddLine}
             variant="default"
             size="sm"
             shortcut="c">
@@ -83,15 +83,15 @@ export function TaskList() {
         </div>
         <div className="flex items-center gap-6 text-muted-foreground shrink-0 px-1">
           <div className="flex items-center gap-2">
-            <TaskStatusIcon status="todo" size="md" />
+            <TaskStatusIcon status="todo" size="lg" />
             <span className="text-xs">{taskCounts.todo} Todo</span>
           </div>
           <div className="flex items-center gap-2">
-            <TaskStatusIcon status="in-progress" size="md" />
+            <TaskStatusIcon status="in-progress" size="lg" />
             <span className="text-xs">{taskCounts.inProgress} In progress</span>
           </div>
           <div className="flex items-center gap-2">
-            <TaskStatusIcon status="done" size="md" />
+            <TaskStatusIcon status="done" size="lg" />
             <span className="text-xs">{taskCounts.done} Done</span>
           </div>
         </div>
@@ -116,7 +116,7 @@ export function TaskList() {
                 ))}
                 {tasks.length === 0 && (
                   <div className="text-center py-12 text-muted-foreground">
-                    <Circle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <RiCheckboxBlankCircleLine className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No issues yet</p>
                     <p className="text-sm">
                       Create your first issue to get started

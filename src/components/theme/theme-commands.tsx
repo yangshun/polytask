@@ -1,11 +1,11 @@
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { RiMacbookLine, RiMoonFill, RiSunFill } from 'react-icons/ri';
 import { CommandCreator } from '~/actions/types';
 import { setTheme, toggleTheme } from '~/store/features/theme/theme-slice';
 
 export const themeToggleCommand: CommandCreator = () => ({
   id: 'theme.toggle',
   name: 'Toggle theme',
-  icon: Monitor,
+  icon: RiMacbookLine,
   shortcut: 't',
   group: 'theme',
   description: 'Switch between light and dark mode',
@@ -16,7 +16,7 @@ export const themeSetDarkCommand: CommandCreator = () => ({
   id: 'theme.dark',
   name: 'Set dark theme',
   shortcut: 'd',
-  icon: Moon,
+  icon: RiMoonFill,
   group: 'theme',
   description: 'Set to dark theme',
   action: () => setTheme('dark'),
@@ -25,7 +25,7 @@ export const themeSetDarkCommand: CommandCreator = () => ({
 export const themeSetLightCommand: CommandCreator = () => ({
   id: 'theme.light',
   name: 'Set light theme',
-  icon: Sun,
+  icon: RiSunFill,
   shortcut: 'l',
   group: 'theme',
   description: 'Set to light theme',

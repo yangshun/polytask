@@ -1,6 +1,5 @@
 'use client';
 
-import { User, Calendar, Trash2 } from 'lucide-react';
 import { cn } from '~/lib/utils';
 import { Badge } from '~/components/ui/badge';
 import {
@@ -18,6 +17,8 @@ import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { TaskStatusIcon } from './task-status-icon';
 import { useEffect, useRef } from 'react';
+import { RiTimeLine, RiUserLine } from 'react-icons/ri';
+import { taskDeleteCommand } from './task-commands';
 
 interface TaskItemProps {
   task: Todo;
@@ -80,6 +81,8 @@ export function TaskItem({
     }
   }, [isSelected]);
 
+  const DeleteIcon = taskDeleteCommand(task.id).icon!;
+
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
@@ -95,7 +98,7 @@ export function TaskItem({
             <button
               onClick={handleStatusClick}
               className="shrink-0 hover:scale-110 transition-transform">
-              <TaskStatusIcon status={task.status} />
+              <TaskStatusIcon status={task.status} size="lg" />
             </button>
             <span className="text-xs text-muted-foreground font-mono font-medium w-14">
               {task.id}
@@ -128,13 +131,13 @@ export function TaskItem({
             <div className="flex items-center gap-3 transition-opacity">
               {task.assignee && (
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <User className="h-3 w-3" />
+                  <RiUserLine className="h-3 w-3" />
                   <span>{task.assignee.name.split(' ')[0]}</span>
                 </div>
               )}
               {task.dueDate && (
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Calendar className="h-3 w-3" />
+                  <RiTimeLine className="h-3 w-3" />
                   <span>
                     {new Date(task.dueDate).toLocaleDateString('en-US', {
                       month: 'short',
@@ -172,7 +175,7 @@ export function TaskItem({
         </ContextMenuSub>
         <ContextMenuSeparator />
         <ContextMenuItem onClick={handleDelete}>
-          <Trash2 className="h-4 w-4" />
+          <DeleteIcon className="size-4" />
           <span className="ml-2">Delete...</span>
         </ContextMenuItem>
       </ContextMenuContent>
