@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Todo } from '~/types/todo';
-import { mockTodos } from '~/data/mock-todos';
+import { Task, TaskStatus } from '~/types/task';
+import { mockTasks } from '~/data/mock-tasks';
 
 export interface TasksState {
-  tasks: Todo[];
+  tasks: Task[];
   selectedTaskId: string | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: TasksState = {
-  tasks: mockTodos,
+  tasks: mockTasks,
   selectedTaskId: null,
   loading: false,
   error: null,
@@ -21,12 +21,12 @@ export const tasksSlice = createSlice({
   initialState,
   reducers: {
     // Task CRUD operations
-    addTask: (state, action: PayloadAction<Todo>) => {
+    addTask: (state, action: PayloadAction<Task>) => {
       state.tasks.push(action.payload);
     },
     updateTask: (
       state,
-      action: PayloadAction<{ id: string; updates: Partial<Todo> }>,
+      action: PayloadAction<{ id: string; updates: Partial<Task> }>,
     ) => {
       const { id, updates } = action.payload;
       const taskIndex = state.tasks.findIndex((task) => task.id === id);
@@ -65,7 +65,7 @@ export const tasksSlice = createSlice({
     // Status operations
     updateTaskStatus: (
       state,
-      action: PayloadAction<{ id: string; status: Todo['status'] }>,
+      action: PayloadAction<{ id: string; status: TaskStatus }>,
     ) => {
       const { id, status } = action.payload;
       const task = state.tasks.find((task) => task.id === id);
@@ -84,7 +84,7 @@ export const tasksSlice = createSlice({
     // Assignee operations
     assignTask: (
       state,
-      action: PayloadAction<{ id: string; assignee: Todo['assignee'] }>,
+      action: PayloadAction<{ id: string; assignee: Task['assignee'] }>,
     ) => {
       const { id, assignee } = action.payload;
       const task = state.tasks.find((task) => task.id === id);
@@ -180,7 +180,7 @@ export const tasksSlice = createSlice({
       state.tasks = state.tasks.filter((task) => task.status !== 'done');
     },
     resetTasks: (state) => {
-      state.tasks = mockTodos;
+      state.tasks = mockTasks;
       state.selectedTaskId = null;
       state.loading = false;
       state.error = null;

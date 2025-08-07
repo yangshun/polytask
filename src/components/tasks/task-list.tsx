@@ -18,7 +18,7 @@ import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { TaskDetails } from '~/components/tasks/task-details';
 import { ScrollArea } from '~/components/ui/scroll-area';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { Todo } from '~/types/todo';
+import { TaskStatus } from '~/types/task';
 import { Button } from '~/components/ui/button';
 import { useCommandsRegistry } from '~/components/commands/commands-context';
 import {
@@ -51,7 +51,7 @@ export function TaskList() {
     dispatch(toggleTaskStatus(id));
   }
 
-  function handleStatusUpdate(id: string, status: Todo['status']) {
+  function handleStatusUpdate(id: string, status: TaskStatus) {
     dispatch(updateTaskStatus({ id, status }));
   }
 

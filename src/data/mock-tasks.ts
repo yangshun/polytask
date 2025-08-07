@@ -1,4 +1,4 @@
-import { Todo } from '~/types/todo';
+import { Task } from '~/types/task';
 
 const assignees = [
   { id: '1', name: 'John Doe', avatar: '👤' },
@@ -13,7 +13,7 @@ const assignees = [
   { id: '10', name: 'Lisa Garcia', avatar: '👤' },
 ];
 
-export const mockTodos: Todo[] = [
+export const mockTasks: Task[] = [
   {
     id: 'MUL-92',
     title: 'study plans / lists',

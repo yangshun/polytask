@@ -4,10 +4,10 @@ import {
   RiCloseCircleFill,
   RiTimeLine,
 } from 'react-icons/ri';
-import { Todo } from '~/types/todo';
+import { TaskStatus } from '~/types/task';
 
 export const taskStatusRecord: Record<
-  Todo['status'],
+  TaskStatus,
   Readonly<{
     icon: React.ElementType;
     className: string;

@@ -12,7 +12,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '~/components/ui/context-menu';
-import { Todo } from '~/types/todo';
+import { Task, TaskStatus } from '~/types/task';
 import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { TaskStatusIcon } from './status/task-status-icon';
@@ -21,9 +21,9 @@ import { RiTimeLine, RiUserLine } from 'react-icons/ri';
 import { taskDeleteCommand } from './task-commands';
 
 interface TaskItemProps {
-  task: Todo;
+  task: Task;
   onStatusChange: (id: string) => void;
-  onStatusUpdate: (id: string, status: Todo['status']) => void;
+  onStatusUpdate: (id: string, status: TaskStatus) => void;
   onDelete: (id: string) => void;
   isSelected?: boolean;
 }
@@ -47,11 +47,11 @@ export function TaskItem({
     onDelete(task.id);
   }
 
-  function handleStatusUpdate(status: Todo['status']) {
+  function handleStatusUpdate(status: TaskStatus) {
     onStatusUpdate(task.id, status);
   }
 
-  function getStatusText(status: Todo['status']) {
+  function getStatusText(status: TaskStatus) {
     switch (status) {
       case 'todo':
         return 'To Do';
@@ -66,7 +66,7 @@ export function TaskItem({
     }
   }
 
-  const allStatuses: Todo['status'][] = [
+  const allStatuses: TaskStatus[] = [
     'todo',
     'in-progress',
     'done',

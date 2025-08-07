@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '~/store/store';
-import { Todo } from '~/types/todo';
+import { TaskStatus } from '~/types/task';
 
 // Base selectors
 export function selectTasksState(state: RootState) {
@@ -36,7 +36,7 @@ export function selectTaskById(taskId: string) {
 }
 
 // Status-based selectors
-export function selectTasksByStatus(status: Todo['status']) {
+export function selectTasksByStatus(status: TaskStatus) {
   return createSelector([selectAllTasks], function (tasks) {
     return tasks.filter((task) => task.status === status);
   });

@@ -1,8 +1,16 @@
-export interface Todo {
+export type TaskStatus = 'todo' | 'in-progress' | 'done' | 'cancelled';
+
+export interface TaskAssignee {
+  id: string;
+  name: string;
+  avatar?: string;
+}
+
+export interface Task {
   id: string;
   title: string;
   description?: string;
-  status: 'todo' | 'in-progress' | 'done' | 'cancelled';
+  status: TaskStatus;
   assignee?: {
     id: string;
     name: string;
@@ -12,10 +20,4 @@ export interface Todo {
   createdAt: string;
   updatedAt: string;
   dueDate?: string;
-}
-
-export interface TodoProject {
-  id: string;
-  name: string;
-  color: string;
 }

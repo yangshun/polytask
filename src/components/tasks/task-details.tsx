@@ -1,4 +1,4 @@
-import { type Todo } from '~/types/todo';
+import { TaskStatus, type Task } from '~/types/task';
 import { Button } from '~/components/ui/button';
 import {
   DropdownMenu,
@@ -17,7 +17,7 @@ import { taskStatusList, taskStatusRecord } from './status/task-status-list';
 import { cn } from '~/lib/utils';
 
 export type TaskDetailsProps = {
-  task: Todo;
+  task: Task;
 };
 
 export function TaskDetails({ task }: TaskDetailsProps) {
@@ -28,7 +28,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
   const dueDate = task.dueDate || 'No due date';
   const taskDeleteCommandObj = taskDeleteCommand(task.id);
 
-  function handleStatusChange(newStatus: Todo['status']) {
+  function handleStatusChange(newStatus: TaskStatus) {
     if (newStatus !== task.status) {
       dispatch(updateTaskStatus({ id: task.id, status: newStatus }));
     }
