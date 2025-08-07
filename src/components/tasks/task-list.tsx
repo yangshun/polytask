@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2, Circle, Clock, Plus } from 'lucide-react';
+import { Circle, Plus } from 'lucide-react';
 import { cn } from '~/lib/utils';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
@@ -26,6 +26,7 @@ import {
   taskSelectPreviousCommand,
 } from './task-commands';
 import { useEffect } from 'react';
+import { TaskStatusIcon } from './task-status-icon';
 
 export function TaskList() {
   const { registerCommand } = useCommandsRegistry();
@@ -78,19 +79,19 @@ export function TaskList() {
             shortcut="c">
             New issue
           </Button>
-          {selectedTask && <TaskToolbar selectedTask={selectedTask} />}
+          {selectedTask && <TaskToolbar />}
         </div>
         <div className="flex items-center gap-6 text-muted-foreground shrink-0 px-1">
           <div className="flex items-center gap-2">
-            <Circle className="size-4" />
+            <TaskStatusIcon status="todo" size="md" />
             <span className="text-xs">{taskCounts.todo} Todo</span>
           </div>
           <div className="flex items-center gap-2">
-            <Clock className="size-4 text-blue-600" />
+            <TaskStatusIcon status="in-progress" size="md" />
             <span className="text-xs">{taskCounts.inProgress} In progress</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="size-4 text-green-600" />
+            <TaskStatusIcon status="done" size="md" />
             <span className="text-xs">{taskCounts.done} Done</span>
           </div>
         </div>

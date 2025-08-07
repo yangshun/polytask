@@ -27,7 +27,7 @@ export function TaskStatusIcon({
         <CheckCircle2 className={cn(iconSize, 'text-green-600', className)} />
       );
     case 'in-progress':
-      return <Clock className={cn(iconSize, 'text-blue-600', className)} />;
+      return <Clock className={cn(iconSize, 'text-yellow-400', className)} />;
     case 'cancelled':
       return <Circle className={cn(iconSize, 'text-gray-400', className)} />;
     default:
