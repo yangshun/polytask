@@ -12,16 +12,15 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '~/components/ui/context-menu';
-import { Task, TaskStatus } from '~/types/task';
+import { TaskObject, TaskStatus } from '~/types/task';
 import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { TaskStatusIcon } from './status/task-status-icon';
 import { useEffect, useRef } from 'react';
-import { RiUserLine } from 'react-icons/ri';
 import { taskDeleteCommand } from './task-commands';
 
 interface TaskItemProps {
-  task: Task;
+  task: TaskObject;
   onStatusChange: (id: string) => void;
   onStatusUpdate: (id: string, status: TaskStatus) => void;
   onDelete: (id: string) => void;
@@ -128,14 +127,13 @@ export function TaskItem({
                 </Badge>
               )}
             </div>
-            <div className="flex items-center gap-3 transition-opacity">
-              {task.assigneeId && (
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <RiUserLine className="h-3 w-3" />
-                  <span>{task.assigneeId}</span>
-                </div>
-              )}
-            </div>
+            {task.assignee && (
+              <img
+                src={task.assignee?.avatar}
+                alt={task.assignee?.name}
+                className="size-6 rounded-full"
+              />
+            )}
           </div>
         </div>
       </ContextMenuTrigger>

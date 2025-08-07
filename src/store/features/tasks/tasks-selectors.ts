@@ -1,14 +1,34 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { assignees } from '~/data/mock-tasks';
 import { RootState } from '~/store/store';
-import { TaskStatus } from '~/types/task';
+import { TaskRaw, TaskObject, TaskStatus } from '~/types/task';
+
+function augmentTaskWithAssignee(task?: TaskRaw | null): TaskObject | null {
+  if (task == null) {
+    return null;
+  }
+
+  if (!task.assigneeId) {
+    return { ...task, assignee: null };
+  }
+
+  const assignee = assignees.find((a) => a.id === task.assigneeId) ?? null;
+
+  return {
+    ...task,
+    assignee,
+  };
+}
+
+function augmentTasksWithAssignee(tasks: TaskRaw[]): Array<TaskObject> {
+  return tasks.map(augmentTaskWithAssignee).flatMap((task) => task || []);
+}
 
 // Base selectors
-export function selectTasksState(state: RootState) {
-  return state.tasks;
-}
 export function selectAllTasks(state: RootState) {
-  return state.tasks.tasks;
+  return augmentTasksWithAssignee(state.tasks.tasks);
 }
+
 export function selectSelectedTaskId(state: RootState) {
   return state.tasks.selectedTaskId;
 }
@@ -18,6 +38,7 @@ export const selectSelectedTask = createSelector(
   [selectAllTasks, selectSelectedTaskId],
   function (tasks, selectedTaskId) {
     if (!selectedTaskId) return null;
+
     return tasks.find((task) => task.id === selectedTaskId) || null;
   },
 );
@@ -67,14 +88,14 @@ export const selectCancelledTasks = createSelector(
 // Assignee-based selectors
 export function selectTasksByAssignee(assigneeId: string) {
   return createSelector([selectAllTasks], function (tasks) {
-    return tasks.filter((task) => task.assigneeId === assigneeId);
+    return tasks.filter((task) => task.assignee?.id === assigneeId);
   });
 }
 
 export const selectUnassignedTasks = createSelector(
   [selectAllTasks],
   function (tasks) {
-    return tasks.filter((task) => task.assigneeId != null);
+    return tasks.filter((task) => task.assignee != null);
   },
 );
 

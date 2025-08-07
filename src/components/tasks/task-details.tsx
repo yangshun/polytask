@@ -1,4 +1,4 @@
-import { TaskStatus, type Task } from '~/types/task';
+import { TaskObject, TaskStatus } from '~/types/task';
 import { Button } from '~/components/ui/button';
 import {
   DropdownMenu,
@@ -17,14 +17,13 @@ import { taskStatusList, taskStatusRecord } from './status/task-status-list';
 import { cn } from '~/lib/utils';
 
 export type TaskDetailsProps = {
-  task: Task;
+  task: TaskObject;
 };
 
 export function TaskDetails({ task }: TaskDetailsProps) {
   const { registerCommand } = useCommandsRegistry();
 
   const dispatch = useAppDispatch();
-  const assigneeName = task.assigneeId || 'Unassigned';
   const taskDeleteCommandObj = taskDeleteCommand(task.id);
 
   function handleStatusChange(newStatus: TaskStatus) {
@@ -92,7 +91,18 @@ export function TaskDetails({ task }: TaskDetailsProps) {
         <h2 className="text-lg font-bold mb-2">{task.title}</h2>
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
           <span>Assignee:</span>
-          <span className="font-medium">{assigneeName}</span>
+          {task.assignee && (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <img
+                src={task.assignee?.avatar}
+                alt={task.assignee?.name}
+                className="size-6 rounded-full"
+              />
+              <span className="font-medium">
+                {task.assignee?.name || 'Unassigned'}
+              </span>
+            </div>
+          )}
         </div>
         <div className="mb-2 text-sm font-semibold">Description</div>
         <div className="text-sm text-muted-foreground whitespace-pre-line">

@@ -6,7 +6,7 @@ export interface TaskAssignee {
   avatar?: string;
 }
 
-export interface Task {
+export interface TaskRaw {
   id: string;
   title: string;
   description?: string;
@@ -17,6 +17,6 @@ export interface Task {
   updatedAt: string;
 }
 
-export type TaskObject = Omit<Task, 'assigneeId'> & {
-  assignee?: TaskAssignee;
+export type TaskObject = Omit<TaskRaw, 'assigneeId'> & {
+  assignee: TaskAssignee | null;
 };

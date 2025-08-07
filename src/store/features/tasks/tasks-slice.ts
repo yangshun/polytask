@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Task, TaskStatus } from '~/types/task';
+import { TaskRaw, TaskStatus } from '~/types/task';
 import { mockTasks } from '~/data/mock-tasks';
 
 export interface TasksState {
-  tasks: Task[];
+  tasks: TaskRaw[];
   selectedTaskId: string | null;
 }
 
@@ -17,12 +17,12 @@ export const tasksSlice = createSlice({
   initialState,
   reducers: {
     // Task CRUD operations
-    addTask: (state, action: PayloadAction<Task>) => {
+    addTask: (state, action: PayloadAction<TaskRaw>) => {
       state.tasks.push(action.payload);
     },
     updateTask: (
       state,
-      action: PayloadAction<{ id: string; updates: Partial<Task> }>,
+      action: PayloadAction<{ id: string; updates: Partial<TaskRaw> }>,
     ) => {
       const { id, updates } = action.payload;
       const taskIndex = state.tasks.findIndex((task) => task.id === id);
