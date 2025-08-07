@@ -19,38 +19,31 @@ import { TaskStatusIcon } from './status/task-status-icon';
 import { useEffect, useRef, useState } from 'react';
 import { taskDeleteCommand } from './task-commands';
 import { TaskStatusCombobox } from './status/task-status-combobox';
-import { RiProgress4Line } from 'react-icons/ri';
+import { RiProgress4Line, RiUser2Fill } from 'react-icons/ri';
+import { TaskAssigneeCombobox } from './assignee/task-assignee-combobox';
 
 interface TaskItemProps {
   task: TaskObject;
-  onStatusChange: (id: string) => void;
-  onStatusUpdate: (id: string, status: TaskStatus) => void;
+  onAssigneeChange: (assigneeId: string) => void;
+  onStatusChange: (status: TaskStatus) => void;
   onDelete: (id: string) => void;
   isSelected?: boolean;
 }
 
 export function TaskItem({
   task,
+  onAssigneeChange,
   onStatusChange,
-  onStatusUpdate,
   onDelete,
   isSelected = false,
 }: TaskItemProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const [open, setOpen] = useState(false);
-
-  function handleStatusClick(e: React.MouseEvent) {
-    e.stopPropagation(); // Prevent the main div click from firing
-    onStatusChange(task.id);
-  }
+  const [statusSubOpen, setStatusSubOpen] = useState(false);
+  const [assigneeSubOpen, setAssigneeSubOpen] = useState(false);
 
   function handleDelete() {
     onDelete(task.id);
-  }
-
-  function handleStatusUpdate(status: TaskStatus) {
-    onStatusUpdate(task.id, status);
   }
 
   useEffect(() => {
@@ -75,9 +68,7 @@ export function TaskItem({
             onClick={() => {
               dispatch(setSelectedTask(task.id));
             }}>
-            <button
-              onClick={handleStatusClick}
-              className="shrink-0 hover:scale-110 transition-transform">
+            <button className="shrink-0 hover:scale-110 transition-transform">
               <TaskStatusIcon status={task.status} size="lg" />
             </button>
             <span className="text-xs text-muted-foreground font-mono font-medium w-14">
@@ -119,7 +110,7 @@ export function TaskItem({
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-52">
-        <ContextMenuSub open={open} onOpenChange={setOpen}>
+        <ContextMenuSub open={statusSubOpen} onOpenChange={setStatusSubOpen}>
           <ContextMenuSubTrigger>
             <RiProgress4Line className="size-4 text-muted-foreground" />
             <span className="ml-2">Status</span>
@@ -127,8 +118,24 @@ export function TaskItem({
           <ContextMenuSubContent className="p-0 w-48">
             <TaskStatusCombobox
               onSelect={(status) => {
-                handleStatusUpdate(status);
-                setOpen(false);
+                onStatusChange(status);
+                setStatusSubOpen(false);
+              }}
+            />
+          </ContextMenuSubContent>
+        </ContextMenuSub>
+        <ContextMenuSub
+          open={assigneeSubOpen}
+          onOpenChange={setAssigneeSubOpen}>
+          <ContextMenuSubTrigger>
+            <RiUser2Fill className="size-4 text-muted-foreground" />
+            <span className="ml-2">Assignee</span>
+          </ContextMenuSubTrigger>
+          <ContextMenuSubContent className="p-0 w-48">
+            <TaskAssigneeCombobox
+              onSelect={(assigneeId) => {
+                onAssigneeChange(assigneeId);
+                setAssigneeSubOpen(false);
               }}
             />
           </ContextMenuSubContent>
