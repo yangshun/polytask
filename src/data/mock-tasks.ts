@@ -24,7 +24,6 @@ export const mockTasks: Task[] = [
     labels: ['frontend', 'planning'],
     createdAt: '2023-10-15',
     updatedAt: '2023-10-15',
-    dueDate: '2023-10-30',
   },
   {
     id: 'MUL-91',
@@ -66,7 +65,6 @@ export const mockTasks: Task[] = [
     labels: ['backend', 'security', 'auth'],
     createdAt: '2023-10-16',
     updatedAt: '2023-10-18',
-    dueDate: '2023-10-22',
   },
   {
     id: 'MUL-100',
@@ -77,7 +75,6 @@ export const mockTasks: Task[] = [
     labels: ['database', 'migration'],
     createdAt: '2023-10-16',
     updatedAt: '2023-10-16',
-    dueDate: '2023-10-25',
   },
   {
     id: 'MUL-99',
@@ -108,7 +105,6 @@ export const mockTasks: Task[] = [
     labels: ['performance', 'optimization'],
     createdAt: '2023-10-12',
     updatedAt: '2023-10-17',
-    dueDate: '2023-10-28',
   },
   {
     id: 'MUL-96',
@@ -159,7 +155,6 @@ export const mockTasks: Task[] = [
     labels: ['backend', 'notifications', 'email'],
     createdAt: '2023-10-06',
     updatedAt: '2023-10-15',
-    dueDate: '2023-10-26',
   },
   {
     id: 'MUL-89',
@@ -170,7 +165,6 @@ export const mockTasks: Task[] = [
     labels: ['search', 'backend', 'elasticsearch'],
     createdAt: '2023-10-05',
     updatedAt: '2023-10-05',
-    dueDate: '2023-10-30',
   },
   {
     id: 'MUL-88',
@@ -221,7 +215,6 @@ export const mockTasks: Task[] = [
     labels: ['security', 'audit'],
     createdAt: '2023-09-30',
     updatedAt: '2023-09-30',
-    dueDate: '2023-10-20',
   },
   {
     id: 'MUL-82',
@@ -382,7 +375,6 @@ export const mockTasks: Task[] = [
     labels: ['realtime', 'websockets', 'notifications'],
     createdAt: '2023-09-14',
     updatedAt: '2023-10-08',
-    dueDate: '2023-10-25',
   },
   {
     id: 'MUL-65',
@@ -443,7 +435,6 @@ export const mockTasks: Task[] = [
     labels: ['architecture', 'microservices', 'planning'],
     createdAt: '2023-09-08',
     updatedAt: '2023-09-08',
-    dueDate: '2023-10-31',
   },
   {
     id: 'MUL-59',
@@ -514,7 +505,6 @@ export const mockTasks: Task[] = [
     labels: ['testing', 'automation', 'cypress'],
     createdAt: '2023-09-01',
     updatedAt: '2023-10-07',
-    dueDate: '2023-10-24',
   },
   {
     id: 'MUL-52',

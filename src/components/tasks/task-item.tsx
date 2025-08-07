@@ -17,7 +17,7 @@ import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { TaskStatusIcon } from './status/task-status-icon';
 import { useEffect, useRef } from 'react';
-import { RiTimeLine, RiUserLine } from 'react-icons/ri';
+import { RiUserLine } from 'react-icons/ri';
 import { taskDeleteCommand } from './task-commands';
 
 interface TaskItemProps {
@@ -133,17 +133,6 @@ export function TaskItem({
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                   <RiUserLine className="h-3 w-3" />
                   <span>{task.assignee.name.split(' ')[0]}</span>
-                </div>
-              )}
-              {task.dueDate && (
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <RiTimeLine className="h-3 w-3" />
-                  <span>
-                    {new Date(task.dueDate).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </span>
                 </div>
               )}
             </div>

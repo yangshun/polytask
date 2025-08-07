@@ -25,7 +25,6 @@ export function TaskDetails({ task }: TaskDetailsProps) {
 
   const dispatch = useAppDispatch();
   const assigneeName = task.assignee?.name || 'No assignee';
-  const dueDate = task.dueDate || 'No due date';
   const taskDeleteCommandObj = taskDeleteCommand(task.id);
 
   function handleStatusChange(newStatus: TaskStatus) {
@@ -94,10 +93,6 @@ export function TaskDetails({ task }: TaskDetailsProps) {
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
           <span>Assignee:</span>
           <span className="font-medium">{assigneeName}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-          <span>Due date:</span>
-          <span className="font-medium">{dueDate}</span>
         </div>
         <div className="mb-2 text-sm font-semibold">Description</div>
         <div className="text-sm text-muted-foreground whitespace-pre-line">

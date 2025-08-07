@@ -19,5 +19,4 @@ export interface Task {
   labels?: string[];
   createdAt: string;
   updatedAt: string;
-  dueDate?: string;
 }

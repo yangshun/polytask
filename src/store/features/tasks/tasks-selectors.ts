@@ -116,18 +116,6 @@ export const selectTaskCounts = createSelector(
   },
 );
 
-// Overdue tasks selector
-export const selectOverdueTasks = createSelector(
-  [selectAllTasks],
-  function (tasks) {
-    const now = new Date();
-    return tasks.filter((task) => {
-      if (!task.dueDate || task.status === 'done') return false;
-      return new Date(task.dueDate) < now;
-    });
-  },
-);
-
 // Recently updated tasks selector
 export const selectRecentlyUpdatedTasks = createSelector(
   [selectAllTasks],
