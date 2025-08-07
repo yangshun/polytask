@@ -21,6 +21,11 @@ import { taskDeleteCommand } from './task-commands';
 import { TaskStatusCombobox } from './status/task-status-combobox';
 import { RiProgress4Line, RiUser2Fill } from 'react-icons/ri';
 import { TaskAssigneeCombobox } from './assignee/task-assignee-combobox';
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '~/components/ui/popover';
 
 interface TaskItemProps {
   task: TaskObject;
@@ -39,6 +44,8 @@ export function TaskItem({
 }: TaskItemProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
+  const [statusOpen, setStatusOpen] = useState(false);
+  const [assigneeOpen, setAssigneeOpen] = useState(false);
   const [statusSubOpen, setStatusSubOpen] = useState(false);
   const [assigneeSubOpen, setAssigneeSubOpen] = useState(false);
 
@@ -62,15 +69,29 @@ export function TaskItem({
         <div ref={rootRef}>
           <div
             className={cn(
-              'group flex items-center gap-3 px-3 py-2 rounded transition-colors',
+              'group flex items-center gap-3 px-3 py-2 rounded',
               isSelected ? 'bg-indigo-300/25' : 'hover:bg-accent/50',
             )}
             onClick={() => {
-              dispatch(setSelectedTask(task.id));
+              setTimeout(() => {
+                dispatch(setSelectedTask(task.id));
+              }, 0);
             }}>
-            <button className="shrink-0 hover:scale-110 transition-transform">
-              <TaskStatusIcon status={task.status} size="lg" />
-            </button>
+            <Popover open={statusOpen} onOpenChange={setStatusOpen}>
+              <PopoverTrigger asChild>
+                <button className="shrink-0" aria-label="Change task status">
+                  <TaskStatusIcon status={task.status} size="lg" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="right" className="w-[200px] p-0">
+                <TaskStatusCombobox
+                  onSelect={(status) => {
+                    onStatusChange(status);
+                    setStatusOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
             <span className="text-xs text-muted-foreground font-mono font-medium w-14">
               {task.id}
             </span>
@@ -100,11 +121,28 @@ export function TaskItem({
               )}
             </div>
             {task.assignee && (
-              <img
-                src={task.assignee?.avatar}
-                alt={task.assignee?.name}
-                className="size-6 rounded-full"
-              />
+              <Popover open={assigneeOpen} onOpenChange={setAssigneeOpen}>
+                <PopoverTrigger asChild>
+                  <button
+                    className="shrink-0"
+                    aria-expanded={assigneeOpen}
+                    aria-label="Change assignee">
+                    <img
+                      src={task.assignee?.avatar}
+                      alt={task.assignee?.name}
+                      className="size-6 rounded-full"
+                    />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent side="right" className="w-[200px] p-0">
+                  <TaskAssigneeCombobox
+                    onSelect={(assigneeId) => {
+                      onAssigneeChange(assigneeId);
+                      setAssigneeOpen(false);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
             )}
           </div>
         </div>
