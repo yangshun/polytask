@@ -129,10 +129,10 @@ export function TaskItem({
               )}
             </div>
             <div className="flex items-center gap-3 transition-opacity">
-              {task.assignee && (
+              {task.assigneeId && (
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                   <RiUserLine className="h-3 w-3" />
-                  <span>{task.assignee.name.split(' ')[0]}</span>
+                  <span>{task.assigneeId}</span>
                 </div>
               )}
             </div>

@@ -11,12 +11,12 @@ export interface Task {
   title: string;
   description?: string;
   status: TaskStatus;
-  assignee?: {
-    id: string;
-    name: string;
-    avatar?: string;
-  };
+  assigneeId?: string;
   labels?: string[];
   createdAt: string;
   updatedAt: string;
 }
+
+export type TaskObject = Omit<Task, 'assigneeId'> & {
+  assignee?: TaskAssignee;
+};

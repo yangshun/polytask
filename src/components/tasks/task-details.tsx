@@ -24,7 +24,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
   const { registerCommand } = useCommandsRegistry();
 
   const dispatch = useAppDispatch();
-  const assigneeName = task.assignee?.name || 'No assignee';
+  const assigneeName = task.assigneeId || 'Unassigned';
   const taskDeleteCommandObj = taskDeleteCommand(task.id);
 
   function handleStatusChange(newStatus: TaskStatus) {

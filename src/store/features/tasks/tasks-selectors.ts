@@ -9,12 +9,6 @@ export function selectTasksState(state: RootState) {
 export function selectAllTasks(state: RootState) {
   return state.tasks.tasks;
 }
-export function selectTasksLoading(state: RootState) {
-  return state.tasks.loading;
-}
-export function selectTasksError(state: RootState) {
-  return state.tasks.error;
-}
 export function selectSelectedTaskId(state: RootState) {
   return state.tasks.selectedTaskId;
 }
@@ -73,14 +67,14 @@ export const selectCancelledTasks = createSelector(
 // Assignee-based selectors
 export function selectTasksByAssignee(assigneeId: string) {
   return createSelector([selectAllTasks], function (tasks) {
-    return tasks.filter((task) => task.assignee?.id === assigneeId);
+    return tasks.filter((task) => task.assigneeId === assigneeId);
   });
 }
 
 export const selectUnassignedTasks = createSelector(
   [selectAllTasks],
   function (tasks) {
-    return tasks.filter((task) => !task.assignee);
+    return tasks.filter((task) => task.assigneeId != null);
   },
 );
 
@@ -134,7 +128,9 @@ export const selectRecentlyUpdatedTasks = createSelector(
 export const selectSelectedTaskIndex = createSelector(
   [selectAllTasks, selectSelectedTaskId],
   function (tasks, selectedTaskId) {
-    if (!selectedTaskId) return -1;
+    if (selectedTaskId == null) {
+      return -1;
+    }
     return tasks.findIndex((task) => task.id === selectedTaskId);
   },
 );
@@ -142,7 +138,10 @@ export const selectSelectedTaskIndex = createSelector(
 export const selectHasNextTask = createSelector(
   [selectAllTasks, selectSelectedTaskIndex],
   function (tasks, selectedIndex) {
-    if (selectedIndex === -1 || tasks.length === 0) return false;
+    if (selectedIndex === -1 || tasks.length === 0) {
+      return false;
+    }
+
     return selectedIndex < tasks.length - 1;
   },
 );
@@ -150,7 +149,10 @@ export const selectHasNextTask = createSelector(
 export const selectHasPreviousTask = createSelector(
   [selectSelectedTaskIndex],
   function (selectedIndex) {
-    if (selectedIndex === -1) return false;
+    if (selectedIndex === -1) {
+      return false;
+    }
+
     return selectedIndex > 0;
   },
 );

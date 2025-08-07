@@ -5,15 +5,11 @@ import { mockTasks } from '~/data/mock-tasks';
 export interface TasksState {
   tasks: Task[];
   selectedTaskId: string | null;
-  loading: boolean;
-  error: string | null;
 }
 
 const initialState: TasksState = {
   tasks: mockTasks,
   selectedTaskId: null,
-  loading: false,
-  error: null,
 };
 
 export const tasksSlice = createSlice({
@@ -84,12 +80,12 @@ export const tasksSlice = createSlice({
     // Assignee operations
     assignTask: (
       state,
-      action: PayloadAction<{ id: string; assignee: Task['assignee'] }>,
+      action: PayloadAction<{ id: string; assigneeId: string }>,
     ) => {
-      const { id, assignee } = action.payload;
+      const { id, assigneeId } = action.payload;
       const task = state.tasks.find((task) => task.id === id);
       if (task) {
-        task.assignee = assignee;
+        task.assigneeId = assigneeId;
         task.updatedAt = new Date().toISOString();
       }
     },
@@ -182,8 +178,6 @@ export const tasksSlice = createSlice({
     resetTasks: (state) => {
       state.tasks = mockTasks;
       state.selectedTaskId = null;
-      state.loading = false;
-      state.error = null;
     },
   },
 });
