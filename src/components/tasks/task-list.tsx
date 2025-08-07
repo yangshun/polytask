@@ -56,8 +56,16 @@ export function TaskList() {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <div className="flex items-center justify-between w-full">
+    <div
+      className={cn(
+        'flex flex-col',
+        'border border-input',
+        'rounded-sm',
+        'divide-y divide-input',
+        'h-full bg-background',
+      )}>
+      <div
+        className={cn('flex items-center justify-between w-full', 'py-2 px-3')}>
         <div className="flex items-center gap-2">
           <Button
             tooltip="Create new issue"
@@ -84,7 +92,7 @@ export function TaskList() {
           </div>
         </div>
       </div>
-      <div className={cn('border border-input', 'mb-4 p-1', 'rounded-lg')}>
+      <div className={cn('p-1', 'rounded-lg', 'overflow-y-auto')}>
         <div className="space-y-1">
           {tasks.map((task) => (
             <TaskItem

@@ -2,24 +2,22 @@ import { TaskList } from '~/components/tasks/task-list';
 import { ThemeToggle } from '~/components/theme/theme-toggle';
 import { CommandPalette } from '~/components/commands/command-palette';
 import { CommandsInitializer } from '~/components/commands/commands-initializer';
+import { cn } from '~/lib/utils';
 
 export default function Home() {
   return (
-    <div className="container px-4 mx-auto py-10">
-      <CommandsInitializer />
-      <div className="flex justify-between items-start mb-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Multitask</h1>
-          <p className="text-muted-foreground">
-            Manage your tasks efficiently using AI
-          </p>
-        </div>
-        <div className="flex items-center gap-4">
+    <div className="flex flex-col h-screen">
+      <div className="flex items-center justify-between gap-2 p-2">
+        <h1 className="text-base tracking-wide">Multitask</h1>
+        <div className="flex items-center gap-2">
+          <CommandsInitializer />
           <CommandPalette />
           <ThemeToggle />
         </div>
       </div>
-      <TaskList />
+      <div className={cn('px-2 pb-2 grow h-0')}>
+        <TaskList />
+      </div>
     </div>
   );
 }

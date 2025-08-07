@@ -56,7 +56,7 @@ export function TaskToolbar({ selectedTask }: { selectedTask: Todo }) {
         tooltip={taskDeleteCommandObj.name}
         shortcut={taskDeleteCommandObj.shortcut}
         variant="outline"
-        size="icon"
+        size="sm"
         onClick={() => {
           dispatch(taskDeleteCommandObj.action());
         }}
@@ -67,7 +67,7 @@ export function TaskToolbar({ selectedTask }: { selectedTask: Todo }) {
         variant="outline"
         tooltip={taskSelectNextCommandObj.name}
         shortcut={taskSelectNextCommandObj.shortcut}
-        size="icon"
+        size="sm"
         onClick={() => {
           dispatch(taskSelectNextCommandObj.action());
         }}
@@ -79,7 +79,7 @@ export function TaskToolbar({ selectedTask }: { selectedTask: Todo }) {
         variant="outline"
         tooltip={taskSelectPreviousCommandObj.name}
         shortcut={taskSelectPreviousCommandObj.shortcut}
-        size="icon"
+        size="sm"
         onClick={() => {
           dispatch(taskSelectPreviousCommandObj.action());
         }}

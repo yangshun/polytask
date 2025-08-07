@@ -34,7 +34,7 @@ export function ThemeToggle() {
       <Button
         icon={themeSetDarkCommandObject.icon}
         variant="outline"
-        size="icon"
+        size="sm"
         disabled>
         <span className="sr-only">{themeToggleCommandObject.name}</span>
       </Button>
@@ -51,7 +51,7 @@ export function ThemeToggle() {
       shortcut={themeToggleCommandObject.shortcut}
       tooltip={themeToggleCommandObject.name}
       variant="outline"
-      size="icon"
+      size="sm"
       onClick={handleThemeToggle}>
       <span className="sr-only">{themeToggleCommandObject.name}</span>
     </Button>
