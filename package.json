@@ -23,6 +23,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-redux": "^9.2.0",
+    "react-resizable-panels": "^3.0.4",
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {

@@ -15,6 +15,8 @@ import {
 } from '~/store/features/tasks/tasks-selectors';
 import { TaskItem } from '~/components/tasks/task-item';
 import { TaskToolbar } from '~/components/tasks/task-toolbar';
+import { TaskDetails } from '~/components/tasks/task-details';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Todo } from '~/types/todo';
 import { Button } from '~/components/ui/button';
 import { useCommandsRegistry } from '~/components/commands/commands-context';
@@ -92,26 +94,40 @@ export function TaskList() {
           </div>
         </div>
       </div>
-      <div className={cn('p-1', 'rounded-lg', 'overflow-y-auto')}>
-        <div className="space-y-1">
-          {tasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              onStatusChange={handleStatusChange}
-              onStatusUpdate={handleStatusUpdate}
-              onDelete={handleDeleteTask}
-              isSelected={selectedTask?.id === task.id}
-            />
-          ))}
-        </div>
-        {tasks.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            <Circle className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>No issues yet</p>
-            <p className="text-sm">Create your first issue to get started</p>
-          </div>
-        )}
+      <div className="h-0 grow">
+        <PanelGroup direction="horizontal">
+          <Panel minSize={50} defaultSize={selectedTask ? 70 : 100}>
+            <div className="p-1 size-full space-y-1 overflow-y-auto">
+              {tasks.map((task) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  onStatusChange={handleStatusChange}
+                  onStatusUpdate={handleStatusUpdate}
+                  onDelete={handleDeleteTask}
+                  isSelected={selectedTask?.id === task.id}
+                />
+              ))}
+              {tasks.length === 0 && (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Circle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No issues yet</p>
+                  <p className="text-sm">
+                    Create your first issue to get started
+                  </p>
+                </div>
+              )}
+            </div>
+          </Panel>
+          {selectedTask && (
+            <>
+              <PanelResizeHandle className="w-px bg-border cursor-col-resize" />
+              <Panel>
+                <TaskDetails task={selectedTask} />
+              </Panel>
+            </>
+          )}
+        </PanelGroup>
       </div>
     </div>
   );

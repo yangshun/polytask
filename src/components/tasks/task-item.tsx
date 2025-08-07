@@ -76,7 +76,7 @@ export function TaskItem({
         <div>
           <div
             className={cn(
-              'group flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
+              'group flex items-center gap-3 px-3 py-2 rounded transition-colors',
               isSelected ? 'bg-indigo-300/25' : 'hover:bg-accent/50',
             )}
             onClick={() => {
