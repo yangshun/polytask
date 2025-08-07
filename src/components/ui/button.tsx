@@ -82,6 +82,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                   'ml-1',
                   'px-1 py-0.5',
                   'rounded',
+                  'text-xs',
                 )}>
                 {shortcut.toLocaleUpperCase()}
               </kbd>

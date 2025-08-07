@@ -16,6 +16,7 @@ import {
 import { TaskItem } from '~/components/tasks/task-item';
 import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { TaskDetails } from '~/components/tasks/task-details';
+import { ScrollArea } from '~/components/ui/scroll-area';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Todo } from '~/types/todo';
 import { Button } from '~/components/ui/button';
@@ -67,7 +68,7 @@ export function TaskList() {
         'h-full bg-background',
       )}>
       <div
-        className={cn('flex items-center justify-between w-full', 'py-2 px-3')}>
+        className={cn('flex items-center justify-between w-full', 'py-2 px-2')}>
         <div className="flex items-center gap-2">
           <Button
             tooltip="Create new issue"
@@ -79,50 +80,55 @@ export function TaskList() {
           </Button>
           {selectedTask && <TaskToolbar selectedTask={selectedTask} />}
         </div>
-        <div className="flex items-center gap-6 text-sm text-muted-foreground shrink-0">
+        <div className="flex items-center gap-6 text-muted-foreground shrink-0 px-1">
           <div className="flex items-center gap-2">
-            <Circle className="h-4 w-4" />
-            <span>{taskCounts.todo} Todo</span>
+            <Circle className="size-4" />
+            <span className="text-xs">{taskCounts.todo} Todo</span>
           </div>
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-blue-600" />
-            <span>{taskCounts.inProgress} In progress</span>
+            <Clock className="size-4 text-blue-600" />
+            <span className="text-xs">{taskCounts.inProgress} In progress</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
-            <span>{taskCounts.done} Done</span>
+            <CheckCircle2 className="size-4 text-green-600" />
+            <span className="text-xs">{taskCounts.done} Done</span>
           </div>
         </div>
       </div>
       <div className="h-0 grow">
         <PanelGroup direction="horizontal">
-          <Panel minSize={50} defaultSize={selectedTask ? 70 : 100}>
-            <div className="p-1 size-full space-y-1 overflow-y-auto">
-              {tasks.map((task) => (
-                <TaskItem
-                  key={task.id}
-                  task={task}
-                  onStatusChange={handleStatusChange}
-                  onStatusUpdate={handleStatusUpdate}
-                  onDelete={handleDeleteTask}
-                  isSelected={selectedTask?.id === task.id}
-                />
-              ))}
-              {tasks.length === 0 && (
-                <div className="text-center py-12 text-muted-foreground">
-                  <Circle className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No issues yet</p>
-                  <p className="text-sm">
-                    Create your first issue to get started
-                  </p>
-                </div>
-              )}
-            </div>
+          <Panel
+            className="p-1"
+            minSize={50}
+            defaultSize={selectedTask ? 70 : 100}>
+            <ScrollArea className="h-full">
+              <div className="size-full space-y-1">
+                {tasks.map((task) => (
+                  <TaskItem
+                    key={task.id}
+                    task={task}
+                    onStatusChange={handleStatusChange}
+                    onStatusUpdate={handleStatusUpdate}
+                    onDelete={handleDeleteTask}
+                    isSelected={selectedTask?.id === task.id}
+                  />
+                ))}
+                {tasks.length === 0 && (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Circle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No issues yet</p>
+                    <p className="text-sm">
+                      Create your first issue to get started
+                    </p>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
           </Panel>
           {selectedTask && (
             <>
               <PanelResizeHandle className="w-px bg-border cursor-col-resize" />
-              <Panel>
+              <Panel minSize={20}>
                 <TaskDetails task={selectedTask} />
               </Panel>
             </>

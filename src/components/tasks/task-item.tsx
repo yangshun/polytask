@@ -17,6 +17,7 @@ import { Todo } from '~/types/todo';
 import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { TaskStatusIcon } from './task-status-icon';
+import { useEffect, useRef } from 'react';
 
 interface TaskItemProps {
   task: Todo;
@@ -33,6 +34,7 @@ export function TaskItem({
   onDelete,
   isSelected = false,
 }: TaskItemProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
 
   function handleStatusClick(e: React.MouseEvent) {
@@ -70,10 +72,18 @@ export function TaskItem({
     'cancelled',
   ];
 
+  useEffect(() => {
+    if (isSelected && rootRef.current) {
+      rootRef.current.scrollIntoView({
+        block: 'nearest',
+      });
+    }
+  }, [isSelected]);
+
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
-        <div>
+        <div ref={rootRef}>
           <div
             className={cn(
               'group flex items-center gap-3 px-3 py-2 rounded transition-colors',
