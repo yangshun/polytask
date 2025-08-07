@@ -17,7 +17,6 @@ import { Todo } from '~/types/todo';
 import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { TaskStatusIcon } from './task-status-icon';
-import { TaskPriorityIcon } from './task-priority-icon';
 
 interface TaskItemProps {
   task: Todo;
@@ -88,12 +87,9 @@ export function TaskItem({
               className="shrink-0 hover:scale-110 transition-transform">
               <TaskStatusIcon status={task.status} />
             </button>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-xs text-muted-foreground font-mono font-medium w-14">
-                {task.id}
-              </span>
-              <TaskPriorityIcon priority={task.priority} />
-            </div>
+            <span className="text-xs text-muted-foreground font-mono font-medium w-14">
+              {task.id}
+            </span>
             <div className="flex-1 min-w-0">
               <span
                 className={cn(

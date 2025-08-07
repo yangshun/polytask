@@ -3,7 +3,6 @@ export interface Todo {
   title: string;
   description?: string;
   status: 'todo' | 'in-progress' | 'done' | 'cancelled';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
   assignee?: {
     id: string;
     name: string;

@@ -47,21 +47,6 @@ export const selectCancelledTasks = createSelector([selectAllTasks], (tasks) =>
   tasks.filter((task) => task.status === 'cancelled'),
 );
 
-// Priority-based selectors
-export const selectTasksByPriority = (priority: Todo['priority']) =>
-  createSelector([selectAllTasks], (tasks) =>
-    tasks.filter((task) => task.priority === priority),
-  );
-
-export const selectUrgentTasks = createSelector([selectAllTasks], (tasks) =>
-  tasks.filter((task) => task.priority === 'urgent'),
-);
-
-export const selectHighPriorityTasks = createSelector(
-  [selectAllTasks],
-  (tasks) => tasks.filter((task) => task.priority === 'high'),
-);
-
 // Assignee-based selectors
 export const selectTasksByAssignee = (assigneeId: string) =>
   createSelector([selectAllTasks], (tasks) =>
@@ -94,16 +79,6 @@ export const selectTaskCounts = createSelector([selectAllTasks], (tasks) => ({
   done: tasks.filter((task) => task.status === 'done').length,
   cancelled: tasks.filter((task) => task.status === 'cancelled').length,
 }));
-
-export const selectPriorityCounts = createSelector(
-  [selectAllTasks],
-  (tasks) => ({
-    urgent: tasks.filter((task) => task.priority === 'urgent').length,
-    high: tasks.filter((task) => task.priority === 'high').length,
-    medium: tasks.filter((task) => task.priority === 'medium').length,
-    low: tasks.filter((task) => task.priority === 'low').length,
-  }),
-);
 
 // Overdue tasks selector
 export const selectOverdueTasks = createSelector([selectAllTasks], (tasks) => {

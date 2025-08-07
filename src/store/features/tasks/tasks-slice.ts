@@ -81,18 +81,6 @@ export const tasksSlice = createSlice({
         task.updatedAt = new Date().toISOString();
       }
     },
-    // Priority operations
-    updateTaskPriority: (
-      state,
-      action: PayloadAction<{ id: string; priority: Todo['priority'] }>,
-    ) => {
-      const { id, priority } = action.payload;
-      const task = state.tasks.find((task) => task.id === id);
-      if (task) {
-        task.priority = priority;
-        task.updatedAt = new Date().toISOString();
-      }
-    },
     // Assignee operations
     assignTask: (
       state,
@@ -206,7 +194,6 @@ export const {
   deleteTask,
   updateTaskStatus,
   toggleTaskStatus,
-  updateTaskPriority,
   assignTask,
   addTaskLabel,
   removeTaskLabel,
