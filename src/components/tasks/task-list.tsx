@@ -84,7 +84,7 @@ export function TaskList() {
           </div>
         </div>
       </div>
-      <div className={cn('border border-input mb-4 p-1', 'rounded-lg')}>
+      <div className={cn('border border-input', 'mb-4 p-1', 'rounded-lg')}>
         <div className="space-y-1">
           {tasks.map((task) => (
             <TaskItem
