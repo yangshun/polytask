@@ -26,7 +26,7 @@ import {
   taskSelectPreviousCommand,
 } from './task-commands';
 import { useEffect } from 'react';
-import { TaskStatusIcon } from './task-status-icon';
+import { TaskStatusIcon } from './status/task-status-icon';
 
 export function TaskList() {
   const { registerCommand } = useCommandsRegistry();

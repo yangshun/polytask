@@ -15,7 +15,7 @@ import {
 import { Todo } from '~/types/todo';
 import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
-import { TaskStatusIcon } from './task-status-icon';
+import { TaskStatusIcon } from './status/task-status-icon';
 import { useEffect, useRef } from 'react';
 import { RiTimeLine, RiUserLine } from 'react-icons/ri';
 import { taskDeleteCommand } from './task-commands';
