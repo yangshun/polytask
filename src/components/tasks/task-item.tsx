@@ -1,16 +1,6 @@
 'use client';
 
-import {
-  CheckCircle2,
-  Circle,
-  Clock,
-  AlertTriangle,
-  Flame,
-  User,
-  Calendar,
-  ArrowRight,
-  Trash2,
-} from 'lucide-react';
+import { User, Calendar, Trash2 } from 'lucide-react';
 import { cn } from '~/lib/utils';
 import { Badge } from '~/components/ui/badge';
 import {
@@ -26,34 +16,8 @@ import {
 import { Todo } from '~/types/todo';
 import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
-
-function getStatusIcon(status: Todo['status']) {
-  switch (status) {
-    case 'done':
-      return <CheckCircle2 className="h-4 w-4 text-green-600" />;
-    case 'in-progress':
-      return <Clock className="h-4 w-4 text-blue-600" />;
-    case 'cancelled':
-      return <Circle className="h-4 w-4 text-gray-400" />;
-    default:
-      return <Circle className="h-4 w-4 text-gray-400" />;
-  }
-}
-
-function getPriorityIcon(priority: Todo['priority']) {
-  switch (priority) {
-    case 'urgent':
-      return <Flame className="h-3 w-3 text-red-500" />;
-    case 'high':
-      return <AlertTriangle className="h-3 w-3 text-orange-500" />;
-    case 'medium':
-      return <ArrowRight className="h-3 w-3 text-yellow-500" />;
-    case 'low':
-      return <ArrowRight className="h-3 w-3 text-gray-400 rotate-90" />;
-    default:
-      return null;
-  }
-}
+import { TaskStatusIcon } from './task-status-icon';
+import { TaskPriorityIcon } from './task-priority-icon';
 
 interface TaskItemProps {
   task: Todo;
@@ -122,13 +86,13 @@ export function TaskItem({
             <button
               onClick={handleStatusClick}
               className="shrink-0 hover:scale-110 transition-transform">
-              {getStatusIcon(task.status)}
+              <TaskStatusIcon status={task.status} />
             </button>
             <div className="flex items-center gap-2 shrink-0">
               <span className="text-xs text-muted-foreground font-mono font-medium w-14">
                 {task.id}
               </span>
-              {getPriorityIcon(task.priority)}
+              <TaskPriorityIcon priority={task.priority} />
             </div>
             <div className="flex-1 min-w-0">
               <span
@@ -180,7 +144,7 @@ export function TaskItem({
       <ContextMenuContent className="w-52">
         <ContextMenuSub>
           <ContextMenuSubTrigger>
-            {getStatusIcon(task.status)}
+            <TaskStatusIcon status={task.status} />
             <span className="ml-2">Status</span>
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
@@ -189,7 +153,7 @@ export function TaskItem({
                 key={status}
                 onClick={() => handleStatusUpdate(status)}
                 className={cn('flex items-center')}>
-                {getStatusIcon(status)}
+                <TaskStatusIcon status={status} />
                 <span className="ml-2">{getStatusText(status)}</span>
                 {task.status === status && (
                   <span className="ml-auto text-xs text-muted-foreground">
