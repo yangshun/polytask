@@ -1,4 +1,9 @@
-export type TaskStatus = 'todo' | 'in-progress' | 'done' | 'cancelled';
+export type TaskStatus =
+  | 'todo'
+  | 'in-progress'
+  | 'in-review'
+  | 'done'
+  | 'cancelled';
 
 export interface TaskAssignee {
   id: string;

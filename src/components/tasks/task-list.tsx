@@ -27,6 +27,7 @@ import {
 } from './task-commands';
 import { useEffect } from 'react';
 import { TaskStatusIcon } from './status/task-status-icon';
+import { taskStatusRecord } from './status/task-status-list';
 
 export function TaskList() {
   const { registerCommand } = useCommandsRegistry();
@@ -84,15 +85,27 @@ export function TaskList() {
         <div className="flex items-center gap-6 text-muted-foreground shrink-0 px-1">
           <div className="flex items-center gap-2">
             <TaskStatusIcon status="todo" size="lg" />
-            <span className="text-xs">{taskCounts.todo} Todo</span>
+            <span className="text-xs">
+              {taskCounts.todo} {taskStatusRecord.todo.label}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <TaskStatusIcon status="in-progress" size="lg" />
-            <span className="text-xs">{taskCounts.inProgress} In progress</span>
+            <span className="text-xs">
+              {taskCounts.inProgress} {taskStatusRecord['in-progress'].label}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <TaskStatusIcon status="in-review" size="lg" />
+            <span className="text-xs">
+              {taskCounts.inReview} {taskStatusRecord['in-review'].label}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <TaskStatusIcon status="done" size="lg" />
-            <span className="text-xs">{taskCounts.done} Done</span>
+            <span className="text-xs">
+              {taskCounts.done} {taskStatusRecord.done.label}
+            </span>
           </div>
         </div>
       </div>

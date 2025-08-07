@@ -1,19 +1,11 @@
 import { TaskObject, TaskStatus } from '~/types/task';
 import { Button } from '~/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu';
-import { RiArrowDownSLine } from 'react-icons/ri';
+import { TaskStatusSelector } from './status/task-status-selector';
 import { useAppDispatch } from '~/store/hooks';
 import { updateTaskStatus } from '~/store/features/tasks/tasks-slice';
 import { taskDeleteCommand, taskUnselectCommand } from './task-commands';
 import { useCommandsRegistry } from '../commands/commands-context';
 import { useEffect } from 'react';
-import { TaskStatusIcon } from './status/task-status-icon';
-import { taskStatusList, taskStatusRecord } from './status/task-status-list';
 import { cn } from '~/lib/utils';
 
 export type TaskDetailsProps = {
@@ -46,35 +38,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
     <div className={cn('divide-y divide-input')}>
       <div
         className={cn('flex items-center gap-2 justify-between', 'py-2 px-2')}>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-1"
-              aria-label="Change status">
-              <TaskStatusIcon status={task.status} />
-              <span className="capitalize text-xs font-medium">
-                {task.status.replace('-', ' ')}
-              </span>
-              <RiArrowDownSLine className="w-3 h-3 ml-1 opacity-60" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            {taskStatusList.map((status) => {
-              const taskStatus = taskStatusRecord[status];
-
-              return (
-                <DropdownMenuItem
-                  key={status}
-                  onClick={() => handleStatusChange(status)}>
-                  <TaskStatusIcon status={status} className="mr-2" size="md" />
-                  {taskStatus.label}
-                </DropdownMenuItem>
-              );
-            })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TaskStatusSelector value={task.status} onChange={handleStatusChange} />
         <Button
           tooltip={taskDeleteCommandObj.name}
           shortcut={taskDeleteCommandObj.shortcut}
