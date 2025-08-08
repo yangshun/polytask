@@ -39,10 +39,9 @@ export function useKeyboardShortcuts() {
       }
 
       // Create shortcut string (e.g., "cmd+t", "cmd+shift+l")
-      const shortcut =
-        modifiers.length > 0
-          ? `${modifiers.join('+')}+${event.key.toLowerCase()}`
-          : event.key.toLowerCase();
+      const shortcut = [...modifiers.join('+'), event.key.toLowerCase()].join(
+        '+',
+      );
 
       const command = commandsRegistry.getCommandByShortcut(shortcut);
 

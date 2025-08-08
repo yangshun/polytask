@@ -13,6 +13,7 @@ import {
 } from '~/components/ui/command';
 import { useAppDispatch } from '~/store/hooks';
 import { useCommandsRegistry } from '~/components/commands/commands-context';
+import { formatShortcut } from '../shortcuts/format-shortcut';
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -40,15 +41,6 @@ export function CommandPalette() {
     acc[group].push(command);
     return acc;
   }, {} as Record<string, typeof commands>);
-
-  const formatShortcut = (shortcut: string) => {
-    return shortcut
-      .replace('cmd', '⌘')
-      .replace('shift', '⇧')
-      .replace('alt', '⌥')
-      .replace('+', '')
-      .toUpperCase();
-  };
 
   return (
     <>
