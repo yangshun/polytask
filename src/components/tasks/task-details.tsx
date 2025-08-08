@@ -2,7 +2,7 @@ import { TaskObject } from '~/types/task';
 import { Button } from '~/components/ui/button';
 import { TaskStatusSelector } from './status/task-status-selector';
 import { TaskAssigneeSelector } from './assignee/task-assignee-selector';
-import { Textarea } from '~/components/ui/textarea';
+import { TaskDescriptionField } from './description/task-description-field';
 import { TaskTitleField } from './title/task-title-field';
 
 import { useAppDispatch } from '~/store/hooks';
@@ -13,9 +13,8 @@ import {
 } from '~/store/features/tasks/tasks-slice';
 import { taskDeleteCommand, taskUnselectCommand } from './task-commands';
 import { useCommandsRegistry } from '../commands/commands-context';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { cn } from '~/lib/utils';
-import { Label } from '../ui/label';
 
 export type TaskDetailsProps = {
   task: TaskObject;
@@ -26,10 +25,6 @@ export function TaskDetails({ task }: TaskDetailsProps) {
 
   const dispatch = useAppDispatch();
   const taskDeleteCommandObj = taskDeleteCommand(task.id);
-
-  const [description, setDescription] = useState<string>(
-    task.description || '',
-  );
 
   useEffect(() => {
     const unregisterTaskDelete = registerCommand(taskDeleteCommand(task.id));
@@ -92,20 +87,19 @@ export function TaskDetails({ task }: TaskDetailsProps) {
             <span className="font-medium">Unassigned</span>
           )}
         </div>
-        <div className="grid w-full gap-3">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            onBlur={() => {
-              if (description !== task.description) {
-                dispatch(updateTask({ id: task.id, updates: { description } }));
-              }
-            }}
-            placeholder="Add a description..."
-          />
-        </div>
+        <TaskDescriptionField
+          value={task.description || ''}
+          onChange={(newDescription) => {
+            if (newDescription !== task.description) {
+              dispatch(
+                updateTask({
+                  id: task.id,
+                  updates: { description: newDescription },
+                }),
+              );
+            }
+          }}
+        />
       </div>
     </div>
   );
