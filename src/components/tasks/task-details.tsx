@@ -1,4 +1,4 @@
-import { TaskObject, TaskStatus, TaskAssignee } from '~/types/task';
+import { TaskObject } from '~/types/task';
 import { Button } from '~/components/ui/button';
 import { TaskStatusSelector } from './status/task-status-selector';
 import { TaskAssigneeSelector } from './assignee/task-assignee-selector';
@@ -13,7 +13,7 @@ import {
 } from '~/store/features/tasks/tasks-slice';
 import { taskDeleteCommand, taskUnselectCommand } from './task-commands';
 import { useCommandsRegistry } from '../commands/commands-context';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '~/lib/utils';
 import { Label } from '../ui/label';
 
@@ -31,29 +31,6 @@ export function TaskDetails({ task }: TaskDetailsProps) {
     task.description || '',
   );
 
-  function handleStatusChange(newStatus: TaskStatus) {
-    if (newStatus !== task.status) {
-      dispatch(updateTaskStatus({ id: task.id, status: newStatus }));
-    }
-  }
-
-  function handleAssigneeChange(newAssignee: TaskAssignee) {
-    if (newAssignee?.id !== task.assignee?.id) {
-      dispatch(
-        assignTask({
-          id: task.id,
-          assigneeId: newAssignee.id,
-        }),
-      );
-    }
-  }
-
-  function handleDescriptionBlur() {
-    if (description !== task.description) {
-      dispatch(updateTask({ id: task.id, updates: { description } }));
-    }
-  }
-
   useEffect(() => {
     const unregisterTaskDelete = registerCommand(taskDeleteCommand(task.id));
     const unregisterTaskUnselect = registerCommand(taskUnselectCommand());
@@ -68,7 +45,14 @@ export function TaskDetails({ task }: TaskDetailsProps) {
     <div className={cn('divide-y divide-input')}>
       <div
         className={cn('flex items-center gap-2 justify-between', 'py-2 px-2')}>
-        <TaskStatusSelector value={task.status} onChange={handleStatusChange} />
+        <TaskStatusSelector
+          value={task.status}
+          onChange={(newStatus) => {
+            if (newStatus !== task.status) {
+              dispatch(updateTaskStatus({ id: task.id, status: newStatus }));
+            }
+          }}
+        />
         <Button
           tooltip={taskDeleteCommandObj.name}
           shortcut={taskDeleteCommandObj.shortcut}
@@ -93,7 +77,16 @@ export function TaskDetails({ task }: TaskDetailsProps) {
           {task.assignee ? (
             <TaskAssigneeSelector
               value={task.assignee ?? undefined}
-              onChange={handleAssigneeChange}
+              onChange={(newAssignee) => {
+                if (newAssignee?.id !== task.assignee?.id) {
+                  dispatch(
+                    assignTask({
+                      id: task.id,
+                      assigneeId: newAssignee.id,
+                    }),
+                  );
+                }
+              }}
             />
           ) : (
             <span className="font-medium">Unassigned</span>
@@ -105,7 +98,11 @@ export function TaskDetails({ task }: TaskDetailsProps) {
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            onBlur={handleDescriptionBlur}
+            onBlur={() => {
+              if (description !== task.description) {
+                dispatch(updateTask({ id: task.id, updates: { description } }));
+              }
+            }}
             placeholder="Add a description..."
           />
         </div>
