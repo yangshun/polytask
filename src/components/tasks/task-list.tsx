@@ -138,7 +138,7 @@ export function TaskList() {
             <>
               <PanelResizeHandle className="w-px bg-border cursor-col-resize" />
               <Panel minSize={20}>
-                <TaskDetails task={selectedTask} />
+                <TaskDetails key={selectedTask.id} task={selectedTask} />
               </Panel>
             </>
           )}

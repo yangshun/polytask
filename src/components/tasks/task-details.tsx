@@ -3,6 +3,7 @@ import { Button } from '~/components/ui/button';
 import { TaskStatusSelector } from './status/task-status-selector';
 import { TaskAssigneeSelector } from './assignee/task-assignee-selector';
 import { Textarea } from '~/components/ui/textarea';
+import { TaskTitleField } from './title/task-title-field';
 
 import { useAppDispatch } from '~/store/hooks';
 import {
@@ -12,7 +13,7 @@ import {
 } from '~/store/features/tasks/tasks-slice';
 import { taskDeleteCommand, taskUnselectCommand } from './task-commands';
 import { useCommandsRegistry } from '../commands/commands-context';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '~/lib/utils';
 import { Label } from '../ui/label';
 
@@ -29,11 +30,6 @@ export function TaskDetails({ task }: TaskDetailsProps) {
   const [description, setDescription] = useState<string>(
     task.description || '',
   );
-
-  // Keep local description in sync when task changes
-  useEffect(() => {
-    setDescription(task.description || '');
-  }, [task.id, task.description]);
 
   function handleStatusChange(newStatus: TaskStatus) {
     if (newStatus !== task.status) {
@@ -85,10 +81,15 @@ export function TaskDetails({ task }: TaskDetailsProps) {
           icon={taskDeleteCommandObj.icon}
         />
       </div>
-      <div className={cn('px-3 py-3')}>
-        <h2 className="text-lg font-bold mb-2">{task.title}</h2>
+      <div className={cn('flex flex-col gap-2 px-3 py-3')}>
+        <TaskTitleField
+          key={task.id}
+          value={task.title}
+          onChange={(value) =>
+            dispatch(updateTask({ id: task.id, updates: { title: value } }))
+          }
+        />
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-          <span>Assignee:</span>
           {task.assignee ? (
             <TaskAssigneeSelector
               value={task.assignee ?? undefined}
