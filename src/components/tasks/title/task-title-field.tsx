@@ -50,6 +50,7 @@ export function TaskTitleField({
 
   return (
     <div
+      tabIndex={0}
       contentEditable
       role="textbox"
       aria-multiline={false}
@@ -58,6 +59,7 @@ export function TaskTitleField({
       className={cn(
         'flex w-full min-w-0 rounded-md py-1 text-base font-medium',
         'focus-visible:border-none focus-visible:ring-transparent focus-visible:outline-0',
+        'selection:bg-primary selection:text-primary-foreground',
       )}
       onInput={handleInput}
       onBlur={handleBlur}

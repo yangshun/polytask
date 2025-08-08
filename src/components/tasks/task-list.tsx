@@ -1,6 +1,6 @@
 'use client';
 
-import { RiAddLine, RiCheckboxBlankCircleLine } from 'react-icons/ri';
+import { RiCheckboxBlankCircleLine } from 'react-icons/ri';
 import { cn } from '~/lib/utils';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
@@ -18,7 +18,7 @@ import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { TaskDetails } from '~/components/tasks/task-details';
 import { ScrollArea } from '~/components/ui/scroll-area';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { Button } from '~/components/ui/button';
+import { NewTaskDialog } from '~/components/tasks/new-task-dialog';
 import { useCommandsRegistry } from '~/components/commands/commands-context';
 import {
   taskSelectNextCommand,
@@ -63,14 +63,7 @@ export function TaskList() {
       <div
         className={cn('flex items-center justify-between w-full', 'py-2 px-2')}>
         <div className="flex items-center gap-2">
-          <Button
-            tooltip="Create new issue"
-            icon={RiAddLine}
-            variant="default"
-            size="sm"
-            shortcut="c">
-            New issue
-          </Button>
+          <NewTaskDialog />
           {selectedTask && <TaskToolbar />}
         </div>
         <div className="flex items-center gap-6 text-muted-foreground shrink-0 px-1">
