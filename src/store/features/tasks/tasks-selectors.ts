@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { assignees } from '~/data/mock-tasks';
+import { assignees } from '~/data/mock-assignees';
 import { RootState } from '~/store/store';
 import { TaskRaw, TaskObject, TaskStatus } from '~/types/task';
 
@@ -25,9 +25,10 @@ function augmentTasksWithAssignee(tasks: TaskRaw[]): Array<TaskObject> {
 }
 
 // Base selectors
-export function selectAllTasks(state: RootState) {
-  return augmentTasksWithAssignee(state.tasks.tasks);
-}
+export const selectRawTasks = (state: RootState) => state.tasks.tasks;
+export const selectAllTasks = createSelector([selectRawTasks], (tasks) =>
+  augmentTasksWithAssignee(tasks),
+);
 
 export function selectSelectedTaskId(state: RootState) {
   return state.tasks.selectedTaskId;

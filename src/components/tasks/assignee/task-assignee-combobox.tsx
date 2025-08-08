@@ -9,7 +9,7 @@ import {
   CommandGroup,
 } from '~/components/ui/command';
 
-import { assignees } from '~/data/mock-tasks';
+import { assignees } from '~/data/mock-assignees';
 
 type Props = {
   onSelect: (assignee: string) => void;

@@ -14,8 +14,7 @@ import {
 } from '~/components/ui/command';
 import { Button } from '~/components/ui/button';
 import { RiArrowDownSLine } from 'react-icons/ri';
-
-import { assignees } from '~/data/mock-tasks';
+import { assignees } from '~/data/mock-assignees';
 import type { TaskAssignee } from '~/types/task';
 
 export type TaskAssigneeSelectorProps = {
