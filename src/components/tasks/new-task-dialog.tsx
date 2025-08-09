@@ -15,8 +15,14 @@ import { TaskAssigneeSelector } from '~/components/tasks/assignee/task-assignee-
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { addTask, setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { selectAllTasks } from '~/store/features/tasks/tasks-selectors';
-import type { TaskAssignee, TaskRaw, TaskStatus } from '~/types/task';
+import type {
+  TaskAssignee,
+  TaskRaw,
+  TaskStatus,
+  TaskPriority,
+} from '~/types/task';
 import { RiAddLine } from 'react-icons/ri';
+import { TaskPrioritySelector } from './priority/task-priority-selector';
 
 function getTodayDateString() {
   return new Date().toISOString().slice(0, 10);
@@ -44,6 +50,7 @@ export function NewTaskDialog() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<TaskStatus>('todo');
+  const [priority, setPriority] = useState<TaskPriority>(0);
   const [assignee, setAssignee] = useState<TaskAssignee | null>(null);
 
   const nextId = useMemo(() => getNextTaskId(tasks.map((t) => t.id)), [tasks]);
@@ -52,6 +59,7 @@ export function NewTaskDialog() {
     setTitle('');
     setDescription('');
     setStatus('todo');
+    setPriority(0);
     setAssignee(null);
   }
 
@@ -70,6 +78,7 @@ export function NewTaskDialog() {
       title: title.trim() || 'Untitled',
       description: description,
       status,
+      priority,
       assigneeId: assignee?.id,
       labels: [],
       createdAt,
@@ -110,6 +119,10 @@ export function NewTaskDialog() {
               onChange={(a) => setAssignee(a)}
             />
             <TaskStatusSelector value={status} onChange={(s) => setStatus(s)} />
+            <TaskPrioritySelector
+              value={priority}
+              onChange={(p) => setPriority(p)}
+            />
           </div>
         </div>
         <DialogFooter>

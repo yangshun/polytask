@@ -10,11 +10,13 @@ import {
   assignTask,
   updateTaskStatus,
   updateTask,
+  updateTaskPriority,
 } from '~/store/features/tasks/tasks-slice';
 import { taskDeleteCommand, taskUnselectCommand } from './task-commands';
 import { useCommandsRegistry } from '../commands/commands-context';
 import { useEffect } from 'react';
 import { cn } from '~/lib/utils';
+import { TaskPrioritySelector } from './priority/task-priority-selector';
 
 export type TaskDetailsProps = {
   task: TaskObject;
@@ -40,14 +42,24 @@ export function TaskDetails({ task }: TaskDetailsProps) {
     <div className={cn('divide-y divide-input')}>
       <div
         className={cn('flex items-center gap-2 justify-between', 'py-2 px-2')}>
-        <TaskStatusSelector
-          value={task.status}
-          onChange={(newStatus) => {
-            if (newStatus !== task.status) {
-              dispatch(updateTaskStatus({ id: task.id, status: newStatus }));
-            }
-          }}
-        />
+        <div className="flex items-center gap-2">
+          <TaskStatusSelector
+            value={task.status}
+            onChange={(newStatus) => {
+              if (newStatus !== task.status) {
+                dispatch(updateTaskStatus({ id: task.id, status: newStatus }));
+              }
+            }}
+          />
+          <TaskPrioritySelector
+            value={task.priority}
+            onChange={(p) => {
+              if (p !== task.priority) {
+                dispatch(updateTaskPriority({ id: task.id, priority: p }));
+              }
+            }}
+          />
+        </div>
         <Button
           tooltip={taskDeleteCommandObj.name}
           shortcut={taskDeleteCommandObj.shortcut}

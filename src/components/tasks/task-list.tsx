@@ -7,6 +7,7 @@ import {
   assignTask,
   deleteTask,
   updateTaskStatus,
+  updateTaskPriority,
 } from '~/store/features/tasks/tasks-slice';
 import {
   selectAllTasks,
@@ -107,6 +108,9 @@ export function TaskList() {
                     }}
                     onStatusChange={(status) => {
                       dispatch(updateTaskStatus({ id: task.id, status }));
+                    }}
+                    onPriorityChange={(priority) => {
+                      dispatch(updateTaskPriority({ id: task.id, priority }));
                     }}
                     onDelete={handleDeleteTask}
                     isSelected={selectedTask?.id === task.id}

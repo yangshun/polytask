@@ -5,6 +5,8 @@ export type TaskStatus =
   | 'done'
   | 'cancelled';
 
+export type TaskPriority = 0 | 1 | 2 | 3 | 4;
+
 export interface TaskAssignee {
   id: string;
   name: string;
@@ -16,6 +18,7 @@ export interface TaskRaw {
   title: string;
   description?: string;
   status: TaskStatus;
+  priority: TaskPriority;
   assigneeId?: string;
   labels?: string[];
   createdAt: string;

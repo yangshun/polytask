@@ -13,7 +13,6 @@ import {
   CommandGroup,
 } from '~/components/ui/command';
 import { Button } from '~/components/ui/button';
-import { RiArrowDownSLine } from 'react-icons/ri';
 import { assignees } from '~/data/mock-assignees';
 import type { TaskAssignee } from '~/types/task';
 
@@ -48,7 +47,6 @@ export function TaskAssigneeSelector({
           <span className="text-xs font-medium">
             {value ? value.name : 'Unassigned'}
           </span>
-          <RiArrowDownSLine className="w-3 h-3 ml-1 opacity-60" />
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="p-0 w-56">

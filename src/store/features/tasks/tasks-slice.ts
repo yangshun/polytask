@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TaskRaw, TaskStatus } from '~/types/task';
+import { TaskRaw, TaskStatus, TaskPriority } from '~/types/task';
 import { mockTasks } from '~/data/mock-tasks';
 
 export interface TasksState {
@@ -74,6 +74,18 @@ export const tasksSlice = createSlice({
       const task = state.tasks.find((task) => task.id === action.payload);
       if (task) {
         task.status = task.status === 'done' ? 'todo' : 'done';
+        task.updatedAt = new Date().toISOString();
+      }
+    },
+    // Priority operations
+    updateTaskPriority: (
+      state,
+      action: PayloadAction<{ id: string; priority: TaskPriority }>,
+    ) => {
+      const { id, priority } = action.payload;
+      const task = state.tasks.find((task) => task.id === id);
+      if (task) {
+        task.priority = priority;
         task.updatedAt = new Date().toISOString();
       }
     },
@@ -173,6 +185,7 @@ export const {
   deleteTask,
   updateTaskStatus,
   toggleTaskStatus,
+  updateTaskPriority,
   assignTask,
   addTaskLabel,
   removeTaskLabel,

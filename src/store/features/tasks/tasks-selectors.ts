@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { assignees } from '~/data/mock-assignees';
 import { RootState } from '~/store/store';
-import { TaskRaw, TaskObject, TaskStatus } from '~/types/task';
+import { TaskRaw, TaskObject, TaskStatus, TaskPriority } from '~/types/task';
 
 function augmentTaskWithAssignee(task?: TaskRaw | null): TaskObject | null {
   if (task == null) {
@@ -89,6 +89,13 @@ export const selectCancelledTasks = createSelector(
   },
 );
 
+// Priority-based selectors
+export function selectTasksByPriority(priority: TaskPriority) {
+  return createSelector([selectAllTasks], function (tasks) {
+    return tasks.filter((task) => task.priority === priority);
+  });
+}
+
 // Assignee-based selectors
 export function selectTasksByAssignee(assigneeId: string) {
   return createSelector([selectAllTasks], function (tasks) {
@@ -132,6 +139,11 @@ export const selectTaskCounts = createSelector(
       inReview: tasks.filter((task) => task.status === 'in-review').length,
       done: tasks.filter((task) => task.status === 'done').length,
       cancelled: tasks.filter((task) => task.status === 'cancelled').length,
+      p0: tasks.filter((task) => task.priority === 0).length,
+      p1: tasks.filter((task) => task.priority === 1).length,
+      p2: tasks.filter((task) => task.priority === 2).length,
+      p3: tasks.filter((task) => task.priority === 3).length,
+      p4: tasks.filter((task) => task.priority === 4).length,
     };
   },
 );

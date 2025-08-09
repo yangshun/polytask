@@ -12,25 +12,29 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '~/components/ui/context-menu';
-import { TaskObject, TaskStatus } from '~/types/task';
+import { TaskObject, TaskStatus, TaskPriority } from '~/types/task';
 import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { TaskStatusIcon } from './status/task-status-icon';
 import { useEffect, useRef, useState } from 'react';
 import { taskDeleteCommand } from './task-commands';
 import { TaskStatusCombobox } from './status/task-status-combobox';
-import { RiProgress4Line, RiUser2Fill } from 'react-icons/ri';
+import { RiProgress4Line } from 'react-icons/ri';
 import { TaskAssigneeCombobox } from './assignee/task-assignee-combobox';
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from '~/components/ui/popover';
+import { TaskPriorityCombobox } from './priority/task-priority-combobox';
+import { TaskPriorityIcon } from './priority/task-priority-icon';
+import { MdAssignmentInd } from 'react-icons/md';
 
 interface TaskItemProps {
   task: TaskObject;
   onAssigneeChange: (assigneeId: string) => void;
   onStatusChange: (status: TaskStatus) => void;
+  onPriorityChange: (priority: TaskPriority) => void;
   onDelete: (id: string) => void;
   isSelected?: boolean;
 }
@@ -39,6 +43,7 @@ export function TaskItem({
   task,
   onAssigneeChange,
   onStatusChange,
+  onPriorityChange,
   onDelete,
   isSelected = false,
 }: TaskItemProps) {
@@ -46,8 +51,10 @@ export function TaskItem({
   const dispatch = useAppDispatch();
   const [statusOpen, setStatusOpen] = useState(false);
   const [assigneeOpen, setAssigneeOpen] = useState(false);
+  const [priorityOpen, setPriorityOpen] = useState(false);
   const [statusSubOpen, setStatusSubOpen] = useState(false);
   const [assigneeSubOpen, setAssigneeSubOpen] = useState(false);
+  const [prioritySubOpen, setPrioritySubOpen] = useState(false);
 
   function handleDelete() {
     onDelete(task.id);
@@ -77,6 +84,26 @@ export function TaskItem({
                 dispatch(setSelectedTask(task.id));
               }, 0);
             }}>
+            <Popover open={priorityOpen} onOpenChange={setPriorityOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  className="shrink-0 text-xs font-medium px-1.5 py-0.5"
+                  aria-label="Change priority">
+                  <TaskPriorityIcon priority={task.priority} />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="right" className="w-[220px] p-0">
+                <TaskPriorityCombobox
+                  onSelect={(priority) => {
+                    onPriorityChange(priority);
+                    setPriorityOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+            <span className="text-xs text-muted-foreground font-mono font-medium w-14">
+              {task.id}
+            </span>
             <Popover open={statusOpen} onOpenChange={setStatusOpen}>
               <PopoverTrigger asChild>
                 <button className="shrink-0" aria-label="Change task status">
@@ -92,9 +119,6 @@ export function TaskItem({
                 />
               </PopoverContent>
             </Popover>
-            <span className="text-xs text-muted-foreground font-mono font-medium w-14">
-              {task.id}
-            </span>
             <div className="flex-1 min-w-0">
               <span
                 className={cn(
@@ -166,7 +190,7 @@ export function TaskItem({
           open={assigneeSubOpen}
           onOpenChange={setAssigneeSubOpen}>
           <ContextMenuSubTrigger>
-            <RiUser2Fill className="size-4 text-muted-foreground" />
+            <MdAssignmentInd className="size-4 text-muted-foreground" />
             <span className="ml-2">Assignee</span>
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="p-0 w-48">
@@ -174,6 +198,25 @@ export function TaskItem({
               onSelect={(assigneeId) => {
                 onAssigneeChange(assigneeId);
                 setAssigneeSubOpen(false);
+              }}
+            />
+          </ContextMenuSubContent>
+        </ContextMenuSub>
+        <ContextMenuSub
+          open={prioritySubOpen}
+          onOpenChange={setPrioritySubOpen}>
+          <ContextMenuSubTrigger>
+            <TaskPriorityIcon
+              priority={2}
+              className="size-4 text-muted-foreground"
+            />
+            <span className="ml-2">Priority</span>
+          </ContextMenuSubTrigger>
+          <ContextMenuSubContent className="p-0 w-56">
+            <TaskPriorityCombobox
+              onSelect={(priority) => {
+                onPriorityChange(priority);
+                setPrioritySubOpen(false);
               }}
             />
           </ContextMenuSubContent>

@@ -6,11 +6,11 @@ import {
   PopoverContent,
 } from '~/components/ui/popover';
 
-import { RiArrowDownSLine } from 'react-icons/ri';
 import { TaskStatusIcon } from './task-status-icon';
 import { cn } from '~/lib/utils';
 import { useState } from 'react';
 import { TaskStatusCombobox } from './task-status-combobox';
+import { taskStatusRecord } from './task-status-list';
 
 export type TaskStatusSelectorProps = {
   value: TaskStatus;
@@ -34,10 +34,9 @@ export function TaskStatusSelector({
           className={cn('flex items-center gap-1', className)}
           aria-label="Change status">
           <TaskStatusIcon status={value} />
-          <span className="capitalize text-xs font-medium">
-            {value.replace('-', ' ')}
+          <span className="text-xs font-medium">
+            {taskStatusRecord[value].label}
           </span>
-          <RiArrowDownSLine className="w-3 h-3 ml-1 opacity-60" />
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="p-0 w-48">
