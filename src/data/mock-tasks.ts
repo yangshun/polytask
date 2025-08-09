@@ -505,3 +505,7 @@ export const mockTasks: TaskRaw[] = [
   //   updatedAt: '2023-08-31',
   // },
 ];
+
+mockTasks.sort(
+  (a, b) => Number(b.id.match(/(\d+)/)![0]) - Number(a.id.match(/(\d+)/)![0]),
+);

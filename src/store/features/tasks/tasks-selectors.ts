@@ -26,6 +26,7 @@ function augmentTasksWithAssignee(tasks: TaskRaw[]): Array<TaskObject> {
 
 // Base selectors
 export const selectRawTasks = (state: RootState) => state.tasks.tasks;
+
 export const selectAllTasks = createSelector([selectRawTasks], (tasks) =>
   augmentTasksWithAssignee(tasks),
 );
@@ -38,7 +39,9 @@ export function selectSelectedTaskId(state: RootState) {
 export const selectSelectedTask = createSelector(
   [selectAllTasks, selectSelectedTaskId],
   function (tasks, selectedTaskId) {
-    if (!selectedTaskId) return null;
+    if (!selectedTaskId) {
+      return null;
+    }
 
     return tasks.find((task) => task.id === selectedTaskId) || null;
   },
