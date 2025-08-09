@@ -77,16 +77,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <TooltipContent>
             {tooltip}{' '}
             {shortcut && (
-              <kbd
-                className={cn(
-                  'border border-muted-foreground',
-                  'ml-1',
-                  'px-1 py-0.5',
-                  'rounded',
-                  'text-xs',
-                )}>
-                {formatShortcut(shortcut).toLocaleUpperCase()}
-              </kbd>
+              <span className="inline-flex items-center gap-0.5 ml-1">
+                {shortcut.split('+').map((key) => (
+                  <kbd
+                    key={key}
+                    className={cn(
+                      'flex items-center justify-center',
+                      'size-5',
+                      'border border-muted-foreground',
+                      'rounded',
+                      'text-sm',
+                    )}>
+                    {formatShortcut(key).toLocaleUpperCase()}
+                  </kbd>
+                ))}
+              </span>
             )}
           </TooltipContent>
         </Tooltip>

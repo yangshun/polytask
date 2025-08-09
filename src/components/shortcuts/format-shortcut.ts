@@ -1,12 +1,13 @@
 export function formatShortcut(shortcut: string) {
   return shortcut
-    .replace('cmd', '⌘')
-    .replace('shift', '⇧')
-    .replace('alt', '⌥')
-    .replace('ctrl', '⌃')
+    .replace('Cmd', '⌘')
+    .replace('Shift', '⇧')
+    .replace('Alt', '⌥')
+    .replace('Ctrl', '⌃')
     .replace('ArrowUp', '↑')
     .replace('ArrowDown', '↓')
-    .replace('enter', '↵')
+    .replace('Enter', '↵')
+    .replace('Backspace', '⌫')
     .replace('+', '')
     .toUpperCase();
 }

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useCommandsRegistry } from '~/components/commands/commands-context';
-import { useKeyboardShortcuts } from '~/lib/use-keyboard-shortcuts';
+import { useKeyboardShortcuts } from '~/components/shortcuts/use-keyboard-shortcuts';
 import {
   themeToggleCommand,
   themeSetLightCommand,

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from '~/store/hooks';
-import { commandsRegistry } from '../components/commands/commands-registry';
+import { commandsRegistry } from '../commands/commands-registry';
 
 export function useKeyboardShortcuts() {
   const dispatch = useAppDispatch();

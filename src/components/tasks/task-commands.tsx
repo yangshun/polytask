@@ -17,7 +17,7 @@ export const taskDeleteCommand: CommandCreator = (id: string) => ({
   id: 'task.delete',
   name: 'Delete task',
   icon: RiDeleteBinLine,
-  shortcut: 'd',
+  shortcut: 'Cmd+Backspace',
   group: 'tasks',
   description: 'Delete the selected task',
   action: () => deleteTask(id),
