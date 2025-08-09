@@ -69,23 +69,19 @@ export function TaskDetails({ task }: TaskDetailsProps) {
           }
         />
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-          {task.assignee ? (
-            <TaskAssigneeSelector
-              value={task.assignee ?? undefined}
-              onChange={(newAssignee) => {
-                if (newAssignee?.id !== task.assignee?.id) {
-                  dispatch(
-                    assignTask({
-                      id: task.id,
-                      assigneeId: newAssignee.id,
-                    }),
-                  );
-                }
-              }}
-            />
-          ) : (
-            <span className="font-medium">Unassigned</span>
-          )}
+          <TaskAssigneeSelector
+            value={task.assignee ?? undefined}
+            onChange={(newAssignee) => {
+              if (newAssignee?.id !== task.assignee?.id) {
+                dispatch(
+                  assignTask({
+                    id: task.id,
+                    assigneeId: newAssignee.id,
+                  }),
+                );
+              }
+            }}
+          />
         </div>
         <TaskDescriptionField
           value={task.description || ''}

@@ -95,12 +95,9 @@ export function TaskList() {
       </div>
       <div className="h-0 grow">
         <PanelGroup direction="horizontal">
-          <Panel
-            className="p-1"
-            minSize={50}
-            defaultSize={selectedTask ? 70 : 100}>
+          <Panel minSize={50} defaultSize={selectedTask ? 70 : 100}>
             <ScrollArea className="h-full">
-              <div className="size-full space-y-1">
+              <div className="size-full">
                 {tasks.map((task) => (
                   <TaskItem
                     key={task.id}

@@ -69,8 +69,8 @@ export function TaskItem({
         <div ref={rootRef}>
           <div
             className={cn(
-              'group flex items-center gap-3 px-3 py-2 rounded',
-              isSelected ? 'bg-indigo-300/25' : 'hover:bg-accent/50',
+              'group flex items-center gap-3 px-3 py-2',
+              isSelected ? 'bg-accent/50' : 'hover:bg-accent/25',
             )}
             onClick={() => {
               setTimeout(() => {
