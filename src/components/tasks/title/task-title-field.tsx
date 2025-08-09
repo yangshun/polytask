@@ -41,7 +41,9 @@ export function TaskTitleField({
   }
 
   function handleBlur() {
-    if (buffer !== value) {
+    if (buffer === '') {
+      setBuffer(value);
+    } else if (buffer !== value) {
       onChange(buffer);
     }
 
@@ -49,21 +51,31 @@ export function TaskTitleField({
   }
 
   return (
-    <div
-      tabIndex={0}
-      contentEditable
-      role="textbox"
-      aria-multiline={false}
-      suppressContentEditableWarning
-      ref={titleRef}
-      className={cn(
-        'flex w-full min-w-0 rounded-md py-1 text-base font-medium',
-        'focus-visible:border-none focus-visible:ring-transparent focus-visible:outline-0',
-        'selection:bg-primary selection:text-primary-foreground',
+    <div className="relative w-full text-xl font-bold">
+      <div
+        tabIndex={0}
+        contentEditable={true}
+        role="textbox"
+        aria-multiline={false}
+        suppressContentEditableWarning
+        ref={titleRef}
+        className={cn(
+          'z-[1] w-full py-1',
+          'whitespace-nowrap',
+          'focus-visible:border-none focus-visible:ring-transparent focus-visible:outline-0',
+          'selection:bg-primary selection:text-primary-foreground',
+        )}
+        onInput={handleInput}
+        onBlur={handleBlur}
+        {...props}
+      />
+      {buffer.length === 0 && (
+        <div
+          className="absolute top-0 text-neutral-700 pointer-events-none py-1"
+          aria-hidden={true}>
+          Enter task title...
+        </div>
       )}
-      onInput={handleInput}
-      onBlur={handleBlur}
-      {...props}
-    />
+    </div>
   );
 }
