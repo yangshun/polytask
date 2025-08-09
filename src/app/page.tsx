@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen">
       <div className="flex items-center justify-between gap-2 p-2">
-        <h1 className="text-base tracking-wide">Multitask</h1>
+        <h1 className="text-base tracking-wide">Polytask</h1>
         <div className="flex items-center gap-2">
           <CommandsInitializer />
           <CommandPalette />
