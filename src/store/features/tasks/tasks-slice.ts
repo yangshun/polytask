@@ -16,9 +16,8 @@ export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    // Task CRUD operations
     addTask: (state, action: PayloadAction<TaskRaw>) => {
-      state.tasks.push(action.payload);
+      state.tasks.unshift(action.payload);
     },
     updateTask: (
       state,
