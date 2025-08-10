@@ -18,7 +18,7 @@ import { selectAllTasks } from '~/store/features/tasks/tasks-selectors';
 import type { TaskRaw, TaskStatus, TaskPriority } from '~/types/task';
 import { TaskPrioritySelector } from './priority/task-priority-selector';
 import { taskCreateDialogOpenCommand } from './task-commands';
-import { useCommandsRegistry } from '~/components/commands/commands-context';
+import { useCommands } from '~/components/commands/commands-context';
 
 function getTodayDateString() {
   return new Date().toISOString().slice(0, 10);
@@ -39,7 +39,7 @@ function getNextTaskId(existingIds: string[]) {
 }
 
 export function NewTaskDialog() {
-  const { registerCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommands();
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectAllTasks);
   const [open, setOpen] = useState(false);

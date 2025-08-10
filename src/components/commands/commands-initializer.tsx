@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useCommandsRegistry } from '~/components/commands/commands-context';
+import { useCommands } from '~/components/commands/commands-context';
 import { useKeyboardShortcuts } from '~/components/shortcuts/use-keyboard-shortcuts';
 import {
   themeToggleCommand,
@@ -10,7 +10,7 @@ import {
 } from '~/components/theme/theme-commands';
 
 export function CommandsInitializer() {
-  const { registerCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommands();
 
   // Set up keyboard shortcuts
   useKeyboardShortcuts();

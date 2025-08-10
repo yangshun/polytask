@@ -11,7 +11,7 @@ import { TaskPriorityIcon } from './task-priority-icon';
 import { TaskPriorityCombobox } from './task-priority-combobox';
 import { taskPriorityRecord } from './task-priority-list';
 import { taskPriorityOpenCommand } from '../task-commands';
-import { useCommandsRegistry } from '~/components/commands/commands-context';
+import { useCommands } from '~/components/commands/commands-context';
 
 export function TaskPrioritySelector({
   value,
@@ -23,7 +23,7 @@ export function TaskPrioritySelector({
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const { registerCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommands();
 
   const openCommand = useMemo(
     () =>

@@ -13,7 +13,7 @@ import {
   updateTaskPriority,
 } from '~/store/features/tasks/tasks-slice';
 import { taskDeleteCommand, taskUnselectCommand } from './task-commands';
-import { useCommandsRegistry } from '../commands/commands-context';
+import { useCommands } from '../commands/commands-context';
 import { useEffect } from 'react';
 import { cn } from '~/lib/utils';
 import { TaskPrioritySelector } from './priority/task-priority-selector';
@@ -23,7 +23,7 @@ export type TaskDetailsProps = {
 };
 
 export function TaskDetails({ task }: TaskDetailsProps) {
-  const { registerCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommands();
 
   const dispatch = useAppDispatch();
   const taskDeleteCommandObj = taskDeleteCommand(task.id);

@@ -11,12 +11,12 @@ import {
   CommandList,
   CommandShortcut,
 } from '~/components/ui/command';
-import { useCommandsRegistry } from '~/components/commands/commands-context';
+import { useCommands } from '~/components/commands/commands-context';
 import { formatShortcut } from '../shortcuts/format-shortcut';
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
-  const { commands } = useCommandsRegistry();
+  const { commands } = useCommands();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

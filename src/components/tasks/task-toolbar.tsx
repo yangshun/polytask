@@ -3,7 +3,7 @@
 import { Button } from '~/components/ui/button';
 import { useAppSelector } from '~/store/hooks';
 import { NewTaskDialog } from '~/components/tasks/new-task-dialog';
-import { useCommandsRegistry } from '~/components/commands/commands-context';
+import { useCommands } from '~/components/commands/commands-context';
 import {
   selectHasNextTask,
   selectHasPreviousTask,
@@ -16,7 +16,7 @@ import {
 import { useEffect } from 'react';
 
 export function TaskToolbar() {
-  const { registerCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommands();
 
   const hasNextTask = useAppSelector(selectHasNextTask);
   const hasPreviousTask = useAppSelector(selectHasPreviousTask);

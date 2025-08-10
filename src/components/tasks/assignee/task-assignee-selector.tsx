@@ -6,7 +6,7 @@ import {
 } from '~/components/ui/popover';
 
 import { Button } from '~/components/ui/button';
-import { useCommandsRegistry } from '~/components/commands/commands-context';
+import { useCommands } from '~/components/commands/commands-context';
 import { taskAssigneeOpenCommand } from '../task-commands';
 import { TaskAssigneeCombobox } from './task-assignee-combobox';
 import { assignees } from '~/data/mock-assignees';
@@ -21,7 +21,7 @@ export function TaskAssigneeSelector({
   onChange,
 }: TaskAssigneeSelectorProps) {
   const [open, setOpen] = useState(false);
-  const { registerCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommands();
 
   const openCommand = useMemo(
     () =>

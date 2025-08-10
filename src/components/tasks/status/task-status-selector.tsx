@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { TaskStatusCombobox } from './task-status-combobox';
 import { taskStatusRecord } from './task-status-list';
 import { taskStatusOpenCommand } from '../task-commands';
-import { useCommandsRegistry } from '~/components/commands/commands-context';
+import { useCommands } from '~/components/commands/commands-context';
 
 export type TaskStatusSelectorProps = {
   value: TaskStatus;
@@ -26,7 +26,7 @@ export function TaskStatusSelector({
   className,
 }: TaskStatusSelectorProps) {
   const [open, setOpen] = useState(false);
-  const { registerCommand } = useCommandsRegistry();
+  const { registerCommand } = useCommands();
 
   const openCommand = useMemo(
     () =>
