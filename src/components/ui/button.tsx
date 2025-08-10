@@ -39,6 +39,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   icon?: React.ElementType;
+  iconClassname?: string;
   tooltip?: string;
   shortcut?: string;
 }
@@ -54,6 +55,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       tooltip,
       shortcut,
       icon: Icon,
+      iconClassname,
       ...props
     },
     ref,
@@ -65,7 +67,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}>
-        {Icon && <Icon className="size-4 shrink-0" />}
+        {Icon && <Icon className={cn('size-4 shrink-0', iconClassname)} />}
         {children}
       </Comp>
     );

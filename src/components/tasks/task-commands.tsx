@@ -27,6 +27,7 @@ export const taskCreateDialogOpenCommand: CommandCreator = (
   group: 'tasks',
   description: 'Create a new task',
   action: () => func(),
+  commandPalette: true,
 });
 
 export const taskStatusOpenCommand: CommandCreator = (func: () => void) => ({
@@ -37,6 +38,7 @@ export const taskStatusOpenCommand: CommandCreator = (func: () => void) => ({
   group: 'tasks',
   description: 'Change status of the selected task',
   action: () => func(),
+  commandPalette: true,
 });
 
 export const taskPriorityOpenCommand: CommandCreator = (func: () => void) => ({
@@ -47,6 +49,7 @@ export const taskPriorityOpenCommand: CommandCreator = (func: () => void) => ({
   group: 'tasks',
   description: 'Change priority of the selected task',
   action: () => func(),
+  commandPalette: true,
 });
 
 export const taskAssigneeOpenCommand: CommandCreator = (func: () => void) => ({
@@ -57,6 +60,7 @@ export const taskAssigneeOpenCommand: CommandCreator = (func: () => void) => ({
   group: 'tasks',
   description: 'Change assignee of the selected task',
   action: () => func(),
+  commandPalette: true,
 });
 
 export const taskDeleteCommand: CommandCreator = (id: string) => ({
@@ -67,16 +71,18 @@ export const taskDeleteCommand: CommandCreator = (id: string) => ({
   group: 'tasks',
   description: 'Delete the selected task',
   action: () => store.dispatch(deleteTask(id)),
+  commandPalette: true,
 });
 
 export const taskUnselectCommand: CommandCreator = () => ({
   id: 'task.unselect',
   name: 'Unselect task',
   icon: RiForbidLine,
-  shortcut: 'escape',
+  shortcut: 'Escape',
   group: 'tasks',
   description: 'Unselect the selected task',
   action: () => store.dispatch(clearSelectedTask()),
+  commandPalette: true,
 });
 
 export const taskSelectNextCommand: CommandCreator = () => ({
@@ -87,6 +93,7 @@ export const taskSelectNextCommand: CommandCreator = () => ({
   group: 'tasks',
   description: 'Navigate to the next task',
   action: () => store.dispatch(selectNextTask()),
+  commandPalette: false,
 });
 
 export const taskSelectPreviousCommand: CommandCreator = () => ({
@@ -97,4 +104,5 @@ export const taskSelectPreviousCommand: CommandCreator = () => ({
   group: 'tasks',
   description: 'Navigate to the previous task',
   action: () => store.dispatch(selectPreviousTask()),
+  commandPalette: false,
 });

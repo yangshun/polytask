@@ -11,6 +11,7 @@ export const themeToggleCommand: CommandCreator = () => ({
   group: 'theme',
   description: 'Switch between light and dark mode',
   action: () => store.dispatch(toggleTheme()),
+  commandPalette: true,
 });
 
 export const themeSetDarkCommand: CommandCreator = () => ({
@@ -21,6 +22,7 @@ export const themeSetDarkCommand: CommandCreator = () => ({
   group: 'theme',
   description: 'Set to dark theme',
   action: () => store.dispatch(setTheme('dark')),
+  commandPalette: true,
 });
 
 export const themeSetLightCommand: CommandCreator = () => ({
@@ -31,4 +33,5 @@ export const themeSetLightCommand: CommandCreator = () => ({
   group: 'theme',
   description: 'Set to light theme',
   action: () => store.dispatch(setTheme('light')),
+  commandPalette: true,
 });

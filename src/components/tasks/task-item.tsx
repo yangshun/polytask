@@ -129,7 +129,7 @@ export function TaskItem({
             <div className="flex-1 min-w-0">
               <span
                 className={cn(
-                  'text-sm',
+                  'text-sm font-medium',
                   task.status === 'done' &&
                     'line-through text-muted-foreground',
                 )}>

@@ -6,6 +6,7 @@ export type Command = Readonly<{
   group?: 'theme' | 'tasks';
   icon: React.ElementType;
   shortcut?: string;
+  commandPalette: boolean;
 }>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

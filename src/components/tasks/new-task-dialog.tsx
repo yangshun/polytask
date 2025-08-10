@@ -60,14 +60,6 @@ export function NewTaskDialog() {
     setAssigneeId(null);
   }
 
-  function handleOpenChange(val: boolean) {
-    setOpen(val);
-    if (!val) {
-      // closed, reset lazily
-      resetForm();
-    }
-  }
-
   function handleCreate() {
     const createdAt = getTodayDateString();
     const newTask: TaskRaw = {
@@ -84,6 +76,7 @@ export function NewTaskDialog() {
     dispatch(addTask(newTask));
     dispatch(setSelectedTask(newTask.id));
     setOpen(false);
+    resetForm();
   }
 
   const openCommand = useMemo(
@@ -103,7 +96,7 @@ export function NewTaskDialog() {
   }, [registerCommand, openCommand]);
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           tooltip={openCommand.name}

@@ -45,29 +45,45 @@ export function TaskList() {
       <div
         className={cn('flex items-center justify-between w-full', 'py-2 px-2')}>
         <TaskToolbar />
-        <div className="flex items-center gap-6 text-muted-foreground shrink-0 px-1">
+        <div className="flex items-center gap-3 md:gap-6 text-muted-foreground shrink-0 px-1">
           <div className="flex items-center gap-2">
             <TaskStatusIcon status="todo" size="lg" />
             <span className="text-xs">
-              {taskCounts.todo} {taskStatusRecord.todo.label}
+              {taskCounts.todo}
+              <span className="max-md:hidden">
+                {' '}
+                {taskStatusRecord.todo.label}
+              </span>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <TaskStatusIcon status="in-progress" size="lg" />
             <span className="text-xs">
-              {taskCounts.inProgress} {taskStatusRecord['in-progress'].label}
+              {taskCounts.inProgress}
+              <span className="max-md:hidden">
+                {' '}
+                {taskStatusRecord['in-progress'].label}
+              </span>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <TaskStatusIcon status="in-review" size="lg" />
             <span className="text-xs">
-              {taskCounts.inReview} {taskStatusRecord['in-review'].label}
+              {taskCounts.inReview}
+              <span className="max-md:hidden">
+                {' '}
+                {taskStatusRecord['in-review'].label}
+              </span>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <TaskStatusIcon status="done" size="lg" />
             <span className="text-xs">
-              {taskCounts.done} {taskStatusRecord.done.label}
+              {taskCounts.done}
+              <span className="max-md:hidden">
+                {' '}
+                {taskStatusRecord.done.label}
+              </span>
             </span>
           </div>
         </div>
