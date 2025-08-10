@@ -82,13 +82,13 @@ export function TaskDetails({ task }: TaskDetailsProps) {
         />
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
           <TaskAssigneeSelector
-            value={task.assignee ?? undefined}
-            onChange={(newAssignee) => {
-              if (newAssignee?.id !== task.assignee?.id) {
+            value={task.assignee?.id ?? undefined}
+            onChange={(assigneeId) => {
+              if (assigneeId !== task.assignee?.id) {
                 dispatch(
                   assignTask({
                     id: task.id,
-                    assigneeId: newAssignee.id,
+                    assigneeId,
                   }),
                 );
               }

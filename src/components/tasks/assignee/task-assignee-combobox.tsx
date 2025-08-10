@@ -12,7 +12,7 @@ import {
 import { assignees } from '~/data/mock-assignees';
 
 type Props = {
-  onSelect: (assignee: string) => void;
+  onSelect: (assigneeId: string) => void;
 };
 
 export function TaskAssigneeCombobox({ onSelect }: Props) {

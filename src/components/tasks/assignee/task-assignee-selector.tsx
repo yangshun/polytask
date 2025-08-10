@@ -1,24 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from '~/components/ui/popover';
-import {
-  Command,
-  CommandInput,
-  CommandList,
-  CommandItem,
-  CommandEmpty,
-  CommandGroup,
-} from '~/components/ui/command';
+
 import { Button } from '~/components/ui/button';
+import { useCommandsRegistry } from '~/components/commands/commands-context';
+import { taskAssigneeOpenCommand } from '../task-commands';
+import { TaskAssigneeCombobox } from './task-assignee-combobox';
 import { assignees } from '~/data/mock-assignees';
-import type { TaskAssignee } from '~/types/task';
 
 export type TaskAssigneeSelectorProps = {
-  value?: TaskAssignee | null;
-  onChange: (assignee: TaskAssignee) => void;
+  value?: string | null;
+  onChange: (assigneeId: string) => void;
 };
 
 export function TaskAssigneeSelector({
@@ -26,6 +21,25 @@ export function TaskAssigneeSelector({
   onChange,
 }: TaskAssigneeSelectorProps) {
   const [open, setOpen] = useState(false);
+  const { registerCommand } = useCommandsRegistry();
+
+  const openCommand = useMemo(
+    () =>
+      taskAssigneeOpenCommand(() => {
+        setOpen(true);
+      }),
+    [setOpen],
+  );
+
+  useEffect(() => {
+    const unregisterAssignee = registerCommand(openCommand);
+
+    return () => {
+      unregisterAssignee();
+    };
+  }, [registerCommand, openCommand]);
+
+  const assignee = assignees.find((a) => a.id === value) || null;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -33,48 +47,31 @@ export function TaskAssigneeSelector({
         <Button
           variant="outline"
           size="sm"
+          tooltip={openCommand.name}
+          shortcut={openCommand.shortcut}
           className="flex items-center gap-1"
-          aria-label="Change assignee">
-          {value ? (
+          aria-label={openCommand.name}>
+          {assignee ? (
             <img
-              src={value.avatar}
-              alt={value.name}
+              src={assignee.avatar}
+              alt={assignee.name}
               className="size-5 rounded-full"
             />
           ) : (
             <span className="size-5 rounded-full bg-muted" />
           )}
           <span className="text-xs font-medium">
-            {value ? value.name : 'Unassigned'}
+            {assignee ? assignee.name : 'Unassigned'}
           </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="p-0 w-56">
-        <Command>
-          <CommandInput placeholder="Change assignee..." className="h-9" />
-          <CommandList>
-            <CommandEmpty>No assignee found.</CommandEmpty>
-            <CommandGroup>
-              {assignees.map((assignee) => (
-                <CommandItem
-                  key={assignee.id}
-                  value={assignee.name}
-                  onSelect={() => {
-                    onChange(assignee);
-                    setOpen(false);
-                  }}
-                  className="flex items-center gap-2">
-                  <img
-                    src={assignee.avatar}
-                    alt={assignee.name}
-                    className="size-5 rounded-full"
-                  />
-                  <span>{assignee.name}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
+        <TaskAssigneeCombobox
+          onSelect={(assignee) => {
+            onChange(assignee);
+            setOpen(false);
+          }}
+        />
       </PopoverContent>
     </Popover>
   );

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -15,14 +15,10 @@ import { TaskAssigneeSelector } from '~/components/tasks/assignee/task-assignee-
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { addTask, setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { selectAllTasks } from '~/store/features/tasks/tasks-selectors';
-import type {
-  TaskAssignee,
-  TaskRaw,
-  TaskStatus,
-  TaskPriority,
-} from '~/types/task';
-import { RiAddLine } from 'react-icons/ri';
+import type { TaskRaw, TaskStatus, TaskPriority } from '~/types/task';
 import { TaskPrioritySelector } from './priority/task-priority-selector';
+import { taskCreateDialogOpenCommand } from './task-commands';
+import { useCommandsRegistry } from '~/components/commands/commands-context';
 
 function getTodayDateString() {
   return new Date().toISOString().slice(0, 10);
@@ -43,6 +39,7 @@ function getNextTaskId(existingIds: string[]) {
 }
 
 export function NewTaskDialog() {
+  const { registerCommand } = useCommandsRegistry();
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectAllTasks);
   const [open, setOpen] = useState(false);
@@ -51,7 +48,7 @@ export function NewTaskDialog() {
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<TaskStatus>('todo');
   const [priority, setPriority] = useState<TaskPriority>(0);
-  const [assignee, setAssignee] = useState<TaskAssignee | null>(null);
+  const [assigneeId, setAssigneeId] = useState<string | null>(null);
 
   const nextId = useMemo(() => getNextTaskId(tasks.map((t) => t.id)), [tasks]);
 
@@ -60,7 +57,7 @@ export function NewTaskDialog() {
     setDescription('');
     setStatus('todo');
     setPriority(0);
-    setAssignee(null);
+    setAssigneeId(null);
   }
 
   function handleOpenChange(val: boolean) {
@@ -79,7 +76,7 @@ export function NewTaskDialog() {
       description: description,
       status,
       priority,
-      assigneeId: assignee?.id,
+      assigneeId: assigneeId ?? undefined,
       labels: [],
       createdAt,
       updatedAt: createdAt,
@@ -89,17 +86,33 @@ export function NewTaskDialog() {
     setOpen(false);
   }
 
+  const openCommand = useMemo(
+    () =>
+      taskCreateDialogOpenCommand(() => {
+        setOpen(true);
+      }),
+    [setOpen],
+  );
+
+  useEffect(() => {
+    const unregisterDialogOpen = registerCommand(openCommand);
+
+    return () => {
+      unregisterDialogOpen();
+    };
+  }, [registerCommand, openCommand]);
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
-          tooltip="Create new issue"
-          icon={RiAddLine}
+          tooltip={openCommand.name}
+          icon={openCommand.icon}
           variant="default"
           size="sm"
-          shortcut="c">
-          New issue
-        </Button>
+          aria-label={openCommand.name}
+          shortcut={openCommand.shortcut}
+        />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -115,8 +128,8 @@ export function NewTaskDialog() {
           />
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <TaskAssigneeSelector
-              value={assignee ?? undefined}
-              onChange={(a) => setAssignee(a)}
+              value={assigneeId ?? undefined}
+              onChange={(a) => setAssigneeId(a)}
             />
             <TaskStatusSelector value={status} onChange={(s) => setStatus(s)} />
             <TaskPrioritySelector

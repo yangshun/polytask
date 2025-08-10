@@ -19,34 +19,15 @@ import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { TaskDetails } from '~/components/tasks/task-details';
 import { ScrollArea } from '~/components/ui/scroll-area';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { NewTaskDialog } from '~/components/tasks/new-task-dialog';
-import { useCommandsRegistry } from '~/components/commands/commands-context';
-import {
-  taskSelectNextCommand,
-  taskSelectPreviousCommand,
-} from './task-commands';
-import { useEffect } from 'react';
 import { TaskStatusIcon } from './status/task-status-icon';
 import { taskStatusRecord } from './status/task-status-list';
 
 export function TaskList() {
-  const { registerCommand } = useCommandsRegistry();
-
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectAllTasks);
 
   const selectedTask = useAppSelector(selectSelectedTask);
   const taskCounts = useAppSelector(selectTaskCounts);
-
-  useEffect(() => {
-    const unregisterNext = registerCommand(taskSelectNextCommand());
-    const unregisterPrevious = registerCommand(taskSelectPreviousCommand());
-
-    return () => {
-      unregisterNext();
-      unregisterPrevious();
-    };
-  }, [registerCommand]);
 
   function handleDeleteTask(id: string) {
     dispatch(deleteTask(id));
@@ -63,10 +44,7 @@ export function TaskList() {
       )}>
       <div
         className={cn('flex items-center justify-between w-full', 'py-2 px-2')}>
-        <div className="flex items-center gap-2">
-          <NewTaskDialog />
-          {selectedTask && <TaskToolbar />}
-        </div>
+        <TaskToolbar />
         <div className="flex items-center gap-6 text-muted-foreground shrink-0 px-1">
           <div className="flex items-center gap-2">
             <TaskStatusIcon status="todo" size="lg" />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { TaskPriority } from '~/types/task';
 import { Button } from '~/components/ui/button';
 import {
@@ -10,6 +10,8 @@ import { cn } from '~/lib/utils';
 import { TaskPriorityIcon } from './task-priority-icon';
 import { TaskPriorityCombobox } from './task-priority-combobox';
 import { taskPriorityRecord } from './task-priority-list';
+import { taskPriorityOpenCommand } from '../task-commands';
+import { useCommandsRegistry } from '~/components/commands/commands-context';
 
 export function TaskPrioritySelector({
   value,
@@ -21,6 +23,23 @@ export function TaskPrioritySelector({
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const { registerCommand } = useCommandsRegistry();
+
+  const openCommand = useMemo(
+    () =>
+      taskPriorityOpenCommand(() => {
+        setOpen(true);
+      }),
+    [setOpen],
+  );
+
+  useEffect(() => {
+    const unregisterPriority = registerCommand(openCommand);
+
+    return () => {
+      unregisterPriority();
+    };
+  }, [registerCommand, openCommand]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -28,15 +47,17 @@ export function TaskPrioritySelector({
         <Button
           variant="outline"
           size="sm"
+          tooltip={openCommand.name}
+          shortcut={openCommand.shortcut}
           className={cn('flex items-center gap-1', className)}
-          aria-label="Change priority">
+          aria-label={openCommand.name}>
           <TaskPriorityIcon priority={value} />
           <span className="text-xs font-medium">
             {taskPriorityRecord[value].label}
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="p-0 w-56">
+      <PopoverContent align="start" className="p-0 w-48">
         <TaskPriorityCombobox
           onSelect={(priority) => {
             onChange(priority);

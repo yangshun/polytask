@@ -4,7 +4,7 @@ export type Command = Readonly<{
   name: string;
   description?: string;
   group?: 'theme' | 'tasks';
-  icon?: React.ElementType;
+  icon: React.ElementType;
   shortcut?: string;
 }>;
 

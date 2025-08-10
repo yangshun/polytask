@@ -17,9 +17,13 @@ import { useAppDispatch } from '~/store/hooks';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { TaskStatusIcon } from './status/task-status-icon';
 import { useEffect, useRef, useState } from 'react';
-import { taskDeleteCommand } from './task-commands';
+import {
+  taskAssigneeOpenCommand,
+  taskDeleteCommand,
+  taskPriorityOpenCommand,
+  taskStatusOpenCommand,
+} from './task-commands';
 import { TaskStatusCombobox } from './status/task-status-combobox';
-import { RiProgress4Line } from 'react-icons/ri';
 import { TaskAssigneeCombobox } from './assignee/task-assignee-combobox';
 import {
   Popover,
@@ -28,7 +32,6 @@ import {
 } from '~/components/ui/popover';
 import { TaskPriorityCombobox } from './priority/task-priority-combobox';
 import { TaskPriorityIcon } from './priority/task-priority-icon';
-import { MdAssignmentInd } from 'react-icons/md';
 
 interface TaskItemProps {
   task: TaskObject;
@@ -69,6 +72,10 @@ export function TaskItem({
   }, [isSelected]);
 
   const DeleteIcon = taskDeleteCommand(task.id).icon!;
+
+  const statusOpenCommandObject = taskStatusOpenCommand(() => {});
+  const assigneeOpenCommandObject = taskAssigneeOpenCommand(() => {});
+  const priorityOpenCommandObject = taskPriorityOpenCommand(() => {});
 
   return (
     <ContextMenu>
@@ -174,7 +181,7 @@ export function TaskItem({
       <ContextMenuContent className="w-52">
         <ContextMenuSub open={statusSubOpen} onOpenChange={setStatusSubOpen}>
           <ContextMenuSubTrigger>
-            <RiProgress4Line className="size-4 text-muted-foreground" />
+            <statusOpenCommandObject.icon className="size-4 text-muted-foreground" />
             <span className="ml-2">Status</span>
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="p-0 w-48">
@@ -190,7 +197,7 @@ export function TaskItem({
           open={assigneeSubOpen}
           onOpenChange={setAssigneeSubOpen}>
           <ContextMenuSubTrigger>
-            <MdAssignmentInd className="size-4 text-muted-foreground" />
+            <assigneeOpenCommandObject.icon className="size-4 text-muted-foreground" />
             <span className="ml-2">Assignee</span>
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="p-0 w-48">
@@ -206,10 +213,7 @@ export function TaskItem({
           open={prioritySubOpen}
           onOpenChange={setPrioritySubOpen}>
           <ContextMenuSubTrigger>
-            <TaskPriorityIcon
-              priority={2}
-              className="size-4 text-muted-foreground"
-            />
+            <priorityOpenCommandObject.icon className="size-4 text-muted-foreground" />
             <span className="ml-2">Priority</span>
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="p-0 w-56">
