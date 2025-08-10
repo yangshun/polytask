@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '~/components/ui/button';
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { useAppSelector } from '~/store/hooks';
 import {
   selectHasNextTask,
   selectHasPreviousTask,
@@ -12,7 +12,6 @@ import {
 } from './task-commands';
 
 export function TaskToolbar() {
-  const dispatch = useAppDispatch();
   const hasNextTask = useAppSelector(selectHasNextTask);
   const hasPreviousTask = useAppSelector(selectHasPreviousTask);
 
@@ -27,7 +26,7 @@ export function TaskToolbar() {
         shortcut={taskSelectNextCommandObj.shortcut}
         size="sm"
         onClick={() => {
-          dispatch(taskSelectNextCommandObj.action());
+          taskSelectNextCommandObj.action();
         }}
         disabled={!hasNextTask}
         aria-label={taskSelectNextCommandObj.name}
@@ -39,7 +38,7 @@ export function TaskToolbar() {
         shortcut={taskSelectPreviousCommandObj.shortcut}
         size="sm"
         onClick={() => {
-          dispatch(taskSelectPreviousCommandObj.action());
+          taskSelectPreviousCommandObj.action();
         }}
         disabled={!hasPreviousTask}
         aria-label={taskSelectPreviousCommandObj.name}

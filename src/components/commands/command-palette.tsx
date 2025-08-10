@@ -11,13 +11,11 @@ import {
   CommandList,
   CommandShortcut,
 } from '~/components/ui/command';
-import { useAppDispatch } from '~/store/hooks';
 import { useCommandsRegistry } from '~/components/commands/commands-context';
 import { formatShortcut } from '../shortcuts/format-shortcut';
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
-  const dispatch = useAppDispatch();
   const { commands } = useCommandsRegistry();
 
   useEffect(() => {
@@ -62,7 +60,7 @@ export function CommandPalette() {
                 <CommandItem
                   key={command.id}
                   onSelect={() => {
-                    dispatch(command.action());
+                    command.action();
                     setOpen(false);
                   }}>
                   {command.icon && <command.icon className="mr-2 h-4 w-4" />}

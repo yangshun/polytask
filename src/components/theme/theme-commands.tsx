@@ -1,6 +1,7 @@
 import { RiMacbookLine, RiMoonFill, RiSunFill } from 'react-icons/ri';
 import { CommandCreator } from '~/actions/types';
 import { setTheme, toggleTheme } from '~/store/features/theme/theme-slice';
+import { store } from '~/store/store';
 
 export const themeToggleCommand: CommandCreator = () => ({
   id: 'theme.toggle',
@@ -9,7 +10,7 @@ export const themeToggleCommand: CommandCreator = () => ({
   shortcut: 't',
   group: 'theme',
   description: 'Switch between light and dark mode',
-  action: () => toggleTheme(),
+  action: () => store.dispatch(toggleTheme()),
 });
 
 export const themeSetDarkCommand: CommandCreator = () => ({
@@ -19,7 +20,7 @@ export const themeSetDarkCommand: CommandCreator = () => ({
   icon: RiMoonFill,
   group: 'theme',
   description: 'Set to dark theme',
-  action: () => setTheme('dark'),
+  action: () => store.dispatch(setTheme('dark')),
 });
 
 export const themeSetLightCommand: CommandCreator = () => ({
@@ -29,5 +30,5 @@ export const themeSetLightCommand: CommandCreator = () => ({
   shortcut: 'l',
   group: 'theme',
   description: 'Set to light theme',
-  action: () => setTheme('light'),
+  action: () => store.dispatch(setTheme('light')),
 });

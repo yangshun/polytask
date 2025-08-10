@@ -1,7 +1,5 @@
-import { UnknownAction } from '@reduxjs/toolkit';
-
 export type Command = Readonly<{
-  action: () => UnknownAction;
+  action: () => void;
   id: string;
   name: string;
   description?: string;

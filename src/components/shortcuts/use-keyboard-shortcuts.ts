@@ -1,10 +1,7 @@
 import { useEffect } from 'react';
-import { useAppDispatch } from '~/store/hooks';
 import { commandsRegistry } from '../commands/commands-registry';
 
 export function useKeyboardShortcuts() {
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
     function isWithinInteractiveOverlay(el: HTMLElement | null): boolean {
       const roles = new Set([
@@ -81,11 +78,11 @@ export function useKeyboardShortcuts() {
       if (command) {
         event.preventDefault();
         event.stopPropagation();
-        dispatch(command.action());
+        command.action();
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [dispatch]);
+  }, []);
 }

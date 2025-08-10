@@ -66,7 +66,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
           variant="outline"
           size="sm"
           onClick={() => {
-            dispatch(taskDeleteCommandObj.action());
+            taskDeleteCommandObj.action();
           }}
           aria-label={taskDeleteCommandObj.name}
           icon={taskDeleteCommandObj.icon}
