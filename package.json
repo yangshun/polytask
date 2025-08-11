@@ -28,6 +28,7 @@
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
     "react-resizable-panels": "^3.0.4",
+    "redux-undo": "^1.1.0",
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {

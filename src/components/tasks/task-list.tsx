@@ -21,8 +21,16 @@ import { ScrollArea } from '~/components/ui/scroll-area';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { TaskStatusIcon } from './status/task-status-icon';
 import { taskStatusRecord } from './status/task-status-list';
+import { useEffect } from 'react';
+import {
+  taskSelectNextCommand,
+  taskSelectPreviousCommand,
+  taskUnselectCommand,
+} from './task-commands';
+import { useCommands } from '~/components/commands/commands-context';
 
 export function TaskList() {
+  const { registerCommand } = useCommands();
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectAllTasks);
 
@@ -32,6 +40,18 @@ export function TaskList() {
   function handleDeleteTask(id: string) {
     dispatch(deleteTask(id));
   }
+
+  useEffect(() => {
+    const unregisterNext = registerCommand(taskSelectNextCommand());
+    const unregisterPrevious = registerCommand(taskSelectPreviousCommand());
+    const unregisterTaskUnselect = registerCommand(taskUnselectCommand());
+
+    return () => {
+      unregisterNext();
+      unregisterPrevious();
+      unregisterTaskUnselect();
+    };
+  }, [registerCommand]);
 
   return (
     <div
