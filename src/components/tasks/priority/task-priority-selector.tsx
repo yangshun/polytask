@@ -45,7 +45,7 @@ export function TaskPrioritySelector({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           tooltip={openCommand.name}
           shortcut={openCommand.shortcut}

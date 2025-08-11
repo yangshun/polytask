@@ -9,6 +9,6 @@ export function formatShortcut(shortcut: string) {
     .replace('Enter', '↵')
     .replace('Backspace', '⌫')
     .replace('Escape', 'Esc')
-    .replace('+', '')
+    .replaceAll('+', '')
     .toUpperCase();
 }

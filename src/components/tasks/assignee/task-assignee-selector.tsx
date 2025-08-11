@@ -23,6 +23,8 @@ export function TaskAssigneeSelector({
   const [open, setOpen] = useState(false);
   const { registerCommand } = useCommands();
 
+  const taskAssigneeOpenCommandObj = taskAssigneeOpenCommand(() => {});
+
   const openCommand = useMemo(
     () =>
       taskAssigneeOpenCommand(() => {
@@ -45,7 +47,7 @@ export function TaskAssigneeSelector({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           tooltip={openCommand.name}
           shortcut={openCommand.shortcut}
@@ -58,7 +60,7 @@ export function TaskAssigneeSelector({
               className="size-5 rounded-full"
             />
           ) : (
-            <span className="size-5 rounded-full bg-muted" />
+            <taskAssigneeOpenCommandObj.icon className="size-5 rounded-full bg-muted" />
           )}
           <span className="text-xs font-medium">
             {assignee ? assignee.name : 'Unassigned'}

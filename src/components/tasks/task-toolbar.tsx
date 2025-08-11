@@ -2,7 +2,7 @@
 
 import { Button } from '~/components/ui/button';
 import { useAppSelector } from '~/store/hooks';
-import { NewTaskDialog } from '~/components/tasks/new-task-dialog';
+import { TaskCreateDialog } from '~/components/tasks/create/task-create-dialog';
 import { useCommands } from '~/components/commands/commands-context';
 
 import {
@@ -33,7 +33,7 @@ export function TaskToolbar() {
 
   return (
     <div className="flex items-center gap-2">
-      <NewTaskDialog />
+      <TaskCreateDialog />
       <Button
         variant="ghost"
         aria-label={taskUndoCommandObj.name}

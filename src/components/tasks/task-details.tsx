@@ -5,18 +5,27 @@ import { TaskAssigneeSelector } from './assignee/task-assignee-selector';
 import { TaskDescriptionField } from './description/task-description-field';
 import { TaskTitleField } from './title/task-title-field';
 
-import { useAppDispatch } from '~/store/hooks';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
   assignTask,
   updateTaskStatus,
   updateTask,
   updateTaskPriority,
 } from '~/store/features/tasks/tasks-slice';
-import { taskDeleteCommand, taskUnselectCommand } from './task-commands';
+import {
+  taskDeleteCommand,
+  taskSelectNextCommand,
+  taskSelectPreviousCommand,
+  taskUnselectCommand,
+} from './task-commands';
 import { useCommands } from '../commands/commands-context';
 import { useEffect } from 'react';
 import { cn } from '~/lib/utils';
 import { TaskPrioritySelector } from './priority/task-priority-selector';
+import {
+  selectHasNextTask,
+  selectHasPreviousTask,
+} from '~/store/features/tasks/tasks-selectors';
 
 export type TaskDetailsProps = {
   task: TaskObject;
@@ -26,6 +35,11 @@ export function TaskDetails({ task }: TaskDetailsProps) {
   const { registerCommand } = useCommands();
 
   const dispatch = useAppDispatch();
+
+  const hasNextTask = useAppSelector(selectHasNextTask);
+  const hasPreviousTask = useAppSelector(selectHasPreviousTask);
+  const taskSelectNextCommandObj = taskSelectNextCommand();
+  const taskSelectPreviousCommandObj = taskSelectPreviousCommand();
   const taskDeleteCommandObj = taskDeleteCommand(task.id);
 
   useEffect(() => {
@@ -43,27 +57,35 @@ export function TaskDetails({ task }: TaskDetailsProps) {
       <div
         className={cn('flex items-center gap-2 justify-between', 'py-2 px-2')}>
         <div className="flex items-center gap-2">
-          <TaskStatusSelector
-            value={task.status}
-            onChange={(newStatus) => {
-              if (newStatus !== task.status) {
-                dispatch(updateTaskStatus({ id: task.id, status: newStatus }));
-              }
+          <Button
+            variant="outline"
+            tooltip={taskSelectNextCommandObj.name}
+            shortcut={taskSelectNextCommandObj.shortcut}
+            size="sm"
+            onClick={() => {
+              taskSelectNextCommandObj.action();
             }}
+            disabled={!hasNextTask}
+            aria-label={taskSelectNextCommandObj.name}
+            icon={taskSelectNextCommandObj.icon}
           />
-          <TaskPrioritySelector
-            value={task.priority}
-            onChange={(p) => {
-              if (p !== task.priority) {
-                dispatch(updateTaskPriority({ id: task.id, priority: p }));
-              }
+          <Button
+            variant="outline"
+            tooltip={taskSelectPreviousCommandObj.name}
+            shortcut={taskSelectPreviousCommandObj.shortcut}
+            size="sm"
+            onClick={() => {
+              taskSelectPreviousCommandObj.action();
             }}
+            disabled={!hasPreviousTask}
+            aria-label={taskSelectPreviousCommandObj.name}
+            icon={taskSelectPreviousCommandObj.icon}
           />
         </div>
         <Button
           tooltip={taskDeleteCommandObj.name}
           shortcut={taskDeleteCommandObj.shortcut}
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={() => {
             taskDeleteCommandObj.action();
@@ -80,7 +102,23 @@ export function TaskDetails({ task }: TaskDetailsProps) {
             dispatch(updateTask({ id: task.id, updates: { title: value } }))
           }
         />
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4 -ml-2">
+          <TaskStatusSelector
+            value={task.status}
+            onChange={(newStatus) => {
+              if (newStatus !== task.status) {
+                dispatch(updateTaskStatus({ id: task.id, status: newStatus }));
+              }
+            }}
+          />
+          <TaskPrioritySelector
+            value={task.priority}
+            onChange={(p) => {
+              if (p !== task.priority) {
+                dispatch(updateTaskPriority({ id: task.id, priority: p }));
+              }
+            }}
+          />
           <TaskAssigneeSelector
             value={task.assignee?.id ?? undefined}
             onChange={(assigneeId) => {
