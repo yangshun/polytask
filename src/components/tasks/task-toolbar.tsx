@@ -32,32 +32,34 @@ export function TaskToolbar() {
   }, [registerCommand]);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex justify-between items-center gap-2 w-full">
       <TaskCreateDialog />
-      <Button
-        variant="ghost"
-        aria-label={taskUndoCommandObj.name}
-        tooltip={taskUndoCommandObj.name}
-        shortcut={taskUndoCommandObj.shortcut}
-        size="sm"
-        disabled={!tasksCanUndo}
-        onClick={() => {
-          taskUndoCommandObj.action();
-        }}
-        icon={taskUndoCommandObj.icon}
-      />
-      <Button
-        variant="ghost"
-        aria-label={taskRedoCommandObj.name}
-        tooltip={taskRedoCommandObj.name}
-        shortcut={taskRedoCommandObj.shortcut}
-        size="sm"
-        disabled={!tasksCanRedo}
-        onClick={() => {
-          taskRedoCommandObj.action();
-        }}
-        icon={taskRedoCommandObj.icon}
-      />
+      <div className="flex">
+        <Button
+          variant="ghost"
+          aria-label={taskUndoCommandObj.name}
+          tooltip={taskUndoCommandObj.name}
+          shortcut={taskUndoCommandObj.shortcut}
+          size="sm"
+          disabled={!tasksCanUndo}
+          onClick={() => {
+            taskUndoCommandObj.action();
+          }}
+          icon={taskUndoCommandObj.icon}
+        />
+        <Button
+          variant="ghost"
+          aria-label={taskRedoCommandObj.name}
+          tooltip={taskRedoCommandObj.name}
+          shortcut={taskRedoCommandObj.shortcut}
+          size="sm"
+          disabled={!tasksCanRedo}
+          onClick={() => {
+            taskRedoCommandObj.action();
+          }}
+          icon={taskRedoCommandObj.icon}
+        />
+      </div>
     </div>
   );
 }

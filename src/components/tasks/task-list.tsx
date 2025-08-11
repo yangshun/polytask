@@ -12,15 +12,12 @@ import {
 import {
   selectAllTasks,
   selectSelectedTask,
-  selectTaskCounts,
 } from '~/store/features/tasks/tasks-selectors';
 import { TaskItem } from '~/components/tasks/task-item';
 import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { TaskDetails } from '~/components/tasks/task-details';
 import { ScrollArea } from '~/components/ui/scroll-area';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { TaskStatusIcon } from './status/task-status-icon';
-import { taskStatusRecord } from './status/task-status-list';
 import { useEffect } from 'react';
 import {
   taskSelectNextCommand,
@@ -28,6 +25,7 @@ import {
   taskUnselectCommand,
 } from './task-commands';
 import { useCommands } from '~/components/commands/commands-context';
+import { TaskStatusSummary } from '~/components/tasks/status/task-status-summary';
 
 export function TaskList() {
   const { registerCommand } = useCommands();
@@ -35,7 +33,6 @@ export function TaskList() {
   const tasks = useAppSelector(selectAllTasks);
 
   const selectedTask = useAppSelector(selectSelectedTask);
-  const taskCounts = useAppSelector(selectTaskCounts);
 
   function handleDeleteTask(id: string) {
     dispatch(deleteTask(id));
@@ -62,85 +59,49 @@ export function TaskList() {
         'divide-y divide-input',
         'h-full bg-background',
       )}>
-      <div
-        className={cn('flex items-center justify-between w-full', 'py-2 px-2')}>
+      <div className={cn('flex items-center w-full', 'py-2 px-2')}>
         <TaskToolbar />
-        <div className="flex items-center gap-3 md:gap-6 text-muted-foreground shrink-0 px-1">
-          <div className="flex items-center gap-2">
-            <TaskStatusIcon status="todo" size="lg" />
-            <span className="text-xs">
-              {taskCounts.todo}
-              <span className="max-md:hidden">
-                {' '}
-                {taskStatusRecord.todo.label}
-              </span>
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <TaskStatusIcon status="in-progress" size="lg" />
-            <span className="text-xs">
-              {taskCounts.inProgress}
-              <span className="max-md:hidden">
-                {' '}
-                {taskStatusRecord['in-progress'].label}
-              </span>
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <TaskStatusIcon status="in-review" size="lg" />
-            <span className="text-xs">
-              {taskCounts.inReview}
-              <span className="max-md:hidden">
-                {' '}
-                {taskStatusRecord['in-review'].label}
-              </span>
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <TaskStatusIcon status="done" size="lg" />
-            <span className="text-xs">
-              {taskCounts.done}
-              <span className="max-md:hidden">
-                {' '}
-                {taskStatusRecord.done.label}
-              </span>
-            </span>
-          </div>
-        </div>
       </div>
       <div className="h-0 grow">
         <PanelGroup direction="horizontal">
           <Panel minSize={50} defaultSize={selectedTask ? 70 : 100}>
-            <ScrollArea className="h-full">
-              <div className="size-full">
-                {tasks.map((task) => (
-                  <TaskItem
-                    key={task.id}
-                    task={task}
-                    onAssigneeChange={(assigneeId) => {
-                      dispatch(assignTask({ id: task.id, assigneeId }));
-                    }}
-                    onStatusChange={(status) => {
-                      dispatch(updateTaskStatus({ id: task.id, status }));
-                    }}
-                    onPriorityChange={(priority) => {
-                      dispatch(updateTaskPriority({ id: task.id, priority }));
-                    }}
-                    onDelete={handleDeleteTask}
-                    isSelected={selectedTask?.id === task.id}
-                  />
-                ))}
-                {tasks.length === 0 && (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <RiCheckboxBlankCircleLine className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No issues yet</p>
-                    <p className="text-sm">
-                      Create your first issue to get started
-                    </p>
-                  </div>
-                )}
-              </div>
-            </ScrollArea>
+            <div
+              className={cn(
+                'flex flex-col size-full',
+                'divide-y divide-input',
+              )}>
+              <ScrollArea className="h-0 grow">
+                <div className="size-full">
+                  {tasks.map((task) => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      onAssigneeChange={(assigneeId) => {
+                        dispatch(assignTask({ id: task.id, assigneeId }));
+                      }}
+                      onStatusChange={(status) => {
+                        dispatch(updateTaskStatus({ id: task.id, status }));
+                      }}
+                      onPriorityChange={(priority) => {
+                        dispatch(updateTaskPriority({ id: task.id, priority }));
+                      }}
+                      onDelete={handleDeleteTask}
+                      isSelected={selectedTask?.id === task.id}
+                    />
+                  ))}
+                  {tasks.length === 0 && (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <RiCheckboxBlankCircleLine className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>No issues yet</p>
+                      <p className="text-sm">
+                        Create your first issue to get started
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+              <TaskStatusSummary />
+            </div>
           </Panel>
           {selectedTask && (
             <>

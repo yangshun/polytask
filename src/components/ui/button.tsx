@@ -85,10 +85,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                     key={key}
                     className={cn(
                       'flex items-center justify-center',
-                      'size-5',
+                      'size-4',
                       'border border-muted-foreground',
                       'rounded',
-                      'text-sm',
+                      'text-xs',
                     )}>
                     {formatShortcut(key).toLocaleUpperCase()}
                   </kbd>
