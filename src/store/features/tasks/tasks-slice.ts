@@ -1,6 +1,6 @@
 import undoable, { groupByActionTypes } from 'redux-undo';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TaskRaw, TaskStatus, TaskPriority } from '~/types/task';
+import { TaskRaw } from '~/types/task';
 import { mockTasks } from '~/data/mock-tasks';
 
 export interface TasksState {
@@ -57,37 +57,6 @@ export const tasksSlice = createSlice({
 
       // Remove the task from the list
       state.tasks = state.tasks.filter((task) => task.id !== taskIdToDelete);
-    },
-    // Status operations
-    updateTaskStatus: (
-      state,
-      action: PayloadAction<{ id: string; status: TaskStatus }>,
-    ) => {
-      const { id, status } = action.payload;
-      const task = state.tasks.find((task) => task.id === id);
-      if (task) {
-        task.status = status;
-        task.updatedAt = new Date().toISOString();
-      }
-    },
-    toggleTaskStatus: (state, action: PayloadAction<string>) => {
-      const task = state.tasks.find((task) => task.id === action.payload);
-      if (task) {
-        task.status = task.status === 'done' ? 'todo' : 'done';
-        task.updatedAt = new Date().toISOString();
-      }
-    },
-    // Priority operations
-    updateTaskPriority: (
-      state,
-      action: PayloadAction<{ id: string; priority: TaskPriority }>,
-    ) => {
-      const { id, priority } = action.payload;
-      const task = state.tasks.find((task) => task.id === id);
-      if (task) {
-        task.priority = priority;
-        task.updatedAt = new Date().toISOString();
-      }
     },
     // Assignee operations
     assignTask: (
@@ -183,9 +152,6 @@ export const {
   addTask,
   updateTask,
   deleteTask,
-  updateTaskStatus,
-  toggleTaskStatus,
-  updateTaskPriority,
   assignTask,
   addTaskLabel,
   removeTaskLabel,

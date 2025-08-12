@@ -5,8 +5,7 @@ import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
   assignTask,
   deleteTask,
-  updateTaskStatus,
-  updateTaskPriority,
+  updateTask,
 } from '~/store/features/tasks/tasks-slice';
 import {
   selectAllTasks,
@@ -55,10 +54,10 @@ export function TaskList() {
                   dispatch(assignTask({ id: task.id, assigneeId }));
                 }}
                 onStatusChange={function (status) {
-                  dispatch(updateTaskStatus({ id: task.id, status }));
+                  dispatch(updateTask({ id: task.id, updates: { status } }));
                 }}
                 onPriorityChange={function (priority) {
-                  dispatch(updateTaskPriority({ id: task.id, priority }));
+                  dispatch(updateTask({ id: task.id, updates: { priority } }));
                 }}
                 onDelete={handleDeleteTask}
                 isSelected={selectedTaskId === task.id}

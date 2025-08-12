@@ -6,12 +6,7 @@ import { TaskDescriptionField } from './description/task-description-field';
 import { TaskTitleField } from './title/task-title-field';
 
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import {
-  assignTask,
-  updateTaskStatus,
-  updateTask,
-  updateTaskPriority,
-} from '~/store/features/tasks/tasks-slice';
+import { assignTask, updateTask } from '~/store/features/tasks/tasks-slice';
 import {
   taskDeleteCommand,
   taskSelectNextCommand,
@@ -122,7 +117,9 @@ export function TaskDetails({ task }: TaskDetailsProps) {
             value={task.status}
             onChange={(newStatus) => {
               if (newStatus !== task.status) {
-                dispatch(updateTaskStatus({ id: task.id, status: newStatus }));
+                dispatch(
+                  updateTask({ id: task.id, updates: { status: newStatus } }),
+                );
               }
             }}
           />
@@ -130,7 +127,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
             value={task.priority}
             onChange={(p) => {
               if (p !== task.priority) {
-                dispatch(updateTaskPriority({ id: task.id, priority: p }));
+                dispatch(updateTask({ id: task.id, updates: { priority: p } }));
               }
             }}
           />
