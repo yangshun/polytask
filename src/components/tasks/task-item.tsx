@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '~/lib/utils';
-import { Badge } from '~/components/ui/badge';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -32,6 +31,10 @@ import {
 } from '~/components/ui/popover';
 import { TaskPriorityCombobox } from './priority/task-priority-combobox';
 import { TaskPriorityIcon } from './priority/task-priority-icon';
+import {
+  formatTaskTimestamp,
+  formatTaskDate,
+} from './timestamps/task-timestamp-format';
 
 interface TaskItemProps {
   task: TaskObject;
@@ -72,7 +75,6 @@ export function TaskItem({
   }, [isSelected]);
 
   const DeleteIcon = taskDeleteCommand(task.id).icon!;
-
   const statusOpenCommandObject = taskStatusOpenCommand(() => {});
   const assigneeOpenCommandObject = taskAssigneeOpenCommand(() => {});
   const priorityOpenCommandObject = taskPriorityOpenCommand(() => {});
@@ -83,7 +85,8 @@ export function TaskItem({
         <div ref={rootRef}>
           <div
             className={cn(
-              'group flex items-center gap-3 px-3 py-2',
+              'group flex items-center gap-3',
+              'pl-1.5 pr-6 py-2.5',
               isSelected ? 'bg-accent/50' : 'hover:bg-accent/25',
             )}
             onClick={() => {
@@ -136,7 +139,7 @@ export function TaskItem({
                 {task.title}
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               {task.labels?.slice(0, 2).map((label) => (
                 <Badge
                   key={label}
@@ -150,7 +153,7 @@ export function TaskItem({
                   +{task.labels.length - 2}
                 </Badge>
               )}
-            </div>
+            </div> */}
             {task.assignee && (
               <Popover open={assigneeOpen} onOpenChange={setAssigneeOpen}>
                 <PopoverTrigger asChild>
@@ -175,6 +178,16 @@ export function TaskItem({
                 </PopoverContent>
               </Popover>
             )}
+            <span
+              className="text-xs text-muted-foreground w-16 text-right"
+              title={`Created ${formatTaskTimestamp(task.createdAt)}`}>
+              {formatTaskDate(task.createdAt)}
+            </span>
+            <span
+              className="text-xs text-muted-foreground w-16 text-right"
+              title={`Updated ${formatTaskTimestamp(task.updatedAt)}`}>
+              {formatTaskDate(task.updatedAt)}
+            </span>
           </div>
         </div>
       </ContextMenuTrigger>
