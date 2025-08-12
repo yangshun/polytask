@@ -27,6 +27,7 @@ import { useCommands } from '~/components/commands/commands-context';
 import { TaskStatusSummary } from '~/components/tasks/status/task-status-summary';
 import type { TaskObject } from '~/components/tasks/types';
 import { TaskEmptyState } from '~/components/tasks/task-empty-state';
+import { useMediaQuery } from '~/lib/use-media-query';
 
 export function TaskList() {
   const { registerCommand } = useCommands();
@@ -36,6 +37,7 @@ export function TaskList() {
   const selectedTask: TaskObject | null = useAppSelector(selectSelectedTask);
   const selectedTaskId = useAppSelector(selectSelectedTaskId);
   const hasSelection = !!selectedTaskId;
+  const isDesktop = useMediaQuery('(min-width: 1024px)', true);
 
   function handleDeleteTask(id: string) {
     dispatch(deleteTask(id));
@@ -71,6 +73,10 @@ export function TaskList() {
     );
   }
 
+  const taskDetails = selectedTask ? (
+    <TaskDetails key={selectedTask.id} task={selectedTask} />
+  ) : null;
+
   useEffect(() => {
     const unregisterNext = registerCommand(taskSelectNextCommandCreator());
     const unregisterPrevious = registerCommand(
@@ -100,30 +106,30 @@ export function TaskList() {
         <TaskToolbar />
       </div>
       <div className="h-0 grow">
-        {/* Desktop and larger: split view */}
-        <div className="hidden md:block h-full">
-          <PanelGroup direction="horizontal">
-            <Panel minSize={50} defaultSize={hasSelection ? 70 : 100}>
-              {renderListSection()}
-            </Panel>
-            {selectedTask && (
-              <>
-                <PanelResizeHandle className="w-px bg-border cursor-col-resize" />
-                <Panel minSize={20}>
-                  <TaskDetails key={selectedTask.id} task={selectedTask} />
-                </Panel>
-              </>
-            )}
-          </PanelGroup>
-        </div>
-        {/* Mobile: show either list or details */}
-        <div className="md:hidden h-full">
-          {selectedTask ? (
-            <TaskDetails key={selectedTask.id} task={selectedTask} />
+        <PanelGroup direction="horizontal">
+          {isDesktop ? (
+            <>
+              <Panel
+                id="desktop-list"
+                minSize={50}
+                defaultSize={hasSelection ? 70 : 100}>
+                {renderListSection()}
+              </Panel>
+              {selectedTask && (
+                <>
+                  <PanelResizeHandle className="w-px bg-border cursor-col-resize" />
+                  <Panel id="desktop-details" minSize={20}>
+                    {taskDetails}
+                  </Panel>
+                </>
+              )}
+            </>
           ) : (
-            renderListSection()
+            <Panel id="mobile" minSize={0} defaultSize={100}>
+              {selectedTask ? taskDetails : renderListSection()}
+            </Panel>
           )}
-        </div>
+        </PanelGroup>
       </div>
     </div>
   );
