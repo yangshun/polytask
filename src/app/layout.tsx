@@ -7,6 +7,7 @@ import { CommandsProvider } from '~/components/commands/commands-context';
 
 import { cn } from '~/lib/utils';
 import './globals.css';
+import { TooltipProvider } from '~/components/ui/tooltip';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -39,7 +40,7 @@ export default function RootLayout({
               defaultTheme="system"
               enableSystem
               disableTransitionOnChange>
-              {children}
+              <TooltipProvider>{children}</TooltipProvider>
             </ThemeProvider>
           </CommandsProvider>
         </ReduxProvider>
