@@ -98,7 +98,7 @@ export function TaskItem({
           <div
             className={cn(
               'group flex items-center gap-3',
-              'pl-1.5 pr-6 py-2.5',
+              'pl-3 pr-4 py-2.5',
               isSelected ? 'bg-accent/50' : 'hover:bg-accent/25',
             )}
             onClick={() => {
@@ -110,7 +110,7 @@ export function TaskItem({
               <Popover open={priorityOpen} onOpenChange={setPriorityOpen}>
                 <PopoverTrigger asChild>
                   <button
-                    className="shrink-0 text-xs font-medium px-1.5 py-0.5"
+                    className="shrink-0 text-xs font-medium px-0.5 py-0.5"
                     aria-label="Change priority">
                     <TaskPriorityIcon priority={task.priority} />
                   </button>
@@ -202,14 +202,14 @@ export function TaskItem({
             )}
             {isCreatedAtVisible && (
               <span
-                className="text-xs text-muted-foreground w-16 text-right"
+                className="text-xs text-muted-foreground w-16 text-right font-medium"
                 title={`Created ${formatTaskTimestamp(task.createdAt)}`}>
                 {formatTaskDate(task.createdAt)}
               </span>
             )}
             {isUpdatedAtVisible && (
               <span
-                className="text-xs text-muted-foreground w-16 text-right"
+                className="text-xs text-muted-foreground w-16 text-right font-medium"
                 title={`Updated ${formatTaskTimestamp(task.updatedAt)}`}>
                 {formatTaskDate(task.updatedAt)}
               </span>

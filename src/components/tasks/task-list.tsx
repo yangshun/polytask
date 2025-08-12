@@ -59,7 +59,7 @@ export function TaskList() {
         'divide-y divide-input',
         'h-full bg-background',
       )}>
-      <div className={cn('flex items-center w-full', 'py-2 px-2')}>
+      <div className={cn('flex items-center w-full', 'py-2 pr-2 pl-3')}>
         <TaskToolbar />
       </div>
       <div className="h-0 grow">

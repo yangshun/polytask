@@ -73,7 +73,7 @@ export function CommandPalette() {
                     setOpen(false);
                   }}>
                   {command.icon && (
-                    <command.icon className={cn('mr-2 size-4')} />
+                    <command.icon className={cn('mr-1 size-4')} />
                   )}
                   <span className="font-medium">{command.name}</span>
                   {command.shortcut && (

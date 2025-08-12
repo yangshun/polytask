@@ -1,4 +1,4 @@
-import { RiMacbookLine, RiMoonFill, RiSunFill } from 'react-icons/ri';
+import { RiMacbookLine, RiMoonLine, RiSunLine } from 'react-icons/ri';
 import { CommandCreator } from '~/actions/types';
 import { setTheme, toggleTheme } from '~/store/features/theme/theme-slice';
 import { store } from '~/store/store';
@@ -18,7 +18,7 @@ export const themeSetDarkCommand: CommandCreator = () => ({
   id: 'theme.dark',
   name: 'Set dark theme',
   shortcut: 'd',
-  icon: RiMoonFill,
+  icon: RiMoonLine,
   group: 'theme',
   description: 'Set to dark theme',
   action: () => store.dispatch(setTheme('dark')),
@@ -28,7 +28,7 @@ export const themeSetDarkCommand: CommandCreator = () => ({
 export const themeSetLightCommand: CommandCreator = () => ({
   id: 'theme.light',
   name: 'Set light theme',
-  icon: RiSunFill,
+  icon: RiSunLine,
   shortcut: 'l',
   group: 'theme',
   description: 'Set to light theme',

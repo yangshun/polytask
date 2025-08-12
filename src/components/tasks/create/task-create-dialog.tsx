@@ -103,7 +103,7 @@ export function TaskCreateDialog() {
         <Button
           tooltip={openCommand.name}
           icon={openCommand.icon}
-          variant="default"
+          variant="secondary"
           size="sm"
           aria-label={openCommand.name}
           shortcut={openCommand.shortcut}

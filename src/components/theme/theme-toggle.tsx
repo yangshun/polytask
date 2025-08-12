@@ -48,10 +48,9 @@ export function ThemeToggle() {
           ? themeSetLightCommandObject.icon
           : themeSetDarkCommandObject.icon
       }
-      iconClassname="text-muted-foreground"
       shortcut={themeToggleCommandObject.shortcut}
       tooltip={themeToggleCommandObject.name}
-      variant="outline"
+      variant={theme === 'light' ? 'outline' : 'secondary'}
       size="sm"
       onClick={handleThemeToggle}>
       <span className="sr-only">{themeToggleCommandObject.name}</span>

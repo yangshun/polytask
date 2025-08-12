@@ -55,7 +55,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
   return (
     <div className={cn('divide-y divide-input')}>
       <div
-        className={cn('flex items-center gap-2 justify-between', 'py-2 px-2')}>
+        className={cn('flex items-center gap-2 justify-between', 'py-2 px-3')}>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
