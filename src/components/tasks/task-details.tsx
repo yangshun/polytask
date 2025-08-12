@@ -26,6 +26,7 @@ import {
   selectHasNextTask,
   selectHasPreviousTask,
 } from '~/store/features/tasks/tasks-selectors';
+import { RiContractRightLine } from 'react-icons/ri';
 
 export type TaskDetailsProps = {
   task: TaskObject;
@@ -41,6 +42,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
   const taskSelectNextCommandObj = taskSelectNextCommand();
   const taskSelectPreviousCommandObj = taskSelectPreviousCommand();
   const taskDeleteCommandObj = taskDeleteCommand(task.id);
+  const taskUnselectCommandObj = taskUnselectCommand();
 
   useEffect(() => {
     const unregisterTaskDelete = registerCommand(taskDeleteCommand(task.id));
@@ -82,17 +84,30 @@ export function TaskDetails({ task }: TaskDetailsProps) {
             icon={taskSelectPreviousCommandObj.icon}
           />
         </div>
-        <Button
-          tooltip={taskDeleteCommandObj.name}
-          shortcut={taskDeleteCommandObj.shortcut}
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            taskDeleteCommandObj.action();
-          }}
-          aria-label={taskDeleteCommandObj.name}
-          icon={taskDeleteCommandObj.icon}
-        />
+        <div className="flex items-center gap-0.5">
+          <Button
+            tooltip={taskDeleteCommandObj.name}
+            shortcut={taskDeleteCommandObj.shortcut}
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              taskDeleteCommandObj.action();
+            }}
+            aria-label={taskDeleteCommandObj.name}
+            icon={taskDeleteCommandObj.icon}
+          />
+          <Button
+            aria-label={taskUnselectCommandObj.name}
+            tooltip={taskUnselectCommandObj.name}
+            shortcut={taskUnselectCommandObj.shortcut}
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              taskUnselectCommandObj.action();
+            }}
+            icon={RiContractRightLine}
+          />
+        </div>
       </div>
       <div className={cn('flex flex-col gap-2 px-3 py-3')}>
         <TaskTitleField

@@ -93,7 +93,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                     key={key}
                     className={cn(
                       'flex items-center justify-center',
-                      'size-4',
+                      'h-4 px-1',
                       'border border-muted-foreground',
                       'rounded',
                       'text-xs',

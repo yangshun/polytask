@@ -1,6 +1,5 @@
 'use client';
 
-import { RiCheckboxBlankCircleLine } from 'react-icons/ri';
 import { cn } from '~/lib/utils';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
@@ -12,6 +11,7 @@ import {
 import {
   selectAllTasks,
   selectSelectedTask,
+  selectSelectedTaskId,
 } from '~/store/features/tasks/tasks-selectors';
 import { TaskItem } from '~/components/tasks/task-item';
 import { TaskToolbar } from '~/components/tasks/task-toolbar';
@@ -26,16 +26,50 @@ import {
 } from './task-commands';
 import { useCommands } from '~/components/commands/commands-context';
 import { TaskStatusSummary } from '~/components/tasks/status/task-status-summary';
+import type { TaskObject } from '~/types/task';
+import { TaskEmptyState } from '~/components/tasks/task-empty-state';
 
 export function TaskList() {
   const { registerCommand } = useCommands();
   const dispatch = useAppDispatch();
-  const tasks = useAppSelector(selectAllTasks);
+  const tasks: TaskObject[] = useAppSelector(selectAllTasks);
 
-  const selectedTask = useAppSelector(selectSelectedTask);
+  const selectedTask: TaskObject | null = useAppSelector(selectSelectedTask);
+  const selectedTaskId = useAppSelector(selectSelectedTaskId);
+  const hasSelection = !!selectedTaskId;
 
   function handleDeleteTask(id: string) {
     dispatch(deleteTask(id));
+  }
+
+  function renderListSection() {
+    return (
+      <div className={cn('flex flex-col size-full', 'divide-y divide-input')}>
+        <ScrollArea className="h-0 grow">
+          <div className="size-full">
+            {tasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                onAssigneeChange={function (assigneeId) {
+                  dispatch(assignTask({ id: task.id, assigneeId }));
+                }}
+                onStatusChange={function (status) {
+                  dispatch(updateTaskStatus({ id: task.id, status }));
+                }}
+                onPriorityChange={function (priority) {
+                  dispatch(updateTaskPriority({ id: task.id, priority }));
+                }}
+                onDelete={handleDeleteTask}
+                isSelected={selectedTaskId === task.id}
+              />
+            ))}
+            {tasks.length === 0 && <TaskEmptyState />}
+          </div>
+        </ScrollArea>
+        <TaskStatusSummary />
+      </div>
+    );
   }
 
   useEffect(() => {
@@ -63,55 +97,30 @@ export function TaskList() {
         <TaskToolbar />
       </div>
       <div className="h-0 grow">
-        <PanelGroup direction="horizontal">
-          <Panel minSize={50} defaultSize={selectedTask ? 70 : 100}>
-            <div
-              className={cn(
-                'flex flex-col size-full',
-                'divide-y divide-input',
-              )}>
-              <ScrollArea className="h-0 grow">
-                <div className="size-full">
-                  {tasks.map((task) => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      onAssigneeChange={(assigneeId) => {
-                        dispatch(assignTask({ id: task.id, assigneeId }));
-                      }}
-                      onStatusChange={(status) => {
-                        dispatch(updateTaskStatus({ id: task.id, status }));
-                      }}
-                      onPriorityChange={(priority) => {
-                        dispatch(updateTaskPriority({ id: task.id, priority }));
-                      }}
-                      onDelete={handleDeleteTask}
-                      isSelected={selectedTask?.id === task.id}
-                    />
-                  ))}
-                  {tasks.length === 0 && (
-                    <div className="text-center py-12 text-muted-foreground">
-                      <RiCheckboxBlankCircleLine className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>No issues yet</p>
-                      <p className="text-sm">
-                        Create your first issue to get started
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-              <TaskStatusSummary />
-            </div>
-          </Panel>
-          {selectedTask && (
-            <>
-              <PanelResizeHandle className="w-px bg-border cursor-col-resize" />
-              <Panel minSize={20}>
-                <TaskDetails key={selectedTask.id} task={selectedTask} />
-              </Panel>
-            </>
+        {/* Desktop and larger: split view */}
+        <div className="hidden md:block h-full">
+          <PanelGroup direction="horizontal">
+            <Panel minSize={50} defaultSize={hasSelection ? 70 : 100}>
+              {renderListSection()}
+            </Panel>
+            {selectedTask && (
+              <>
+                <PanelResizeHandle className="w-px bg-border cursor-col-resize" />
+                <Panel minSize={20}>
+                  <TaskDetails key={selectedTask.id} task={selectedTask} />
+                </Panel>
+              </>
+            )}
+          </PanelGroup>
+        </div>
+        {/* Mobile: show either list or details */}
+        <div className="md:hidden h-full">
+          {selectedTask ? (
+            <TaskDetails key={selectedTask.id} task={selectedTask} />
+          ) : (
+            renderListSection()
           )}
-        </PanelGroup>
+        </div>
       </div>
     </div>
   );
