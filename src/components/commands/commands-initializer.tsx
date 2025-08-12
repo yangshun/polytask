@@ -4,9 +4,9 @@ import { useEffect } from 'react';
 import { useCommands } from '~/components/commands/commands-context';
 import { useKeyboardShortcuts } from '~/components/shortcuts/use-keyboard-shortcuts';
 import {
-  themeToggleCommand,
-  themeSetLightCommand,
-  themeSetDarkCommand,
+  themeToggleCommandCreator,
+  themeSetLightCommandCreator,
+  themeSetDarkCommandCreator,
 } from '~/components/theme/theme-commands';
 
 export function CommandsInitializer() {
@@ -17,9 +17,9 @@ export function CommandsInitializer() {
 
   useEffect(() => {
     // Register theme commands
-    const unregisterToggle = registerCommand(themeToggleCommand());
-    const unregisterLight = registerCommand(themeSetLightCommand());
-    const unregisterDark = registerCommand(themeSetDarkCommand());
+    const unregisterToggle = registerCommand(themeToggleCommandCreator());
+    const unregisterLight = registerCommand(themeSetLightCommandCreator());
+    const unregisterDark = registerCommand(themeSetDarkCommandCreator());
 
     // Cleanup on unmount
     return () => {

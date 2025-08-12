@@ -15,9 +15,13 @@ import { TaskAssigneeSelector } from '~/components/tasks/assignee/task-assignee-
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { addTask, setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { selectAllTasks } from '~/store/features/tasks/tasks-selectors';
-import type { TaskRaw, TaskStatus, TaskPriority } from '~/types/task';
+import type {
+  TaskRaw,
+  TaskStatus,
+  TaskPriority,
+} from '~/components/tasks/types';
 import { TaskPrioritySelector } from '../priority/task-priority-selector';
-import { taskCreateDialogOpenCommand } from '../task-commands';
+import { taskCreateDialogOpenCommandCreator } from '../task-commands';
 import { useCommands } from '~/components/commands/commands-context';
 
 function getTodayDateString() {
@@ -83,7 +87,7 @@ export function TaskCreateDialog() {
 
   const openCommand = useMemo(
     () =>
-      taskCreateDialogOpenCommand(() => {
+      taskCreateDialogOpenCommandCreator(() => {
         setOpen(true);
       }),
     [setOpen],

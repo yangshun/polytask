@@ -9,7 +9,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import { Command } from '~/actions/types';
+import { Command } from '~/components/commands/types';
 import { commandsRegistry } from './commands-registry';
 
 interface CommandsContextValue {

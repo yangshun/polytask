@@ -1,4 +1,4 @@
-import { Command } from '~/actions/types';
+import { Command } from '~/components/commands/types';
 
 type CommandRegistry = {
   commands: Map<string, Command>;

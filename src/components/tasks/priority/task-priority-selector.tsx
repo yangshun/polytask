@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { TaskPriority } from '~/types/task';
+import type { TaskPriority } from '~/components/tasks/types';
 import { Button } from '~/components/ui/button';
 import {
   Popover,
@@ -10,7 +10,7 @@ import { cn } from '~/lib/utils';
 import { TaskPriorityIcon } from './task-priority-icon';
 import { TaskPriorityCombobox } from './task-priority-combobox';
 import { taskPriorityRecord } from './task-priority-list';
-import { taskPriorityOpenCommand } from '../task-commands';
+import { taskPriorityOpenCommandCreator } from '../task-commands';
 import { useCommands } from '~/components/commands/commands-context';
 
 export function TaskPrioritySelector({
@@ -27,7 +27,7 @@ export function TaskPrioritySelector({
 
   const openCommand = useMemo(
     () =>
-      taskPriorityOpenCommand(() => {
+      taskPriorityOpenCommandCreator(() => {
         setOpen(true);
       }),
     [setOpen],

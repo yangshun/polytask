@@ -19,7 +19,7 @@ import {
 } from '~/store/features/display/display-selectors';
 import { cn } from '~/lib/utils';
 import { useCommands } from '~/components/commands/commands-context';
-import { taskDisplayPropertiesCommand } from '../task-commands';
+import { taskDisplayPropertiesCommandCreator } from '../task-commands';
 
 const allFields: TaskDisplayField[] = [
   'priority',
@@ -72,7 +72,7 @@ export function TaskDisplayDropdown() {
 
   const openCommand = useMemo(
     () =>
-      taskDisplayPropertiesCommand(() => {
+      taskDisplayPropertiesCommandCreator(() => {
         setOpen(true);
       }),
     [setOpen],
@@ -90,16 +90,14 @@ export function TaskDisplayDropdown() {
     dispatch(toggleField(field));
   }
 
-  const taskDisplayPropertiesCommandObj = taskDisplayPropertiesCommand();
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
           size="sm"
-          shortcut={taskDisplayPropertiesCommandObj.shortcut}
-          icon={taskDisplayPropertiesCommandObj.icon}
+          shortcut={openCommand.shortcut}
+          icon={openCommand.icon}
           tooltip="Show display options"
           aria-label="Show display options">
           Display

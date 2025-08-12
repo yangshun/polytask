@@ -11,7 +11,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '~/components/ui/context-menu';
-import { TaskObject, TaskStatus, TaskPriority } from '~/types/task';
+import { TaskObject, TaskStatus, TaskPriority } from '~/components/tasks/types';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { selectIsFieldVisible } from '~/store/features/display/display-selectors';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
@@ -19,10 +19,10 @@ import { Badge } from '~/components/ui/badge';
 import { TaskStatusIcon } from './status/task-status-icon';
 import { useEffect, useRef, useState } from 'react';
 import {
-  taskAssigneeOpenCommand,
-  taskDeleteCommand,
-  taskPriorityOpenCommand,
-  taskStatusOpenCommand,
+  taskAssigneeOpenCommandCreator,
+  taskDeleteCommandCreator,
+  taskPriorityOpenCommandCreator,
+  taskStatusOpenCommandCreator,
 } from './task-commands';
 import { TaskStatusCombobox } from './status/task-status-combobox';
 import { TaskAssigneeCombobox } from './assignee/task-assignee-combobox';
@@ -86,10 +86,10 @@ export function TaskItem({
     }
   }, [isSelected]);
 
-  const DeleteIcon = taskDeleteCommand(task.id).icon!;
-  const statusOpenCommandObject = taskStatusOpenCommand(() => {});
-  const assigneeOpenCommandObject = taskAssigneeOpenCommand(() => {});
-  const priorityOpenCommandObject = taskPriorityOpenCommand(() => {});
+  const DeleteIcon = taskDeleteCommandCreator(task.id).icon!;
+  const statusOpenCommandObject = taskStatusOpenCommandCreator(() => {});
+  const assigneeOpenCommandObject = taskAssigneeOpenCommandCreator(() => {});
+  const priorityOpenCommandObject = taskPriorityOpenCommandCreator(() => {});
 
   return (
     <ContextMenu>

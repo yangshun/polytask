@@ -5,7 +5,7 @@ import {
   MdSignalCellular4Bar,
 } from 'react-icons/md';
 import { TbLineDashed } from 'react-icons/tb';
-import type { TaskPriority } from '~/types/task';
+import type { TaskPriority } from '~/components/tasks/types';
 
 export const taskPriorityRecord: Record<
   TaskPriority,

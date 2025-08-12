@@ -10,8 +10,11 @@ import {
   selectTasksCanRedo,
   selectTasksCanUndo,
 } from '~/store/features/tasks/tasks-selectors';
-import { taskRedoCommand, taskUndoCommand } from './task-commands';
-import { useEffect } from 'react';
+import {
+  taskRedoCommandCreator,
+  taskUndoCommandCreator,
+} from './task-commands';
+import { useEffect, useMemo } from 'react';
 
 export function TaskToolbar() {
   const { registerCommand } = useCommands();
@@ -19,18 +22,18 @@ export function TaskToolbar() {
   const tasksCanUndo = useAppSelector(selectTasksCanUndo);
   const tasksCanRedo = useAppSelector(selectTasksCanRedo);
 
-  const taskUndoCommandObj = taskUndoCommand();
-  const taskRedoCommandObj = taskRedoCommand();
+  const taskUndoCommand = useMemo(() => taskUndoCommandCreator(), []);
+  const taskRedoCommand = useMemo(() => taskRedoCommandCreator(), []);
 
   useEffect(() => {
-    const unregisterUndo = registerCommand(taskUndoCommand());
-    const unregisterRedo = registerCommand(taskRedoCommand());
+    const unregisterUndo = registerCommand(taskUndoCommand);
+    const unregisterRedo = registerCommand(taskRedoCommand);
 
     return () => {
       unregisterUndo();
       unregisterRedo();
     };
-  }, [registerCommand]);
+  }, [registerCommand, taskUndoCommand, taskRedoCommand]);
 
   return (
     <div className="flex justify-between items-center gap-2 w-full">
@@ -39,27 +42,27 @@ export function TaskToolbar() {
         <TaskDisplayDropdown />
         <Button
           variant="ghost"
-          aria-label={taskUndoCommandObj.name}
-          tooltip={taskUndoCommandObj.name}
-          shortcut={taskUndoCommandObj.shortcut}
+          aria-label={taskUndoCommand.name}
+          tooltip={taskUndoCommand.name}
+          shortcut={taskUndoCommand.shortcut}
           size="sm"
           disabled={!tasksCanUndo}
           onClick={() => {
-            taskUndoCommandObj.action();
+            taskUndoCommand.action();
           }}
-          icon={taskUndoCommandObj.icon}
+          icon={taskUndoCommand.icon}
         />
         <Button
           variant="ghost"
-          aria-label={taskRedoCommandObj.name}
-          tooltip={taskRedoCommandObj.name}
-          shortcut={taskRedoCommandObj.shortcut}
+          aria-label={taskRedoCommand.name}
+          tooltip={taskRedoCommand.name}
+          shortcut={taskRedoCommand.shortcut}
           size="sm"
           disabled={!tasksCanRedo}
           onClick={() => {
-            taskRedoCommandObj.action();
+            taskRedoCommand.action();
           }}
-          icon={taskRedoCommandObj.icon}
+          icon={taskRedoCommand.icon}
         />
       </div>
     </div>

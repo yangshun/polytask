@@ -1,4 +1,4 @@
-import { TaskStatus } from '~/types/task';
+import { TaskStatus } from '~/components/tasks/types';
 import { Button } from '~/components/ui/button';
 import {
   Popover,
@@ -11,7 +11,7 @@ import { cn } from '~/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { TaskStatusCombobox } from './task-status-combobox';
 import { taskStatusRecord } from './task-status-list';
-import { taskStatusOpenCommand } from '../task-commands';
+import { taskStatusOpenCommandCreator } from '../task-commands';
 import { useCommands } from '~/components/commands/commands-context';
 
 export type TaskStatusSelectorProps = {
@@ -30,7 +30,7 @@ export function TaskStatusSelector({
 
   const openCommand = useMemo(
     () =>
-      taskStatusOpenCommand(() => {
+      taskStatusOpenCommandCreator(() => {
         setOpen(true);
       }),
     [setOpen],

@@ -6,7 +6,7 @@ import {
   CommandEmpty,
   CommandGroup,
 } from '~/components/ui/command';
-import { TaskStatus } from '~/types/task';
+import { TaskStatus } from '~/components/tasks/types';
 import { taskStatusList, taskStatusRecord } from './task-status-list';
 import { TaskStatusIcon } from './task-status-icon';
 import { useRef } from 'react';

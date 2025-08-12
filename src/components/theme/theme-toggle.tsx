@@ -6,9 +6,9 @@ import { Button } from '~/components/ui/button';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { setTheme } from '~/store/features/theme/theme-slice';
 import {
-  themeSetDarkCommand,
-  themeSetLightCommand,
-  themeToggleCommand,
+  themeSetDarkCommandData,
+  themeSetLightCommandData,
+  themeToggleCommandData,
 } from './theme-commands';
 
 export function ThemeToggle() {
@@ -25,18 +25,14 @@ export function ThemeToggle() {
     dispatch(setTheme(newTheme));
   }
 
-  const themeToggleCommandObject = themeToggleCommand();
-  const themeSetDarkCommandObject = themeSetDarkCommand();
-  const themeSetLightCommandObject = themeSetLightCommand();
-
   if (!mounted) {
     return (
       <Button
-        icon={themeSetDarkCommandObject.icon}
+        icon={themeSetDarkCommandData.icon}
         variant="outline"
         size="sm"
         disabled>
-        <span className="sr-only">{themeToggleCommandObject.name}</span>
+        <span className="sr-only">{themeToggleCommandData.name}</span>
       </Button>
     );
   }
@@ -45,15 +41,15 @@ export function ThemeToggle() {
     <Button
       icon={
         theme === 'light'
-          ? themeSetLightCommandObject.icon
-          : themeSetDarkCommandObject.icon
+          ? themeSetLightCommandData.icon
+          : themeSetDarkCommandData.icon
       }
-      shortcut={themeToggleCommandObject.shortcut}
-      tooltip={themeToggleCommandObject.name}
+      shortcut={themeToggleCommandData.shortcut}
+      tooltip={themeToggleCommandData.name}
       variant={theme === 'light' ? 'outline' : 'secondary'}
       size="sm"
       onClick={handleThemeToggle}>
-      <span className="sr-only">{themeToggleCommandObject.name}</span>
+      <span className="sr-only">{themeToggleCommandData.name}</span>
     </Button>
   );
 }

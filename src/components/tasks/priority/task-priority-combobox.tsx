@@ -7,7 +7,7 @@ import {
   CommandItem,
   CommandList,
 } from '~/components/ui/command';
-import type { TaskPriority } from '~/types/task';
+import type { TaskPriority } from '~/components/tasks/types';
 import { taskPriorityList, taskPriorityRecord } from './task-priority-list';
 import { TaskPriorityIcon } from './task-priority-icon';
 

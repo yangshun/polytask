@@ -19,13 +19,13 @@ import { ScrollArea } from '~/components/ui/scroll-area';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { useEffect } from 'react';
 import {
-  taskSelectNextCommand,
-  taskSelectPreviousCommand,
-  taskUnselectCommand,
+  taskSelectNextCommandCreator,
+  taskSelectPreviousCommandCreator,
+  taskUnselectCommandCreator,
 } from './task-commands';
 import { useCommands } from '~/components/commands/commands-context';
 import { TaskStatusSummary } from '~/components/tasks/status/task-status-summary';
-import type { TaskObject } from '~/types/task';
+import type { TaskObject } from '~/components/tasks/types';
 import { TaskEmptyState } from '~/components/tasks/task-empty-state';
 
 export function TaskList() {
@@ -72,9 +72,13 @@ export function TaskList() {
   }
 
   useEffect(() => {
-    const unregisterNext = registerCommand(taskSelectNextCommand());
-    const unregisterPrevious = registerCommand(taskSelectPreviousCommand());
-    const unregisterTaskUnselect = registerCommand(taskUnselectCommand());
+    const unregisterNext = registerCommand(taskSelectNextCommandCreator());
+    const unregisterPrevious = registerCommand(
+      taskSelectPreviousCommandCreator(),
+    );
+    const unregisterTaskUnselect = registerCommand(
+      taskUnselectCommandCreator(),
+    );
 
     return () => {
       unregisterNext();

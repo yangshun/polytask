@@ -7,7 +7,7 @@ import {
 
 import { Button } from '~/components/ui/button';
 import { useCommands } from '~/components/commands/commands-context';
-import { taskAssigneeOpenCommand } from '../task-commands';
+import { taskAssigneeOpenCommandCreator } from '../task-commands';
 import { TaskAssigneeCombobox } from './task-assignee-combobox';
 import { assignees } from '~/data/mock-assignees';
 
@@ -23,11 +23,11 @@ export function TaskAssigneeSelector({
   const [open, setOpen] = useState(false);
   const { registerCommand } = useCommands();
 
-  const taskAssigneeOpenCommandObj = taskAssigneeOpenCommand(() => {});
+  const taskAssigneeOpenCommandObj = taskAssigneeOpenCommandCreator(() => {});
 
   const openCommand = useMemo(
     () =>
-      taskAssigneeOpenCommand(() => {
+      taskAssigneeOpenCommandCreator(() => {
         setOpen(true);
       }),
     [setOpen],
