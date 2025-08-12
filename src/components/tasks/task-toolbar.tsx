@@ -4,6 +4,7 @@ import { Button } from '~/components/ui/button';
 import { useAppSelector } from '~/store/hooks';
 import { TaskCreateDialog } from '~/components/tasks/create/task-create-dialog';
 import { useCommands } from '~/components/commands/commands-context';
+import { TaskDisplayDropdown } from '~/components/tasks/display/task-display-dropdown';
 
 import {
   selectTasksCanRedo,
@@ -34,7 +35,8 @@ export function TaskToolbar() {
   return (
     <div className="flex justify-between items-center gap-2 w-full">
       <TaskCreateDialog />
-      <div className="flex">
+      <div className="flex items-center gap-1">
+        <TaskDisplayDropdown />
         <Button
           variant="ghost"
           aria-label={taskUndoCommandObj.name}

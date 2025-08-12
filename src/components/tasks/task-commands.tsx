@@ -9,6 +9,7 @@ import {
   RiProgress4Line,
   RiArrowGoBackLine,
   RiArrowGoForwardLine,
+  RiEqualizerFill,
 } from 'react-icons/ri';
 
 import { CommandCreator } from '~/actions/types';
@@ -51,6 +52,19 @@ export const taskCreateDialogOpenCommand: CommandCreator = (
   shortcut: 'C',
   group: 'tasks',
   description: 'Create a new task',
+  action: () => func(),
+  commandPalette: true,
+});
+
+export const taskDisplayPropertiesCommand: CommandCreator = (
+  func: () => void,
+) => ({
+  id: 'task.display_properties',
+  name: 'Show display options',
+  icon: RiEqualizerFill,
+  shortcut: 'Shift+V',
+  group: 'tasks',
+  description: 'Show display options',
   action: () => func(),
   commandPalette: true,
 });
