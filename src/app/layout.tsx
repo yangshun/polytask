@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Poppins } from 'next/font/google';
 
 import { ThemeProvider } from '~/components/theme/theme-provider';
 import { ReduxProvider } from '~/components/providers/redux-provider';
@@ -19,6 +19,12 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+const poppins = Poppins({
+  weight: '600',
+  variable: '--font-poppins',
+  subsets: ['latin'],
+});
+
 export const metadata: Metadata = {
   title: 'Polytask',
   description: 'AI-powered task management system',
@@ -32,7 +38,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={cn(geistSans.variable, geistMono.variable, 'antialiased')}>
+        className={cn(
+          geistSans.variable,
+          geistMono.variable,
+          poppins.variable,
+          'antialiased',
+        )}>
         <ReduxProvider>
           <CommandsProvider>
             <ThemeProvider
