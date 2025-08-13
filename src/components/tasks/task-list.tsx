@@ -46,29 +46,38 @@ export function TaskList() {
   function renderListSection() {
     return (
       <div className={cn('flex flex-col size-full', 'divide-y divide-input')}>
-        <ScrollArea className="h-0 grow">
-          <div className="size-full">
-            {tasks.map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                onAssigneeChange={function (assigneeId) {
-                  dispatch(assignTask({ id: task.id, assigneeId }));
-                }}
-                onStatusChange={function (status) {
-                  dispatch(updateTask({ id: task.id, updates: { status } }));
-                }}
-                onPriorityChange={function (priority) {
-                  dispatch(updateTask({ id: task.id, updates: { priority } }));
-                }}
-                onDelete={handleDeleteTask}
-                isSelected={selectedTaskId === task.id}
-              />
-            ))}
-            {tasks.length === 0 && <TaskEmptyState />}
-          </div>
-        </ScrollArea>
-        <TaskStatusSummary />
+        {tasks.length === 0 ? (
+          <TaskEmptyState />
+        ) : (
+          <>
+            <ScrollArea className="h-0 grow">
+              <div className="size-full">
+                {tasks.map((task) => (
+                  <TaskItem
+                    key={task.id}
+                    task={task}
+                    onAssigneeChange={function (assigneeId) {
+                      dispatch(assignTask({ id: task.id, assigneeId }));
+                    }}
+                    onStatusChange={function (status) {
+                      dispatch(
+                        updateTask({ id: task.id, updates: { status } }),
+                      );
+                    }}
+                    onPriorityChange={function (priority) {
+                      dispatch(
+                        updateTask({ id: task.id, updates: { priority } }),
+                      );
+                    }}
+                    onDelete={handleDeleteTask}
+                    isSelected={selectedTaskId === task.id}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+            <TaskStatusSummary />
+          </>
+        )}
       </div>
     );
   }

@@ -71,7 +71,7 @@ export function TaskTitleField({
       />
       {buffer.length === 0 && (
         <div
-          className="absolute top-0 text-neutral-700 pointer-events-none py-1"
+          className="absolute top-0 text-muted-foreground pointer-events-none py-1"
           aria-hidden={true}>
           Enter task title...
         </div>
