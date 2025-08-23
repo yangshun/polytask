@@ -1,30 +1,40 @@
 import { useEffect } from 'react';
 import { commandsRegistry } from '../commands/commands-registry';
 
-export function useKeyboardShortcuts() {
-  useEffect(() => {
-    function isWithinInteractiveOverlay(el: HTMLElement | null): boolean {
-      const roles = new Set([
-        'menu',
-        'listbox',
-        'combobox',
-        'dialog',
-        'tree',
-        'grid',
-        'menuitem',
-        'option',
-      ]);
-      let node: HTMLElement | null = el;
-      while (node) {
-        const role = node.getAttribute('role');
-        if (role && roles.has(role)) return true;
-        // cmdk / command palette markers
-        if (node.dataset?.slot === 'command') return true;
-        node = node.parentElement;
-      }
-      return false;
+const interactiveRoles = new Set([
+  'menu',
+  'listbox',
+  'combobox',
+  'dialog',
+  'tree',
+  'grid',
+  'menuitem',
+  'option',
+]);
+
+function isWithinInteractiveOverlay(el: HTMLElement | null): boolean {
+  let node: HTMLElement | null = el;
+
+  while (node) {
+    const role = node.getAttribute('role');
+
+    if (role && interactiveRoles.has(role)) {
+      return true;
     }
 
+    // cmdk / command palette markers
+    if (node.dataset?.slot === 'command') {
+      return true;
+    }
+
+    node = node.parentElement;
+  }
+
+  return false;
+}
+
+export function useKeyboardShortcuts() {
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // If another handler has already claimed this key, do nothing
       if (event.defaultPrevented) return;

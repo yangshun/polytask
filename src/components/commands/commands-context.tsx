@@ -11,10 +11,10 @@ import React, {
 } from 'react';
 import { Command } from '~/components/commands/types';
 import { commandsRegistry } from './commands-registry';
+import { useKeyboardShortcuts } from '~/components/shortcuts/use-keyboard-shortcuts';
 
 interface CommandsContextValue {
   commands: Command[];
-  getCommandsByGroup: (group: string) => Command[];
   registerCommand: (command: Command) => () => void;
   unregisterCommand: (commandId: string) => void;
 }
@@ -30,24 +30,19 @@ interface CommandsProviderProps {
 export function CommandsProvider({ children }: CommandsProviderProps) {
   const [commands, setCommands] = useState<Command[]>([]);
 
+  useKeyboardShortcuts();
+
   useEffect(() => {
-    const updateCommands = () => {
+    function updateCommands() {
       setCommands(commandsRegistry.getAllCommands());
-    };
+    }
 
     // Initial load
     updateCommands();
 
     // Subscribe to changes
-    const unsubscribe = commandsRegistry.subscribe(updateCommands);
-
-    return unsubscribe;
+    return commandsRegistry.subscribe(updateCommands);
   }, []);
-
-  const getCommandsByGroup = useCallback(
-    (group: string) => commands.filter((command) => command.group === group),
-    [commands],
-  );
 
   const registerCommand = useCallback((command: Command) => {
     commandsRegistry.register(command);
@@ -64,11 +59,10 @@ export function CommandsProvider({ children }: CommandsProviderProps) {
   const contextValue = useMemo(
     () => ({
       commands,
-      getCommandsByGroup,
       registerCommand,
       unregisterCommand,
     }),
-    [commands, getCommandsByGroup, registerCommand, unregisterCommand],
+    [commands, registerCommand, unregisterCommand],
   );
 
   return (
@@ -80,10 +74,12 @@ export function CommandsProvider({ children }: CommandsProviderProps) {
 
 export function useCommands(): CommandsContextValue {
   const context = useContext(CommandsContext);
+
   if (context === undefined) {
     throw new Error(
       'useCommandsRegistry must be used within a CommandsProvider',
     );
   }
+
   return context;
 }

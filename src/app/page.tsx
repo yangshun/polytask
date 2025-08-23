@@ -1,7 +1,7 @@
 import { TaskList } from '~/components/tasks/task-list';
 import { ThemeToggle } from '~/components/theme/theme-toggle';
 import { CommandPalette } from '~/components/commands/command-palette';
-import { CommandsInitializer } from '~/components/commands/commands-initializer';
+import { GlobalCommands } from '~/components/global/global-commands';
 import { cn } from '~/lib/utils';
 import { RiGithubFill } from 'react-icons/ri';
 
@@ -27,7 +27,7 @@ export default function Home() {
           <span className="inline-block mx-2 h-5 w-px bg-input" />
           <ThemeToggle />
         </div>
-        <CommandsInitializer />
+        <GlobalCommands />
       </div>
       <div className={cn('px-2 pb-2 grow h-0')}>
         <TaskList />

@@ -28,9 +28,11 @@ class CommandsRegistry {
 
   unregister(commandId: string) {
     const command = this.registry.commands.get(commandId);
+
     if (command?.shortcut) {
       this.registry.keyboardShortcuts.delete(command.shortcut.toLowerCase());
     }
+
     this.registry.commands.delete(commandId);
     this.notifyListeners();
   }
@@ -47,11 +49,8 @@ class CommandsRegistry {
     const commandId = this.registry.keyboardShortcuts.get(
       shortcut.toLowerCase(),
     );
-    return commandId ? this.registry.commands.get(commandId) : undefined;
-  }
 
-  getCommandsByGroup(group: string): Command[] {
-    return this.getAllCommands().filter((command) => command.group === group);
+    return commandId ? this.registry.commands.get(commandId) : undefined;
   }
 
   clear() {

@@ -2,18 +2,15 @@
 
 import { useEffect } from 'react';
 import { useCommands } from '~/components/commands/commands-context';
-import { useKeyboardShortcuts } from '~/components/shortcuts/use-keyboard-shortcuts';
 import {
   themeToggleCommandCreator,
   themeSetLightCommandCreator,
   themeSetDarkCommandCreator,
 } from '~/components/theme/theme-commands';
 
-export function CommandsInitializer() {
+// Technically it can just be a hook
+export function GlobalCommands() {
   const { registerCommand } = useCommands();
-
-  // Set up keyboard shortcuts
-  useKeyboardShortcuts();
 
   useEffect(() => {
     // Register theme commands
