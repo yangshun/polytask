@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '~/lib/utils';
 import { Tooltip, TooltipTrigger, TooltipContent } from './tooltip';
-import { formatShortcut } from '../shortcuts/format-shortcut';
+import { ShortcutKeys } from '../shortcuts/shortcut-keys';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm text-sm font-medium ring-offset-background transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
@@ -85,24 +85,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <Tooltip>
           <TooltipTrigger asChild>{button}</TooltipTrigger>
           <TooltipContent>
-            {tooltip}{' '}
-            {shortcut && (
-              <span className="inline-flex items-center gap-0.5 ml-1">
-                {shortcut.split('+').map((key) => (
-                  <kbd
-                    key={key}
-                    className={cn(
-                      'flex items-center justify-center',
-                      'h-4 px-1',
-                      'border border-muted-foreground',
-                      'rounded',
-                      'text-xs',
-                    )}>
-                    {formatShortcut(key).toLocaleUpperCase()}
-                  </kbd>
-                ))}
-              </span>
-            )}
+            {tooltip} {shortcut && <ShortcutKeys shortcut={shortcut} />}
           </TooltipContent>
         </Tooltip>
       );

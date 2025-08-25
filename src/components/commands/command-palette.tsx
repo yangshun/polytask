@@ -15,6 +15,7 @@ import { useCommands } from '~/components/commands/commands-context';
 import { formatShortcut } from '../shortcuts/format-shortcut';
 import { cn } from '~/lib/utils';
 import { RiTerminalBoxLine } from 'react-icons/ri';
+import { ShortcutKeys } from '../shortcuts/shortcut-keys';
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -93,7 +94,7 @@ export function CommandPalette() {
                   <span className="font-medium">{command.name}</span>
                   {command.shortcut && (
                     <CommandShortcut>
-                      {formatShortcut(command.shortcut)}
+                      <ShortcutKeys shortcut={command.shortcut} />
                     </CommandShortcut>
                   )}
                 </CommandItem>
