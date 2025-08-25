@@ -15,12 +15,14 @@ import { taskStatusOpenCommandCreator } from '../task-commands';
 import { useCommands } from '~/components/commands/commands-context';
 
 export type TaskStatusSelectorProps = {
+  commandScope?: string;
   value: TaskStatus;
   onChange: (status: TaskStatus) => void;
   className?: string;
 };
 
 export function TaskStatusSelector({
+  commandScope,
   value,
   onChange,
   className,
@@ -37,12 +39,12 @@ export function TaskStatusSelector({
   );
 
   useEffect(() => {
-    const unregisterStatus = registerCommand(openCommand);
+    const unregisterStatus = registerCommand(openCommand, commandScope);
 
     return () => {
       unregisterStatus();
     };
-  }, [registerCommand, openCommand]);
+  }, [registerCommand, openCommand, commandScope]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

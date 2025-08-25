@@ -44,8 +44,10 @@ function getNextTaskId(existingIds: string[]) {
   return `MUL-${maxNum + 1}`;
 }
 
+const commandScope = 'create-dialog';
+
 export function TaskCreateDialog() {
-  const { registerCommand } = useCommands();
+  const { registerCommand, setScope, clearScope } = useCommands();
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectAllTasks);
   const [open, setOpen] = useState(false);
@@ -94,6 +96,16 @@ export function TaskCreateDialog() {
   );
 
   useEffect(() => {
+    if (open) {
+      setScope({ name: commandScope, allowGlobalKeybindings: false });
+
+      return () => {
+        clearScope();
+      };
+    }
+  }, [open, setScope, clearScope]);
+
+  useEffect(() => {
     const unregisterDialogOpen = registerCommand(openCommand);
 
     return () => {
@@ -126,12 +138,18 @@ export function TaskCreateDialog() {
             placeholder="Add a description..."
           />
           <div className="flex items-center gap-2 text-sm text-muted-foreground -ml-2">
-            <TaskStatusSelector value={status} onChange={(s) => setStatus(s)} />
+            <TaskStatusSelector
+              commandScope={commandScope}
+              value={status}
+              onChange={(s) => setStatus(s)}
+            />
             <TaskPrioritySelector
+              commandScope={commandScope}
               value={priority}
               onChange={(p) => setPriority(p)}
             />
             <TaskAssigneeSelector
+              commandScope={commandScope}
               value={assigneeId ?? undefined}
               onChange={(a) => setAssigneeId(a)}
             />

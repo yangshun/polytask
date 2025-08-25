@@ -1,23 +1,57 @@
 import { Command } from '~/components/commands/types';
 
-type CommandRegistry = {
-  commands: Map<string, Command>;
-  keyboardShortcuts: Map<string, string>;
+type CommandId = string;
+type ScopeName = string;
+export type ScopeConfig = Readonly<{
+  name: ScopeName;
+  allowGlobalKeybindings: boolean;
+}>;
+export type ScopeParam = ScopeName | ScopeConfig;
+type Registry = {
+  commands: Map<CommandId, Command>;
+  keyboardShortcuts: Map<string, CommandId>;
 };
 
+const GLOBAL_SCOPE: ScopeName = 'global';
 class CommandsRegistry {
-  private registry: CommandRegistry = {
-    commands: new Map(),
-    keyboardShortcuts: new Map(),
-  };
+  scope: ScopeConfig | null = null;
+  private scopedRegistry: Map<ScopeName, Registry> = new Map();
 
   private listeners: Set<() => void> = new Set();
 
-  register(command: Command) {
-    this.registry.commands.set(command.id, command);
+  setScope(scope: ScopeName | ScopeConfig) {
+    this.scope =
+      typeof scope === 'string'
+        ? { name: scope, allowGlobalKeybindings: true }
+        : scope;
+  }
+
+  clearScope() {
+    this.scope = null;
+  }
+
+  private getCurrentScopeRegistry(scopeParam?: ScopeName): Registry {
+    const scope = scopeParam || this.scope?.name || GLOBAL_SCOPE;
+
+    const registry = this.scopedRegistry.get(scope) ?? {
+      commands: new Map(),
+      keyboardShortcuts: new Map(),
+    };
+    this.scopedRegistry.set(scope, registry);
+
+    return registry;
+  }
+
+  register(command: Command, scope?: ScopeName) {
+    const registry = this.getCurrentScopeRegistry(scope);
+    if (registry.commands.has(command.id)) {
+      throw new Error(`Command "${command.id}" already exists in "${scope}"`);
+    }
+
+    registry.commands.set(command.id, command);
 
     if (command.shortcut) {
-      this.registry.keyboardShortcuts.set(
+      registry.keyboardShortcuts.set(
         command.shortcut.toLowerCase(),
         command.id,
       );
@@ -26,36 +60,56 @@ class CommandsRegistry {
     this.notifyListeners();
   }
 
-  unregister(commandId: string) {
-    const command = this.registry.commands.get(commandId);
+  unregister(commandId: string, scope?: ScopeName) {
+    const registry = this.getCurrentScopeRegistry(scope);
+    const command = registry.commands.get(commandId);
 
     if (command?.shortcut) {
-      this.registry.keyboardShortcuts.delete(command.shortcut.toLowerCase());
+      registry.keyboardShortcuts.delete(command.shortcut.toLowerCase());
     }
 
-    this.registry.commands.delete(commandId);
+    registry.commands.delete(commandId);
     this.notifyListeners();
   }
 
-  getCommand(commandId: string): Command | undefined {
-    return this.registry.commands.get(commandId);
+  getCommand(commandId: string, scope?: ScopeName): Command | undefined {
+    const registry = this.getCurrentScopeRegistry(scope);
+
+    return registry.commands.get(commandId);
   }
 
-  getAllCommands(): Command[] {
-    return Array.from(this.registry.commands.values());
+  getAllCommands(scope?: ScopeName): Command[] {
+    // TODO: Merge current + global commands.
+    const registry = this.getCurrentScopeRegistry(scope);
+
+    return Array.from(registry.commands.values());
   }
 
+  /**
+   * Get command corresponding to the current scope or global scope it does not exist in the current scope
+   */
   getCommandByShortcut(shortcut: string): Command | undefined {
-    const commandId = this.registry.keyboardShortcuts.get(
-      shortcut.toLowerCase(),
-    );
+    // Try current scope first
+    if (this.scope != null) {
+      const registry = this.getCurrentScopeRegistry(this.scope.name);
+      const commandId = registry.keyboardShortcuts.get(shortcut.toLowerCase());
+      if (commandId) {
+        return registry.commands.get(commandId);
+      }
 
-    return commandId ? this.registry.commands.get(commandId) : undefined;
+      if (!this.scope.allowGlobalKeybindings) {
+        return;
+      }
+    }
+
+    // Try global scope
+    const registry = this.getCurrentScopeRegistry(GLOBAL_SCOPE);
+    const commandId = registry.keyboardShortcuts.get(shortcut.toLowerCase());
+    return commandId ? registry.commands.get(commandId) : undefined;
   }
 
   clear() {
-    this.registry.commands.clear();
-    this.registry.keyboardShortcuts.clear();
+    this.scopedRegistry.clear();
     this.notifyListeners();
   }
 

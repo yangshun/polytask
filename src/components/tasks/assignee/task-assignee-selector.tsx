@@ -12,11 +12,13 @@ import { TaskAssigneeCombobox } from './task-assignee-combobox';
 import { assignees } from '~/data/mock-assignees';
 
 export type TaskAssigneeSelectorProps = {
+  commandScope?: string;
   value?: string | null;
   onChange: (assigneeId: string) => void;
 };
 
 export function TaskAssigneeSelector({
+  commandScope,
   value,
   onChange,
 }: TaskAssigneeSelectorProps) {
@@ -34,12 +36,12 @@ export function TaskAssigneeSelector({
   );
 
   useEffect(() => {
-    const unregisterAssignee = registerCommand(openCommand);
+    const unregisterAssignee = registerCommand(openCommand, commandScope);
 
     return () => {
       unregisterAssignee();
     };
-  }, [registerCommand, openCommand]);
+  }, [registerCommand, openCommand, commandScope]);
 
   const assignee = assignees.find((a) => a.id === value) || null;
 

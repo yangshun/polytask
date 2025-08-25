@@ -44,13 +44,11 @@ export function TaskDetails({ task }: TaskDetailsProps) {
 
   useEffect(() => {
     const unregisterTaskDelete = registerCommand(taskDeleteCommand);
-    const unregisterTaskUnselect = registerCommand(taskUnselectCommand);
 
     return () => {
       unregisterTaskDelete();
-      unregisterTaskUnselect();
     };
-  }, [registerCommand, taskDeleteCommand, taskUnselectCommand]);
+  }, [registerCommand, taskDeleteCommand]);
 
   return (
     <div className={cn('divide-y divide-input')}>

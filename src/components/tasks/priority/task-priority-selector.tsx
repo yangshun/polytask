@@ -13,15 +13,19 @@ import { taskPriorityRecord } from './task-priority-list';
 import { taskPriorityOpenCommandCreator } from '../task-commands';
 import { useCommands } from '~/components/commands/commands-context';
 
-export function TaskPrioritySelector({
-  value,
-  onChange,
-  className,
-}: {
+type Props = Readonly<{
+  commandScope?: string;
   value: TaskPriority;
   onChange: (p: TaskPriority) => void;
   className?: string;
-}) {
+}>;
+
+export function TaskPrioritySelector({
+  commandScope,
+  value,
+  onChange,
+  className,
+}: Props) {
   const [open, setOpen] = useState(false);
   const { registerCommand } = useCommands();
 
@@ -34,12 +38,12 @@ export function TaskPrioritySelector({
   );
 
   useEffect(() => {
-    const unregisterPriority = registerCommand(openCommand);
+    const unregisterPriority = registerCommand(openCommand, commandScope);
 
     return () => {
       unregisterPriority();
     };
-  }, [registerCommand, openCommand]);
+  }, [registerCommand, openCommand, commandScope]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
