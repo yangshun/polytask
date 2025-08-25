@@ -14,22 +14,37 @@ import {
 import { useCommands } from '~/components/commands/commands-context';
 import { formatShortcut } from '../shortcuts/format-shortcut';
 import { cn } from '~/lib/utils';
+import { RiTerminalBoxLine } from 'react-icons/ri';
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const { commands } = useCommands();
+  const { registerCommand, setScope, clearScope } = useCommands();
 
   useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpen((open) => !open);
-      }
-    };
+    const unregisterCommandPalette = registerCommand({
+      id: 'command-palette',
+      name: 'Command palette',
+      shortcut: 'Cmd+K',
+      icon: RiTerminalBoxLine,
+      action: () => setOpen(true),
+      commandPalette: false,
+    });
 
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
-  }, []);
+    return () => {
+      unregisterCommandPalette();
+    };
+  }, [registerCommand]);
+
+  useEffect(() => {
+    if (open) {
+      setScope({ name: 'command-palette', allowGlobalKeybindings: false });
+
+      return () => {
+        clearScope();
+      };
+    }
+  }, [open, setScope, clearScope]);
 
   // Group commands by their group property
   const groupedCommands = commands

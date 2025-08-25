@@ -19,20 +19,16 @@ export function handleKeyboardEvent(event: KeyboardEvent) {
     return;
   }
 
-  // Check for command palette shortcut (Cmd/Ctrl + K)
-  if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
-    // Let the command palette component handle this
-    return;
-  }
-
   // Check for registered command shortcuts
   const modifiers: string[] = [];
   if (event.metaKey || event.ctrlKey) {
     modifiers.push('cmd');
   }
+
   if (event.shiftKey) {
     modifiers.push('shift');
   }
+
   if (event.altKey) {
     modifiers.push('alt');
   }
