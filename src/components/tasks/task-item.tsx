@@ -115,7 +115,7 @@ export function TaskItem({
                     <TaskPriorityIcon priority={task.priority} />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent side="right" className="w-[220px] p-0">
+                <PopoverContent side="right" className="w-32 p-0">
                   <TaskPriorityCombobox
                     onSelect={(priority) => {
                       onPriorityChange(priority);
@@ -137,7 +137,7 @@ export function TaskItem({
                     <TaskStatusIcon status={task.status} size="lg" />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent side="right" className="w-[200px] p-0">
+                <PopoverContent side="right" className="w-36 p-0">
                   <TaskStatusCombobox
                     onSelect={(status) => {
                       onStatusChange(status);
@@ -190,7 +190,7 @@ export function TaskItem({
                     />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent side="right" className="w-[200px] p-0">
+                <PopoverContent side="right" className="w-48 p-0">
                   <TaskAssigneeCombobox
                     onSelect={(assigneeId) => {
                       onAssigneeChange(assigneeId);
@@ -223,7 +223,7 @@ export function TaskItem({
             <statusOpenCommandObject.icon className="size-4 text-muted-foreground" />
             <span className="ml-2">Status</span>
           </ContextMenuSubTrigger>
-          <ContextMenuSubContent className="p-0 w-48">
+          <ContextMenuSubContent className="p-0 w-36">
             <TaskStatusCombobox
               onSelect={(status) => {
                 onStatusChange(status);
@@ -255,7 +255,7 @@ export function TaskItem({
             <priorityOpenCommandObject.icon className="size-4 text-muted-foreground" />
             <span className="ml-2">Priority</span>
           </ContextMenuSubTrigger>
-          <ContextMenuSubContent className="p-0 w-56">
+          <ContextMenuSubContent className="p-0 w-32">
             <TaskPriorityCombobox
               onSelect={(priority) => {
                 onPriorityChange(priority);

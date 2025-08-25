@@ -62,7 +62,7 @@ export function TaskStatusSelector({
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="p-0 w-48">
+      <PopoverContent align="start" className="p-0 w-36">
         <TaskStatusCombobox
           onSelect={(status) => {
             onChange(status);

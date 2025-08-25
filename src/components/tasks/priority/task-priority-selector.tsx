@@ -61,7 +61,7 @@ export function TaskPrioritySelector({
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="p-0 w-48">
+      <PopoverContent align="start" className="p-0 w-32">
         <TaskPriorityCombobox
           onSelect={(priority) => {
             onChange(priority);

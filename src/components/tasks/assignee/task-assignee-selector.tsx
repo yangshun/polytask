@@ -69,7 +69,7 @@ export function TaskAssigneeSelector({
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="p-0 w-56">
+      <PopoverContent align="start" className="p-0 w-48">
         <TaskAssigneeCombobox
           onSelect={(assignee) => {
             onChange(assignee);
