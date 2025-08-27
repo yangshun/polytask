@@ -134,7 +134,6 @@ export function TaskCreateDialog() {
           <TaskDescriptionField
             value={description}
             onChange={setDescription}
-            id="new-task-description"
             placeholder="Add a description..."
           />
           <div className="flex items-center gap-2 text-sm text-muted-foreground -ml-2">

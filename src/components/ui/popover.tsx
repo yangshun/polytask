@@ -23,7 +23,6 @@ function PopoverContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
-  console.log('align', align);
   return (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Content

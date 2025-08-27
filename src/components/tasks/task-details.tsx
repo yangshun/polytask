@@ -21,7 +21,7 @@ import {
   selectHasNextTask,
   selectHasPreviousTask,
 } from '~/store/features/tasks/tasks-selectors';
-import { RiContractRightLine } from 'react-icons/ri';
+import { RiCloseLine } from 'react-icons/ri';
 
 export type TaskDetailsProps = {
   task: TaskObject;
@@ -54,7 +54,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
     <div className={cn('divide-y divide-input')}>
       <div
         className={cn('flex items-center gap-2 justify-between', 'py-2 px-3')}>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-x-1.5">
           <Button
             variant="outline"
             tooltip={taskSelectNextCommand.name}
@@ -101,7 +101,7 @@ export function TaskDetails({ task }: TaskDetailsProps) {
             onClick={() => {
               taskUnselectCommand.action();
             }}
-            icon={RiContractRightLine}
+            icon={RiCloseLine}
           />
         </div>
       </div>
