@@ -10,26 +10,30 @@ export type TaskDisplayField =
   | 'updatedAt'
   | 'labels';
 
+export type SortDirection = 'asc' | 'desc';
+
 export interface DisplayState {
   visibleFields: TaskDisplayField[];
   sortBy: TaskDisplayField;
-  sortDirection: 'asc' | 'desc';
+  sortDirection: SortDirection;
 }
 
-const defaultVisibleFields: TaskDisplayField[] = [
-  'priority',
-  'id',
-  'status',
-  'title',
-  'assignee',
-  'createdAt',
-  'updatedAt',
-];
+const defaultDisplayConfig: DisplayState = {
+  visibleFields: [
+    'priority',
+    'id',
+    'status',
+    'title',
+    'assignee',
+    'createdAt',
+    'updatedAt',
+  ],
+  sortBy: 'createdAt',
+  sortDirection: 'desc',
+};
 
 const initialState: DisplayState = {
-  visibleFields: defaultVisibleFields,
-  sortBy: 'title',
-  sortDirection: 'asc',
+  ...defaultDisplayConfig,
 };
 
 export const displaySlice = createSlice({
@@ -61,16 +65,16 @@ export const displaySlice = createSlice({
     setSortBy: (state, action: PayloadAction<TaskDisplayField>) => {
       state.sortBy = action.payload;
     },
-    setSortDirection: (state, action: PayloadAction<'asc' | 'desc'>) => {
+    setSortDirection: (state, action: PayloadAction<SortDirection>) => {
       state.sortDirection = action.payload;
     },
     toggleSortDirection: (state) => {
       state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
     },
     resetToDefault: (state) => {
-      state.visibleFields = [...defaultVisibleFields];
-      state.sortBy = 'title';
-      state.sortDirection = 'asc';
+      state.visibleFields = [...defaultDisplayConfig.visibleFields];
+      state.sortBy = defaultDisplayConfig.sortBy;
+      state.sortDirection = defaultDisplayConfig.sortDirection;
     },
   },
 });
