@@ -1,5 +1,5 @@
 import { RootState } from '~/store/store';
-import { TaskDisplayField } from './display-slice';
+import { TaskDisplayField, SortDirection } from './display-slice';
 import { createSelector } from '@reduxjs/toolkit';
 import { selectAllTasks } from '../tasks/tasks-selectors';
 import { TaskObject } from '~/components/tasks/types';
@@ -15,7 +15,7 @@ export const selectIsFieldVisible =
 export const selectSortBy = (state: RootState): TaskDisplayField =>
   state.display.sortBy;
 
-export const selectSortDirection = (state: RootState): 'asc' | 'desc' =>
+export const selectSortDirection = (state: RootState): SortDirection =>
   state.display.sortDirection;
 
 export const selectFieldLabels = (): Record<TaskDisplayField, string> => ({

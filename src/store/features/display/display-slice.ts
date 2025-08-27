@@ -10,10 +10,12 @@ export type TaskDisplayField =
   | 'updatedAt'
   | 'labels';
 
+export type SortDirection = 'asc' | 'desc';
+
 export interface DisplayState {
   visibleFields: TaskDisplayField[];
   sortBy: TaskDisplayField;
-  sortDirection: 'asc' | 'desc';
+  sortDirection: SortDirection;
 }
 
 const defaultVisibleFields: TaskDisplayField[] = [
@@ -61,7 +63,7 @@ export const displaySlice = createSlice({
     setSortBy: (state, action: PayloadAction<TaskDisplayField>) => {
       state.sortBy = action.payload;
     },
-    setSortDirection: (state, action: PayloadAction<'asc' | 'desc'>) => {
+    setSortDirection: (state, action: PayloadAction<SortDirection>) => {
       state.sortDirection = action.payload;
     },
     toggleSortDirection: (state) => {
