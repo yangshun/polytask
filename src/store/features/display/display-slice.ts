@@ -18,20 +18,22 @@ export interface DisplayState {
   sortDirection: SortDirection;
 }
 
-const defaultVisibleFields: TaskDisplayField[] = [
-  'priority',
-  'id',
-  'status',
-  'title',
-  'assignee',
-  'createdAt',
-  'updatedAt',
-];
-
-const initialState: DisplayState = {
-  visibleFields: defaultVisibleFields,
+const defaultDisplayConfig: DisplayState = {
+  visibleFields: [
+    'priority',
+    'id',
+    'status',
+    'title',
+    'assignee',
+    'createdAt',
+    'updatedAt',
+  ],
   sortBy: 'createdAt',
   sortDirection: 'desc',
+};
+
+const initialState: DisplayState = {
+  ...defaultDisplayConfig,
 };
 
 export const displaySlice = createSlice({
@@ -70,9 +72,9 @@ export const displaySlice = createSlice({
       state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
     },
     resetToDefault: (state) => {
-      state.visibleFields = [...defaultVisibleFields];
-      state.sortBy = 'title';
-      state.sortDirection = 'asc';
+      state.visibleFields = [...defaultDisplayConfig.visibleFields];
+      state.sortBy = defaultDisplayConfig.sortBy;
+      state.sortDirection = defaultDisplayConfig.sortDirection;
     },
   },
 });
