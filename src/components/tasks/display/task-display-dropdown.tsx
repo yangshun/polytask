@@ -14,17 +14,17 @@ import {
   setSortBy,
   toggleSortDirection,
   TaskDisplayField,
+  TaskSortField,
+  taskSortFields,
 } from '~/store/features/display/display-slice';
 import {
   selectVisibleFields,
   selectFieldLabels,
   selectSortBy,
   selectSortDirection,
-  selectSortableFields,
 } from '~/store/features/display/display-selectors';
 import { cn } from '~/lib/utils';
 import { useCommands } from '~/components/commands/commands-context';
-import { taskDisplayPropertiesCommandCreator } from '../task-commands';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,6 +33,7 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { RiArrowUpDownLine } from 'react-icons/ri';
 import { FaSortAmountDown, FaSortAmountUpAlt } from 'react-icons/fa';
+import { taskDisplayPropertiesCommandCreator } from '../task-commands';
 
 const allFields: TaskDisplayField[] = [
   'priority',
@@ -62,15 +63,15 @@ function ToggleFieldButton({
       variant={isSelected ? 'outline' : 'ghost'}
       size="sm"
       className={cn(
-        'justify-between text-left h-6 px-2 font-normal',
+        'text-xs text-left h-6 px-2',
         isSelected
-          ? 'bg-accent text-accent-foreground'
-          : 'border border-transparent hover:bg-accent/25',
+          ? 'text-accent-foreground'
+          : 'border border-transparent hover:bg-accent',
         isDisabled && 'opacity-50 cursor-not-allowed',
       )}
       onClick={onToggle}
       disabled={isDisabled}>
-      <span className="text-xs">{label}</span>
+      {label}
     </Button>
   );
 }
@@ -84,7 +85,6 @@ export function TaskDisplayDropdown() {
   const visibleFields = useAppSelector(selectVisibleFields);
   const sortBy = useAppSelector(selectSortBy);
   const sortDirection = useAppSelector(selectSortDirection);
-  const sortableFields = useAppSelector(selectSortableFields);
   const fieldLabels = selectFieldLabels();
 
   const openCommand = useMemo(
@@ -103,11 +103,11 @@ export function TaskDisplayDropdown() {
     };
   }, [registerCommand, openCommand]);
 
-  function handleToggleField(field: TaskDisplayField) {
+  function handleToggleFieldDisplay(field: TaskDisplayField) {
     dispatch(toggleField(field));
   }
 
-  function handleSortBy(field: TaskDisplayField) {
+  function handleSortBy(field: TaskSortField) {
     dispatch(setSortBy(field));
     setSortOpen(false);
   }
@@ -131,76 +131,65 @@ export function TaskDisplayDropdown() {
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-56 p-3"
+        className="w-56 p-0"
         onEscapeKeyDown={() => setOpen(false)}>
-        <div className="space-y-4">
-          <div>
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <RiArrowUpDownLine className="h-3 w-3 text-muted-foreground" />
-                <Label className="text-xs font-medium text-muted-foreground">
-                  Ordering
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <DropdownMenu open={sortOpen} onOpenChange={setSortOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-6 px-2 text-xs min-w-[80px]">
-                      <span>{fieldLabels[sortBy]}</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-32">
-                    {sortableFields.map((field) => (
-                      <DropdownMenuItem
-                        key={field}
-                        onClick={() => handleSortBy(field)}
-                        className={cn(
-                          'text-xs',
-                          sortBy === field && 'bg-accent'
-                        )}>
-                        {fieldLabels[field]}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+        <div className="flex items-center gap-3 p-3">
+          <div className="flex flex-1 items-center gap-1">
+            <RiArrowUpDownLine className="size-4 text-muted-foreground" />
+            <Label className="text-xs font-medium text-muted-foreground">
+              Ordering
+            </Label>
+          </div>
+          <div className="flex flex-1 items-center gap-1 justify-end">
+            <DropdownMenu open={sortOpen} onOpenChange={setSortOpen}>
+              <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-6 w-6 p-0 shrink-0"
-                  onClick={handleToggleSortDirection}>
-                  {sortDirection === 'asc' ? (
-                    <FaSortAmountDown className="h-3 w-3" />
-                  ) : (
-                    <FaSortAmountUpAlt className="h-3 w-3" />
-                  )}
+                  className="h-6 px-1 text-xs w-16">
+                  <span>{fieldLabels[sortBy]}</span>
                 </Button>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-border" />
-
-          <div>
-            <Label className="text-xs font-bold text-foreground mb-3">
-              List options
-            </Label>
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground">
-                Display properties
-              </Label>
-              <div className="mt-3 flex flex-wrap gap-1">
-                {allFields.map((field) => (
-                  <ToggleFieldButton
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-32">
+                {taskSortFields.map((field) => (
+                  <DropdownMenuItem
                     key={field}
-                    label={fieldLabels[field]}
-                    isSelected={visibleFields.includes(field)}
-                    onToggle={() => handleToggleField(field)}
-                  />
+                    onClick={() => handleSortBy(field)}
+                    className={cn('text-xs', sortBy === field && 'bg-accent')}>
+                    {fieldLabels[field]}
+                  </DropdownMenuItem>
                 ))}
-              </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="outline"
+              size="sm"
+              icon={
+                sortDirection === 'asc' ? FaSortAmountDown : FaSortAmountUpAlt
+              }
+              className="size-6 p-0 shrink-0"
+              onClick={handleToggleSortDirection}
+            />
+          </div>
+        </div>
+        <div className="border-t border-border" />
+        <div className="flex flex-col gap-2 p-3">
+          <Label className="text-xs font-medium text-foreground">
+            List options
+          </Label>
+          <div>
+            <Label className="text-xs font-medium text-muted-foreground">
+              Display properties
+            </Label>
+            <div className="mt-3 flex flex-wrap gap-1">
+              {allFields.map((field) => (
+                <ToggleFieldButton
+                  key={field}
+                  label={fieldLabels[field]}
+                  isSelected={visibleFields.includes(field)}
+                  onToggle={() => handleToggleFieldDisplay(field)}
+                />
+              ))}
             </div>
           </div>
         </div>

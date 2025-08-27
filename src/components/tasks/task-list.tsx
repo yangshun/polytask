@@ -8,7 +8,6 @@ import {
   updateTask,
 } from '~/store/features/tasks/tasks-slice';
 import {
-  selectAllTasks,
   selectSelectedTask,
   selectSelectedTaskId,
 } from '~/store/features/tasks/tasks-selectors';

@@ -9,31 +9,38 @@ export type TaskDisplayField =
   | 'createdAt'
   | 'updatedAt'
   | 'labels';
+const defaultVisibleFields: TaskDisplayField[] = [
+  'priority',
+  'id',
+  'status',
+  'title',
+  'assignee',
+  'createdAt',
+  'updatedAt',
+];
 
-export type SortDirection = 'asc' | 'desc';
+export const taskSortFields = [
+  'id',
+  'priority',
+  'status',
+  'title',
+  'assignee',
+  'createdAt',
+  'updatedAt',
+] as const;
+export type TaskSortField = (typeof taskSortFields)[number];
+export type TaskSortDirection = 'asc' | 'desc';
 
 export interface DisplayState {
   visibleFields: TaskDisplayField[];
-  sortBy: TaskDisplayField;
-  sortDirection: SortDirection;
+  sortBy: TaskSortField;
+  sortDirection: TaskSortDirection;
 }
 
-const defaultDisplayConfig: DisplayState = {
-  visibleFields: [
-    'priority',
-    'id',
-    'status',
-    'title',
-    'assignee',
-    'createdAt',
-    'updatedAt',
-  ],
-  sortBy: 'createdAt',
-  sortDirection: 'desc',
-};
-
 const initialState: DisplayState = {
-  ...defaultDisplayConfig,
+  visibleFields: defaultVisibleFields,
+  sortBy: 'title',
+  sortDirection: 'desc',
 };
 
 export const displaySlice = createSlice({
@@ -57,35 +64,37 @@ export const displaySlice = createSlice({
     setVisibleFields: (state, action: PayloadAction<TaskDisplayField[]>) => {
       // Always ensure title is included
       const fields = action.payload;
+
       if (!fields.includes('title')) {
         fields.push('title');
       }
+
       state.visibleFields = fields;
     },
-    setSortBy: (state, action: PayloadAction<TaskDisplayField>) => {
+    setSortBy: (state, action: PayloadAction<TaskSortField>) => {
       state.sortBy = action.payload;
     },
-    setSortDirection: (state, action: PayloadAction<SortDirection>) => {
+    setSortDirection: (state, action: PayloadAction<TaskSortDirection>) => {
       state.sortDirection = action.payload;
     },
     toggleSortDirection: (state) => {
       state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
     },
     resetToDefault: (state) => {
-      state.visibleFields = [...defaultDisplayConfig.visibleFields];
-      state.sortBy = defaultDisplayConfig.sortBy;
-      state.sortDirection = defaultDisplayConfig.sortDirection;
+      state.visibleFields = [...defaultVisibleFields];
+      state.sortBy = initialState.sortBy;
+      state.sortDirection = initialState.sortDirection;
     },
   },
 });
 
-export const { 
-  toggleField, 
-  setVisibleFields, 
-  setSortBy, 
-  setSortDirection, 
-  toggleSortDirection, 
-  resetToDefault 
+export const {
+  toggleField,
+  setVisibleFields,
+  setSortBy,
+  setSortDirection,
+  toggleSortDirection,
+  resetToDefault,
 } = displaySlice.actions;
 
 export default displaySlice.reducer;
