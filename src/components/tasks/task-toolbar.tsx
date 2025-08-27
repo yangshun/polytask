@@ -1,10 +1,13 @@
 'use client';
 
 import { Button } from '~/components/ui/button';
-import { useAppSelector } from '~/store/hooks';
+import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import { TaskCreateDialog } from '~/components/tasks/create/task-create-dialog';
 import { useCommands } from '~/components/commands/commands-context';
 import { TaskDisplayDropdown } from '~/components/tasks/display/task-display-dropdown';
+import { toggleAiChatSidebar } from '~/store/features/display/display-slice';
+import { selectAiChatSidebarVisible } from '~/store/features/display/display-selectors';
+import { RiArrowRightDoubleLine, RiSparkling2Fill } from 'react-icons/ri';
 
 import {
   selectTasksCanRedo,
@@ -18,9 +21,11 @@ import { useEffect, useMemo } from 'react';
 
 export function TaskToolbar() {
   const { registerCommand } = useCommands();
+  const dispatch = useAppDispatch();
 
   const tasksCanUndo = useAppSelector(selectTasksCanUndo);
   const tasksCanRedo = useAppSelector(selectTasksCanRedo);
+  const aiChatSidebarVisible = useAppSelector(selectAiChatSidebarVisible);
 
   const taskUndoCommand = useMemo(() => taskUndoCommandCreator(), []);
   const taskRedoCommand = useMemo(() => taskRedoCommandCreator(), []);
@@ -37,9 +42,8 @@ export function TaskToolbar() {
 
   return (
     <div className="flex justify-between items-center gap-2 w-full">
-      <TaskCreateDialog />
-      <div className="flex items-center gap-1">
-        <TaskDisplayDropdown />
+      <div className="flex items-center gap-x-0.5">
+        <TaskCreateDialog />
         <Button
           variant="ghost"
           aria-label={taskUndoCommand.name}
@@ -64,6 +68,22 @@ export function TaskToolbar() {
           }}
           icon={taskRedoCommand.icon}
         />
+      </div>
+      <div className="flex items-center gap-x-0.5">
+        <TaskDisplayDropdown />
+        <Button
+          variant={'ghost'}
+          aria-label="Toggle AI Chat"
+          tooltip="Toggle AI Chat"
+          size="sm"
+          onClick={() => {
+            dispatch(toggleAiChatSidebar());
+          }}
+          icon={
+            aiChatSidebarVisible ? RiArrowRightDoubleLine : RiSparkling2Fill
+          }>
+          {aiChatSidebarVisible ? undefined : 'Chat'}
+        </Button>
       </div>
     </div>
   );

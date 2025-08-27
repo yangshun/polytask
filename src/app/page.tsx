@@ -1,11 +1,19 @@
+'use client';
+
 import { TaskList } from '~/components/tasks/task-list';
 import { ThemeToggle } from '~/components/theme/theme-toggle';
 import { CommandPalette } from '~/components/commands/command-palette';
 import { GlobalCommands } from '~/components/global/global-commands';
+import { AiChatSidebar } from '~/components/ai/ai-chat-sidebar';
+import { useAppSelector } from '~/store/hooks';
+import { selectAiChatSidebarVisible } from '~/store/features/display/display-selectors';
 import { cn } from '~/lib/utils';
 import { RiGithubFill } from 'react-icons/ri';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 export default function Home() {
+  const aiChatSidebarVisible = useAppSelector(selectAiChatSidebarVisible);
+
   return (
     <div className="flex flex-col h-screen">
       <div className="flex items-center justify-between gap-2 p-2">
@@ -30,7 +38,19 @@ export default function Home() {
         <GlobalCommands />
       </div>
       <div className={cn('px-2 pb-2 grow h-0')}>
-        <TaskList />
+        <PanelGroup direction="horizontal">
+          <Panel defaultSize={100}>
+            <TaskList />
+          </Panel>
+          {aiChatSidebarVisible && (
+            <>
+              <PanelResizeHandle className="w-px cursor-col-resize px-1" />
+              <Panel defaultSize={30} minSize={20} maxSize={50}>
+                <AiChatSidebar />
+              </Panel>
+            </>
+          )}
+        </PanelGroup>
       </div>
     </div>
   );

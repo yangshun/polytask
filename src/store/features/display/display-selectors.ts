@@ -19,6 +19,9 @@ export const selectSortBy = (state: RootState): TaskDisplayField =>
 export const selectSortDirection = (state: RootState): TaskSortDirection =>
   state.display.sortDirection;
 
+export const selectAiChatSidebarVisible = (state: RootState): boolean =>
+  state.display.aiChatSidebarVisible;
+
 export const selectFieldLabels = (): Record<TaskDisplayField, string> => ({
   id: 'ID',
   priority: 'Priority',

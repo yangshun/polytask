@@ -35,12 +35,14 @@ export interface DisplayState {
   visibleFields: TaskDisplayField[];
   sortBy: TaskSortField;
   sortDirection: TaskSortDirection;
+  aiChatSidebarVisible: boolean;
 }
 
 const initialState: DisplayState = {
   visibleFields: defaultVisibleFields,
   sortBy: 'title',
   sortDirection: 'desc',
+  aiChatSidebarVisible: false,
 };
 
 export const displaySlice = createSlice({
@@ -85,6 +87,12 @@ export const displaySlice = createSlice({
       state.sortBy = initialState.sortBy;
       state.sortDirection = initialState.sortDirection;
     },
+    toggleAiChatSidebar: (state) => {
+      state.aiChatSidebarVisible = !state.aiChatSidebarVisible;
+    },
+    setAiChatSidebarVisible: (state, action: PayloadAction<boolean>) => {
+      state.aiChatSidebarVisible = action.payload;
+    },
   },
 });
 
@@ -95,6 +103,8 @@ export const {
   setSortDirection,
   toggleSortDirection,
   resetToDefault,
+  toggleAiChatSidebar,
+  setAiChatSidebarVisible,
 } = displaySlice.actions;
 
 export default displaySlice.reducer;
