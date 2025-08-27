@@ -12,6 +12,8 @@ export type TaskDisplayField =
 
 export interface DisplayState {
   visibleFields: TaskDisplayField[];
+  sortBy: TaskDisplayField;
+  sortDirection: 'asc' | 'desc';
 }
 
 const defaultVisibleFields: TaskDisplayField[] = [
@@ -26,6 +28,8 @@ const defaultVisibleFields: TaskDisplayField[] = [
 
 const initialState: DisplayState = {
   visibleFields: defaultVisibleFields,
+  sortBy: 'title',
+  sortDirection: 'asc',
 };
 
 export const displaySlice = createSlice({
@@ -54,13 +58,30 @@ export const displaySlice = createSlice({
       }
       state.visibleFields = fields;
     },
+    setSortBy: (state, action: PayloadAction<TaskDisplayField>) => {
+      state.sortBy = action.payload;
+    },
+    setSortDirection: (state, action: PayloadAction<'asc' | 'desc'>) => {
+      state.sortDirection = action.payload;
+    },
+    toggleSortDirection: (state) => {
+      state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
+    },
     resetToDefault: (state) => {
       state.visibleFields = [...defaultVisibleFields];
+      state.sortBy = 'title';
+      state.sortDirection = 'asc';
     },
   },
 });
 
-export const { toggleField, setVisibleFields, resetToDefault } =
-  displaySlice.actions;
+export const { 
+  toggleField, 
+  setVisibleFields, 
+  setSortBy, 
+  setSortDirection, 
+  toggleSortDirection, 
+  resetToDefault 
+} = displaySlice.actions;
 
 export default displaySlice.reducer;
