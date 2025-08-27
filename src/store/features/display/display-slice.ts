@@ -30,8 +30,8 @@ const defaultVisibleFields: TaskDisplayField[] = [
 
 const initialState: DisplayState = {
   visibleFields: defaultVisibleFields,
-  sortBy: 'title',
-  sortDirection: 'asc',
+  sortBy: 'createdAt',
+  sortDirection: 'desc',
 };
 
 export const displaySlice = createSlice({
