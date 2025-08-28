@@ -114,3 +114,33 @@ export const selectSortedTasks = createSelector(
     return sortedTasks;
   },
 );
+
+export const selectSortedTaskIndex = createSelector(
+  [selectSortedTasks, (state: RootState) => state.tasks.present.selectedTaskId],
+  function (sortedTasks, selectedTaskId) {
+    if (selectedTaskId == null) {
+      return -1;
+    }
+    return sortedTasks.findIndex((task) => task.id === selectedTaskId);
+  },
+);
+
+export const selectHasNextSortedTask = createSelector(
+  [selectSortedTasks, selectSortedTaskIndex],
+  function (sortedTasks, selectedIndex) {
+    if (selectedIndex === -1 || sortedTasks.length === 0) {
+      return false;
+    }
+    return selectedIndex < sortedTasks.length - 1;
+  },
+);
+
+export const selectHasPreviousSortedTask = createSelector(
+  [selectSortedTaskIndex],
+  function (selectedIndex) {
+    if (selectedIndex === -1) {
+      return false;
+    }
+    return selectedIndex > 0;
+  },
+);

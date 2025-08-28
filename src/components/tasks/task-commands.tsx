@@ -16,10 +16,47 @@ import type { CommandCreator, CommandData } from '~/components/commands/types';
 import {
   clearSelectedTask,
   deleteTask,
-  selectNextTask,
-  selectPreviousTask,
+  selectTaskById,
 } from '~/store/features/tasks/tasks-slice';
+import { selectSortedTasks } from '~/store/features/display/display-selectors';
+import { selectSelectedTaskId } from '~/store/features/tasks/tasks-selectors';
 import { store } from '~/store/store';
+
+function selectNextTaskInSortedOrder() {
+  const state = store.getState();
+  const sortedTasks = selectSortedTasks(state);
+  const selectedTaskId = selectSelectedTaskId(state);
+  
+  if (sortedTasks.length === 0) return;
+  
+  if (!selectedTaskId) {
+    store.dispatch(selectTaskById(sortedTasks[0].id));
+    return;
+  }
+  
+  const currentIndex = sortedTasks.findIndex(task => task.id === selectedTaskId);
+  if (currentIndex !== -1 && currentIndex < sortedTasks.length - 1) {
+    store.dispatch(selectTaskById(sortedTasks[currentIndex + 1].id));
+  }
+}
+
+function selectPreviousTaskInSortedOrder() {
+  const state = store.getState();
+  const sortedTasks = selectSortedTasks(state);
+  const selectedTaskId = selectSelectedTaskId(state);
+  
+  if (sortedTasks.length === 0) return;
+  
+  if (!selectedTaskId) {
+    store.dispatch(selectTaskById(sortedTasks[sortedTasks.length - 1].id));
+    return;
+  }
+  
+  const currentIndex = sortedTasks.findIndex(task => task.id === selectedTaskId);
+  if (currentIndex > 0) {
+    store.dispatch(selectTaskById(sortedTasks[currentIndex - 1].id));
+  }
+}
 
 // Undo
 export const taskUndoCommandData: CommandData = {
@@ -177,7 +214,7 @@ export const taskSelectNextCommandData: CommandData = {
 };
 export const taskSelectNextCommandCreator: CommandCreator = () => ({
   ...taskSelectNextCommandData,
-  action: () => store.dispatch(selectNextTask()),
+  action: selectNextTaskInSortedOrder,
   commandPalette: false,
 });
 
@@ -192,6 +229,6 @@ export const taskSelectPreviousCommandData: CommandData = {
 };
 export const taskSelectPreviousCommandCreator: CommandCreator = () => ({
   ...taskSelectPreviousCommandData,
-  action: () => store.dispatch(selectPreviousTask()),
+  action: selectPreviousTaskInSortedOrder,
   commandPalette: false,
 });

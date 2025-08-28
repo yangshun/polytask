@@ -18,9 +18,9 @@ import { useEffect, useMemo } from 'react';
 import { cn } from '~/lib/utils';
 import { TaskPrioritySelector } from './priority/task-priority-selector';
 import {
-  selectHasNextTask,
-  selectHasPreviousTask,
-} from '~/store/features/tasks/tasks-selectors';
+  selectHasNextSortedTask,
+  selectHasPreviousSortedTask,
+} from '~/store/features/display/display-selectors';
 import { RiCloseLine } from 'react-icons/ri';
 
 export type TaskDetailsProps = {
@@ -32,8 +32,8 @@ export function TaskDetails({ task }: TaskDetailsProps) {
 
   const dispatch = useAppDispatch();
 
-  const hasNextTask = useAppSelector(selectHasNextTask);
-  const hasPreviousTask = useAppSelector(selectHasPreviousTask);
+  const hasNextTask = useAppSelector(selectHasNextSortedTask);
+  const hasPreviousTask = useAppSelector(selectHasPreviousSortedTask);
   const taskSelectNextCommand = taskSelectNextCommandCreator();
   const taskSelectPreviousCommand = taskSelectPreviousCommandCreator();
   const taskDeleteCommand = useMemo(
