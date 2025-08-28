@@ -13,6 +13,7 @@ import {
   toggleField,
   setSortBy,
   toggleSortDirection,
+  resetToDefault,
   TaskDisplayField,
   TaskSortField,
   taskSortFields,
@@ -33,7 +34,7 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { RiArrowUpDownLine } from 'react-icons/ri';
 import { FaSortAmountDown, FaSortAmountUpAlt } from 'react-icons/fa';
-import { taskDisplayPropertiesCommandCreator } from '../task-commands';
+import { taskDisplayPropertiesCommandCreator, taskDisplayResetCommandCreator } from '../task-commands';
 
 const allFields: TaskDisplayField[] = [
   'priority',
@@ -95,13 +96,20 @@ export function TaskDisplayDropdown() {
     [setOpen],
   );
 
+  const resetCommand = useMemo(
+    () => taskDisplayResetCommandCreator(),
+    [],
+  );
+
   useEffect(() => {
     const unregisterDisplayProperties = registerCommand(openCommand);
+    const unregisterDisplayReset = registerCommand(resetCommand);
 
     return () => {
       unregisterDisplayProperties();
+      unregisterDisplayReset();
     };
-  }, [registerCommand, openCommand]);
+  }, [registerCommand, openCommand, resetCommand]);
 
   function handleToggleFieldDisplay(field: TaskDisplayField) {
     dispatch(toggleField(field));
@@ -114,6 +122,10 @@ export function TaskDisplayDropdown() {
 
   function handleToggleSortDirection() {
     dispatch(toggleSortDirection());
+  }
+
+  function handleReset() {
+    dispatch(resetToDefault());
   }
 
   return (
@@ -192,6 +204,14 @@ export function TaskDisplayDropdown() {
               ))}
             </div>
           </div>
+        </div>
+        <div className="border-t border-border mt-2" />
+        <div className="p-3">
+          <button
+            className="text-xs text-foreground/70 hover:text-foreground cursor-pointer"
+            onClick={handleReset}>
+            Reset
+          </button>
         </div>
       </PopoverContent>
     </Popover>
