@@ -105,41 +105,8 @@ export const tasksSlice = createSlice({
     clearSelectedTask: (state) => {
       state.selectedTaskId = null;
     },
-    selectNextTask: (state) => {
-      if (state.tasks.length === 0) return;
-
-      if (!state.selectedTaskId) {
-        // No task selected, select the first one
-        state.selectedTaskId = state.tasks[0].id;
-        return;
-      }
-
-      const currentIndex = state.tasks.findIndex(
-        (task) => task.id === state.selectedTaskId,
-      );
-      if (currentIndex !== -1 && currentIndex < state.tasks.length - 1) {
-        // Select the next task
-        state.selectedTaskId = state.tasks[currentIndex + 1].id;
-      }
-      // If already at the last task, do nothing (stay at current)
-    },
-    selectPreviousTask: (state) => {
-      if (state.tasks.length === 0) return;
-
-      if (!state.selectedTaskId) {
-        // No task selected, select the last one
-        state.selectedTaskId = state.tasks[state.tasks.length - 1].id;
-        return;
-      }
-
-      const currentIndex = state.tasks.findIndex(
-        (task) => task.id === state.selectedTaskId,
-      );
-      if (currentIndex > 0) {
-        // Select the previous task
-        state.selectedTaskId = state.tasks[currentIndex - 1].id;
-      }
-      // If already at the first task, do nothing (stay at current)
+    selectTaskById: (state, action: PayloadAction<string>) => {
+      state.selectedTaskId = action.payload;
     },
     resetTasks: (state) => {
       state.tasks = mockTasks;
@@ -157,13 +124,12 @@ export const {
   removeTaskLabel,
   setSelectedTask,
   clearSelectedTask,
-  selectNextTask,
-  selectPreviousTask,
+  selectTaskById,
   resetTasks,
 } = tasksSlice.actions;
 
 const undoableTasks = undoable(tasksSlice.reducer, {
-  groupBy: groupByActionTypes([selectNextTask.type, selectPreviousTask.type]),
+  groupBy: groupByActionTypes([selectTaskById.type]),
 });
 
 export default undoableTasks;

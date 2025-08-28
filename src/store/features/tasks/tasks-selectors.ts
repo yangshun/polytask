@@ -175,7 +175,7 @@ export const selectRecentlyUpdatedTasks = createSelector(
   },
 );
 
-// Navigation availability selectors
+// Navigation availability selectors (legacy)
 export const selectSelectedTaskIndex = createSelector(
   [selectAllTasks, selectSelectedTaskId],
   function (tasks, selectedTaskId) {
