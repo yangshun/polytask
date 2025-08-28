@@ -34,7 +34,7 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { RiArrowUpDownLine } from 'react-icons/ri';
 import { FaSortAmountDown, FaSortAmountUpAlt } from 'react-icons/fa';
-import { taskDisplayPropertiesCommandCreator } from '../task-commands';
+import { taskDisplayPropertiesCommandCreator, taskDisplayResetCommandCreator } from '../task-commands';
 
 const allFields: TaskDisplayField[] = [
   'priority',
@@ -96,13 +96,20 @@ export function TaskDisplayDropdown() {
     [setOpen],
   );
 
+  const resetCommand = useMemo(
+    () => taskDisplayResetCommandCreator(),
+    [],
+  );
+
   useEffect(() => {
     const unregisterDisplayProperties = registerCommand(openCommand);
+    const unregisterDisplayReset = registerCommand(resetCommand);
 
     return () => {
       unregisterDisplayProperties();
+      unregisterDisplayReset();
     };
-  }, [registerCommand, openCommand]);
+  }, [registerCommand, openCommand, resetCommand]);
 
   function handleToggleFieldDisplay(field: TaskDisplayField) {
     dispatch(toggleField(field));

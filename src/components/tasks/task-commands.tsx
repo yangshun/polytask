@@ -10,6 +10,7 @@ import {
   RiArrowGoBackLine,
   RiArrowGoForwardLine,
   RiEqualizerFill,
+  RiRefreshLine,
 } from 'react-icons/ri';
 
 import type { CommandCreator, CommandData } from '~/components/commands/types';
@@ -19,6 +20,7 @@ import {
   selectNextTask,
   selectPreviousTask,
 } from '~/store/features/tasks/tasks-slice';
+import { resetToDefault } from '~/store/features/display/display-slice';
 import { store } from '~/store/store';
 
 // Undo
@@ -82,6 +84,21 @@ export const taskDisplayPropertiesCommandCreator: CommandCreator = (
 ) => ({
   ...taskDisplayPropertiesCommandData,
   action: () => func(),
+  commandPalette: true,
+});
+
+// Reset display to default
+export const taskDisplayResetCommandData: CommandData = {
+  id: 'task.display.reset',
+  name: 'Reset to default display',
+  icon: RiRefreshLine,
+  shortcut: 'Cmd+Shift+R',
+  group: 'tasks',
+  description: 'Reset display options to default settings',
+};
+export const taskDisplayResetCommandCreator: CommandCreator = () => ({
+  ...taskDisplayResetCommandData,
+  action: () => store.dispatch(resetToDefault()),
   commandPalette: true,
 });
 
