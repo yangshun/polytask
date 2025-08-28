@@ -13,6 +13,7 @@ import {
   toggleField,
   setSortBy,
   toggleSortDirection,
+  resetToDefault,
   TaskDisplayField,
   TaskSortField,
   taskSortFields,
@@ -116,6 +117,10 @@ export function TaskDisplayDropdown() {
     dispatch(toggleSortDirection());
   }
 
+  function handleReset() {
+    dispatch(resetToDefault());
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -192,6 +197,14 @@ export function TaskDisplayDropdown() {
               ))}
             </div>
           </div>
+        </div>
+        <div className="border-t border-border mt-2" />
+        <div className="p-3">
+          <button
+            className="text-xs text-foreground/70 hover:text-foreground cursor-pointer"
+            onClick={handleReset}>
+            Reset
+          </button>
         </div>
       </PopoverContent>
     </Popover>
