@@ -158,7 +158,8 @@ export function TaskDisplayDropdown() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-6 px-1 text-xs w-16">
+                  className="h-6 px-1 text-xs w-16"
+                  tooltip={`Sort by ${fieldLabels[sortBy].toLowerCase()}`}>
                   <span>{fieldLabels[sortBy]}</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -181,6 +182,8 @@ export function TaskDisplayDropdown() {
               }
               className="size-6 p-0 shrink-0"
               onClick={handleToggleSortDirection}
+              tooltip={`Sort ${sortDirection === 'asc' ? 'ascending' : 'descending'}`}
+              aria-label={`Sort ${sortDirection === 'asc' ? 'ascending' : 'descending'}`}
             />
           </div>
         </div>
