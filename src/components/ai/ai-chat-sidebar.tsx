@@ -127,7 +127,7 @@ export function AiChatSidebar() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Ask me anything about your tasks..."
-            className="resize-none min-h-[60px] max-h-[120px] flex-1"
+            className="resize-none min-h-[40px] max-h-[120px] flex-1 leading-tight"
             disabled={status === 'streaming'}
           />
           <Button 
