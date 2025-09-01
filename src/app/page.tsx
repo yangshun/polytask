@@ -5,6 +5,7 @@ import { ThemeToggle } from '~/components/theme/theme-toggle';
 import { CommandPalette } from '~/components/commands/command-palette';
 import { GlobalCommands } from '~/components/global/global-commands';
 import { AiChatSidebar } from '~/components/ai/ai-chat-sidebar';
+import { AiChatProvider } from '~/components/ai/ai-chat-context';
 import { useAppSelector } from '~/store/hooks';
 import { selectAiChatSidebarVisible } from '~/store/features/display/display-selectors';
 import { cn } from '~/lib/utils';
@@ -46,7 +47,9 @@ export default function Home() {
             <>
               <PanelResizeHandle className="w-px cursor-col-resize px-1" />
               <Panel defaultSize={30} minSize={20} maxSize={50}>
-                <AiChatSidebar />
+                <AiChatProvider>
+                  <AiChatSidebar />
+                </AiChatProvider>
               </Panel>
             </>
           )}
