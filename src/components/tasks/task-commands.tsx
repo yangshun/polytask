@@ -17,10 +17,10 @@ import type { CommandCreator, CommandData } from '~/components/commands/types';
 import {
   clearSelectedTask,
   deleteTask,
+  resetFieldsToDefault,
   selectNextTask,
   selectPreviousTask,
 } from '~/store/features/tasks/tasks-slice';
-import { resetToDefault } from '~/store/features/display/display-slice';
 import { store } from '~/store/store';
 
 // Undo
@@ -98,7 +98,7 @@ export const taskDisplayResetCommandData: CommandData = {
 };
 export const taskDisplayResetCommandCreator: CommandCreator = () => ({
   ...taskDisplayResetCommandData,
-  action: () => store.dispatch(resetToDefault()),
+  action: () => store.dispatch(resetFieldsToDefault()),
   commandPalette: true,
 });
 

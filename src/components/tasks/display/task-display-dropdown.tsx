@@ -10,20 +10,20 @@ import {
 import { Label } from '~/components/ui/label';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
-  toggleField,
-  setSortBy,
-  toggleSortDirection,
-  resetToDefault,
+  toggleFieldVisibility,
   TaskDisplayField,
   TaskSortField,
   taskSortFields,
-} from '~/store/features/display/display-slice';
+  setFieldsSortBy,
+  toggleFieldsSortDirection,
+  resetFieldsToDefault,
+} from '~/store/features/tasks/tasks-slice';
 import {
   selectVisibleFields,
   selectFieldLabels,
   selectSortBy,
   selectSortDirection,
-} from '~/store/features/display/display-selectors';
+} from '~/store/features/tasks/tasks-selectors';
 import { cn } from '~/lib/utils';
 import { useCommands } from '~/components/commands/commands-context';
 import {
@@ -34,7 +34,10 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { RiArrowUpDownLine } from 'react-icons/ri';
 import { FaSortAmountDown, FaSortAmountUpAlt } from 'react-icons/fa';
-import { taskDisplayPropertiesCommandCreator, taskDisplayResetCommandCreator } from '../task-commands';
+import {
+  taskDisplayPropertiesCommandCreator,
+  taskDisplayResetCommandCreator,
+} from '../task-commands';
 
 const allFields: TaskDisplayField[] = [
   'priority',
@@ -96,10 +99,7 @@ export function TaskDisplayDropdown() {
     [setOpen],
   );
 
-  const resetCommand = useMemo(
-    () => taskDisplayResetCommandCreator(),
-    [],
-  );
+  const resetCommand = useMemo(() => taskDisplayResetCommandCreator(), []);
 
   useEffect(() => {
     const unregisterDisplayProperties = registerCommand(openCommand);
@@ -112,20 +112,20 @@ export function TaskDisplayDropdown() {
   }, [registerCommand, openCommand, resetCommand]);
 
   function handleToggleFieldDisplay(field: TaskDisplayField) {
-    dispatch(toggleField(field));
+    dispatch(toggleFieldVisibility(field));
   }
 
   function handleSortBy(field: TaskSortField) {
-    dispatch(setSortBy(field));
+    dispatch(setFieldsSortBy(field));
     setSortOpen(false);
   }
 
   function handleToggleSortDirection() {
-    dispatch(toggleSortDirection());
+    dispatch(toggleFieldsSortDirection());
   }
 
   function handleReset() {
-    dispatch(resetToDefault());
+    dispatch(resetFieldsToDefault());
   }
 
   return (
@@ -182,8 +182,12 @@ export function TaskDisplayDropdown() {
               }
               className="size-6 p-0 shrink-0"
               onClick={handleToggleSortDirection}
-              tooltip={`Sort ${sortDirection === 'asc' ? 'ascending' : 'descending'}`}
-              aria-label={`Sort ${sortDirection === 'asc' ? 'ascending' : 'descending'}`}
+              tooltip={`Sort ${
+                sortDirection === 'asc' ? 'ascending' : 'descending'
+              }`}
+              aria-label={`Sort ${
+                sortDirection === 'asc' ? 'ascending' : 'descending'
+              }`}
             />
           </div>
         </div>

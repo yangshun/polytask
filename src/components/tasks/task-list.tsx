@@ -11,7 +11,7 @@ import {
   selectSelectedTask,
   selectSelectedTaskId,
 } from '~/store/features/tasks/tasks-selectors';
-import { selectSortedTasks } from '~/store/features/display/display-selectors';
+import { selectSortedTasks } from '~/store/features/tasks/tasks-selectors';
 import { TaskItem } from '~/components/tasks/task-item';
 import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { TaskDetails } from '~/components/tasks/task-details';

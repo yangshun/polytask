@@ -13,7 +13,7 @@ import {
 } from '~/components/ui/context-menu';
 import { TaskObject, TaskStatus, TaskPriority } from '~/components/tasks/types';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { selectIsFieldVisible } from '~/store/features/display/display-selectors';
+import { selectIsFieldVisible } from '~/store/features/tasks/tasks-selectors';
 import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
 import { Badge } from '~/components/ui/badge';
 import { TaskStatusIcon } from './status/task-status-icon';

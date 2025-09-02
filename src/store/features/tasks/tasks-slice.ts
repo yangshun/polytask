@@ -3,14 +3,54 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TaskRaw } from '~/components/tasks/types';
 import { mockTasks } from '~/data/mock-tasks';
 
+export type TaskDisplayField =
+  | 'id'
+  | 'priority'
+  | 'status'
+  | 'title'
+  | 'assignee'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'labels';
+
+const defaultVisibleFields: TaskDisplayField[] = [
+  'priority',
+  'id',
+  'status',
+  'title',
+  'assignee',
+  'createdAt',
+  'updatedAt',
+];
+
+export const taskSortFields = [
+  'id',
+  'priority',
+  'status',
+  'title',
+  'assignee',
+  'createdAt',
+  'updatedAt',
+] as const;
+export type TaskSortField = (typeof taskSortFields)[number];
+export type TaskSortDirection = 'asc' | 'desc';
+
 export interface TasksState {
   tasks: TaskRaw[];
   selectedTaskId: string | null;
+  visibleFields: TaskDisplayField[];
+  sortBy: TaskSortField;
+  sortDirection: TaskSortDirection;
+  sortFieldHidden: boolean;
 }
 
 const initialState: TasksState = {
   tasks: mockTasks,
   selectedTaskId: null,
+  visibleFields: defaultVisibleFields,
+  sortBy: 'title',
+  sortDirection: 'desc',
+  sortFieldHidden: false,
 };
 
 export const tasksSlice = createSlice({
@@ -145,6 +185,71 @@ export const tasksSlice = createSlice({
       state.tasks = mockTasks;
       state.selectedTaskId = null;
     },
+    // Display-related reducers
+    toggleFieldVisibility: (state, action: PayloadAction<TaskDisplayField>) => {
+      const field = action.payload;
+      const index = state.visibleFields.indexOf(field);
+
+      if (index === -1) {
+        // Field is not visible, add it
+        state.visibleFields.push(field);
+        if (field === state.sortBy) {
+          state.sortFieldHidden = false;
+        }
+      } else {
+        // Field is visible, remove it (but keep at least title)
+        if (field !== 'title') {
+          state.visibleFields.splice(index, 1);
+          if (field === state.sortBy) {
+            state.sortFieldHidden = true;
+          }
+        }
+      }
+    },
+    setFieldsVisibility: (state, action: PayloadAction<TaskDisplayField[]>) => {
+      // Always ensure title is included
+      const fields = action.payload;
+
+      if (!fields.includes('title')) {
+        fields.push('title');
+      }
+
+      state.visibleFields = fields;
+    },
+    setFieldsSortBy: (state, action: PayloadAction<TaskSortField>) => {
+      const newSortField = action.payload;
+      const currentSortField = state.sortBy;
+
+      if (state.sortFieldHidden && currentSortField !== 'title') {
+        const fieldIndex = state.visibleFields.indexOf(currentSortField);
+        if (fieldIndex !== -1) {
+          state.visibleFields.splice(fieldIndex, 1);
+        }
+      }
+
+      const isNewFieldHidden = !state.visibleFields.includes(newSortField);
+      if (isNewFieldHidden) {
+        state.visibleFields.push(newSortField);
+      }
+
+      state.sortBy = newSortField;
+      state.sortFieldHidden = isNewFieldHidden;
+    },
+    setFieldsSortDirection: (
+      state,
+      action: PayloadAction<TaskSortDirection>,
+    ) => {
+      state.sortDirection = action.payload;
+    },
+    toggleFieldsSortDirection: (state) => {
+      state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
+    },
+    resetFieldsToDefault: (state) => {
+      state.visibleFields = [...defaultVisibleFields];
+      state.sortBy = initialState.sortBy;
+      state.sortDirection = initialState.sortDirection;
+      state.sortFieldHidden = initialState.sortFieldHidden;
+    },
   },
 });
 
@@ -160,6 +265,12 @@ export const {
   selectNextTask,
   selectPreviousTask,
   resetTasks,
+  toggleFieldVisibility,
+  setFieldsVisibility,
+  setFieldsSortBy,
+  setFieldsSortDirection,
+  toggleFieldsSortDirection,
+  resetFieldsToDefault,
 } = tasksSlice.actions;
 
 const undoableTasks = undoable(tasksSlice.reducer, {
