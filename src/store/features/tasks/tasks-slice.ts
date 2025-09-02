@@ -1,6 +1,6 @@
 import undoable, { groupByActionTypes } from 'redux-undo';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TaskRaw } from '~/components/tasks/types';
+import { TaskPriority, TaskRaw, TaskStatus } from '~/components/tasks/types';
 import { mockTasks } from '~/data/mock-tasks';
 
 export type TaskDisplayField =
@@ -28,7 +28,6 @@ export const taskSortFields = [
   'priority',
   'status',
   'title',
-  'assignee',
   'createdAt',
   'updatedAt',
 ] as const;
@@ -44,12 +43,91 @@ export interface TasksState {
   sortFieldHidden: boolean;
 }
 
+const defaultSortField: TaskSortField = 'id';
+const defaultSortDirection: TaskSortDirection = 'desc';
+
+function parseTaskId(id: string) {
+  const match = id.match(/^([A-Z]+)-(\d+)$/);
+
+  if (match) {
+    return { prefix: match[1], number: parseInt(match[2], 10) };
+  }
+
+  return { prefix: id, number: 0 };
+}
+
+function sortTasks(
+  tasks: TaskRaw[],
+  sortBy: TaskSortField,
+  sortDirection: TaskSortDirection,
+): TaskRaw[] {
+  return [...tasks].sort((a, b) => {
+    let valueA: string | number;
+    let valueB: string | number;
+
+    switch (sortBy) {
+      case 'id':
+        const idA = parseTaskId(a.id);
+        const idB = parseTaskId(b.id);
+
+        if (idA.prefix !== idB.prefix) {
+          valueA = idA.prefix;
+          valueB = idB.prefix;
+        } else {
+          valueA = idA.number;
+          valueB = idB.number;
+        }
+        break;
+      case 'title':
+        valueA = a.title.toLowerCase();
+        valueB = b.title.toLowerCase();
+        break;
+      case 'status':
+        // TODO: Consolidate with statuses enum.
+        const statusOrder: TaskStatus[] = [
+          'cancelled',
+          'done',
+          'todo',
+          'in-progress',
+          'in-review',
+        ];
+        valueA = statusOrder.indexOf(a.status);
+        valueB = statusOrder.indexOf(b.status);
+        break;
+      case 'priority':
+        // TODO: Consolidate with priorities values.
+        const priorityOrder: TaskPriority[] = [0, 4, 3, 2, 1];
+        valueA = priorityOrder.indexOf(a.priority);
+        valueB = priorityOrder.indexOf(b.priority);
+        break;
+      case 'updatedAt':
+        valueA = new Date(a.updatedAt).getTime();
+        valueB = new Date(b.updatedAt).getTime();
+        break;
+      case 'createdAt':
+        valueA = new Date(a.createdAt).getTime();
+        valueB = new Date(b.createdAt).getTime();
+        break;
+    }
+
+    if (valueA < valueB) {
+      return sortDirection === 'asc' ? -1 : 1;
+    }
+
+    if (valueA > valueB) {
+      return sortDirection === 'asc' ? 1 : -1;
+    }
+
+    return 0;
+  });
+}
+
 const initialState: TasksState = {
-  tasks: mockTasks,
+  tasks: sortTasks(mockTasks, defaultSortField, defaultSortDirection),
   selectedTaskId: null,
   visibleFields: defaultVisibleFields,
-  sortBy: 'title',
-  sortDirection: 'desc',
+  sortBy: defaultSortField,
+  sortDirection: defaultSortDirection,
   sortFieldHidden: false,
 };
 
@@ -59,6 +137,7 @@ export const tasksSlice = createSlice({
   reducers: {
     addTask: (state, action: PayloadAction<TaskRaw>) => {
       state.tasks.unshift(action.payload);
+      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
     },
     updateTask: (
       state,
@@ -66,13 +145,16 @@ export const tasksSlice = createSlice({
     ) => {
       const { id, updates } = action.payload;
       const taskIndex = state.tasks.findIndex((task) => task.id === id);
-      if (taskIndex !== -1) {
-        state.tasks[taskIndex] = {
-          ...state.tasks[taskIndex],
-          ...updates,
-          updatedAt: new Date().toISOString(),
-        };
+      if (taskIndex === -1) {
+        return;
       }
+
+      state.tasks[taskIndex] = {
+        ...state.tasks[taskIndex],
+        ...updates,
+        updatedAt: new Date().toISOString(),
+      };
+      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
     },
     deleteTask: (state, action: PayloadAction<string>) => {
       const taskIdToDelete = action.payload;
@@ -105,10 +187,14 @@ export const tasksSlice = createSlice({
     ) => {
       const { id, assigneeId } = action.payload;
       const task = state.tasks.find((task) => task.id === id);
-      if (task) {
-        task.assigneeId = assigneeId;
-        task.updatedAt = new Date().toISOString();
+
+      if (task == null) {
+        return;
       }
+
+      task.assigneeId = assigneeId;
+      task.updatedAt = new Date().toISOString();
+      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
     },
     // Labels operations
     addTaskLabel: (
@@ -117,14 +203,19 @@ export const tasksSlice = createSlice({
     ) => {
       const { id, label } = action.payload;
       const task = state.tasks.find((task) => task.id === id);
-      if (task) {
-        if (!task.labels) {
-          task.labels = [];
-        }
-        if (!task.labels.includes(label)) {
-          task.labels.push(label);
-          task.updatedAt = new Date().toISOString();
-        }
+
+      if (task == null) {
+        return;
+      }
+
+      if (!task.labels) {
+        task.labels = [];
+      }
+
+      if (!task.labels.includes(label)) {
+        task.labels.push(label);
+        task.updatedAt = new Date().toISOString();
+        state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
       }
     },
     removeTaskLabel: (
@@ -133,12 +224,14 @@ export const tasksSlice = createSlice({
     ) => {
       const { id, label } = action.payload;
       const task = state.tasks.find((task) => task.id === id);
-      if (task && task.labels) {
-        task.labels = task.labels.filter((l) => l !== label);
-        task.updatedAt = new Date().toISOString();
+
+      if (task == null || task.labels == null) {
+        return;
       }
+
+      task.labels = task.labels.filter((label_) => label_ !== label);
+      task.updatedAt = new Date().toISOString();
     },
-    // Task selection operations
     setSelectedTask: (state, action: PayloadAction<string | null>) => {
       state.selectedTaskId = action.payload;
     },
@@ -146,7 +239,9 @@ export const tasksSlice = createSlice({
       state.selectedTaskId = null;
     },
     selectNextTask: (state) => {
-      if (state.tasks.length === 0) return;
+      if (state.tasks.length === 0) {
+        return;
+      }
 
       if (!state.selectedTaskId) {
         // No task selected, select the first one
@@ -157,6 +252,7 @@ export const tasksSlice = createSlice({
       const currentIndex = state.tasks.findIndex(
         (task) => task.id === state.selectedTaskId,
       );
+
       if (currentIndex !== -1 && currentIndex < state.tasks.length - 1) {
         // Select the next task
         state.selectedTaskId = state.tasks[currentIndex + 1].id;
@@ -164,7 +260,9 @@ export const tasksSlice = createSlice({
       // If already at the last task, do nothing (stay at current)
     },
     selectPreviousTask: (state) => {
-      if (state.tasks.length === 0) return;
+      if (state.tasks.length === 0) {
+        return;
+      }
 
       if (!state.selectedTaskId) {
         // No task selected, select the last one
@@ -175,6 +273,7 @@ export const tasksSlice = createSlice({
       const currentIndex = state.tasks.findIndex(
         (task) => task.id === state.selectedTaskId,
       );
+
       if (currentIndex > 0) {
         // Select the previous task
         state.selectedTaskId = state.tasks[currentIndex - 1].id;
@@ -182,10 +281,9 @@ export const tasksSlice = createSlice({
       // If already at the first task, do nothing (stay at current)
     },
     resetTasks: (state) => {
-      state.tasks = mockTasks;
+      state.tasks = sortTasks(mockTasks, state.sortBy, state.sortDirection);
       state.selectedTaskId = null;
     },
-    // Display-related reducers
     toggleFieldVisibility: (state, action: PayloadAction<TaskDisplayField>) => {
       const field = action.payload;
       const index = state.visibleFields.indexOf(field);
@@ -196,14 +294,18 @@ export const tasksSlice = createSlice({
         if (field === state.sortBy) {
           state.sortFieldHidden = false;
         }
-      } else {
-        // Field is visible, remove it (but keep at least title)
-        if (field !== 'title') {
-          state.visibleFields.splice(index, 1);
-          if (field === state.sortBy) {
-            state.sortFieldHidden = true;
-          }
-        }
+
+        return;
+      }
+
+      // Field is visible, remove it (but keep at least title)
+      if (field === 'title') {
+        return;
+      }
+
+      state.visibleFields.splice(index, 1);
+      if (field === state.sortBy) {
+        state.sortFieldHidden = true;
       }
     },
     setFieldsVisibility: (state, action: PayloadAction<TaskDisplayField[]>) => {
@@ -234,21 +336,25 @@ export const tasksSlice = createSlice({
 
       state.sortBy = newSortField;
       state.sortFieldHidden = isNewFieldHidden;
+      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
     },
     setFieldsSortDirection: (
       state,
       action: PayloadAction<TaskSortDirection>,
     ) => {
       state.sortDirection = action.payload;
+      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
     },
     toggleFieldsSortDirection: (state) => {
       state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc';
+      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
     },
     resetFieldsToDefault: (state) => {
       state.visibleFields = [...defaultVisibleFields];
       state.sortBy = initialState.sortBy;
       state.sortDirection = initialState.sortDirection;
       state.sortFieldHidden = initialState.sortFieldHidden;
+      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
     },
   },
 });

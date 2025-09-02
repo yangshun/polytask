@@ -8,10 +8,10 @@ import {
   updateTask,
 } from '~/store/features/tasks/tasks-slice';
 import {
+  selectAllTasks,
   selectSelectedTask,
   selectSelectedTaskId,
 } from '~/store/features/tasks/tasks-selectors';
-import { selectSortedTasks } from '~/store/features/tasks/tasks-selectors';
 import { TaskItem } from '~/components/tasks/task-item';
 import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { TaskDetails } from '~/components/tasks/task-details';
@@ -32,7 +32,7 @@ import { useMediaQuery } from '~/lib/use-media-query';
 export function TaskList() {
   const { registerCommand } = useCommands();
   const dispatch = useAppDispatch();
-  const tasks: TaskObject[] = useAppSelector(selectSortedTasks);
+  const tasks: TaskObject[] = useAppSelector(selectAllTasks);
 
   const selectedTask: TaskObject | null = useAppSelector(selectSelectedTask);
   const selectedTaskId = useAppSelector(selectSelectedTaskId);

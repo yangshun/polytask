@@ -43,8 +43,8 @@ const allFields: TaskDisplayField[] = [
   'priority',
   'id',
   'status',
-  'labels',
   'assignee',
+  'labels',
   'createdAt',
   'updatedAt',
 ];
@@ -212,13 +212,11 @@ export function TaskDisplayDropdown() {
             </div>
           </div>
         </div>
-        <div className="border-t border-border mt-2" />
-        <div className="p-3">
-          <button
-            className="text-xs text-foreground/70 hover:text-foreground cursor-pointer"
-            onClick={handleReset}>
+        <div className="border-t border-border" />
+        <div className="flex items-center px-2 py-2 justify-end">
+          <Button size="xs" variant="ghost" onClick={handleReset}>
             Reset
-          </button>
+          </Button>
         </div>
       </PopoverContent>
     </Popover>
