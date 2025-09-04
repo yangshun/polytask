@@ -1,53 +1,56 @@
 'use client';
 
+import { useChat } from '@ai-sdk/react';
+import { KeyboardEvent, useState } from 'react';
 import { ScrollArea } from '~/components/ui/scroll-area';
 import { Textarea } from '~/components/ui/textarea';
+import { Button } from '~/components/ui/button';
 import { cn } from '~/lib/utils';
-
-interface ChatMessage {
-  id: string;
-  type: 'user' | 'assistant';
-  content: string;
-  timestamp: string;
-}
-
-const mockMessages: ChatMessage[] = [
-  {
-    id: '1',
-    type: 'assistant',
-    content:
-      "Hello! I'm your AI assistant. How can I help you manage your tasks today?",
-    timestamp: '10:30 AM',
-  },
-  {
-    id: '2',
-    type: 'user',
-    content: 'Can you help me prioritize my tasks for this week?',
-    timestamp: '10:31 AM',
-  },
-  {
-    id: '3',
-    type: 'assistant',
-    content:
-      "Of course! I can see you have several tasks in your list. Based on their priorities and deadlines, I'd recommend focusing on the high-priority items first. Would you like me to create a prioritized schedule for you?",
-    timestamp: '10:31 AM',
-  },
-  {
-    id: '4',
-    type: 'user',
-    content: 'Yes, that would be great!',
-    timestamp: '10:32 AM',
-  },
-  {
-    id: '5',
-    type: 'assistant',
-    content:
-      "Here's your prioritized task list:\n\n1. **Critical Priority Tasks**\n   - Complete project proposal review\n   - Submit quarterly report\n\n2. **High Priority Tasks**\n   - Team meeting preparation\n   - Code review for feature branch\n\n3. **Medium Priority Tasks**\n   - Update documentation\n   - Email client responses\n\nWould you like me to help you break down any of these tasks into smaller subtasks?",
-    timestamp: '10:33 AM',
-  },
-];
+import { useAiChatContext } from './ai-chat-context';
 
 export function AiChatSidebar() {
+  const { tasks } = useAiChatContext();
+  const [input, setInput] = useState('');
+  
+  const { messages, sendMessage, status, error } = useChat({
+    id: 'ai-chat',
+    onError: (error) => {
+      console.error('Chat error:', error);
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim() && status !== 'streaming') {
+      sendMessage(
+        { text: input.trim() },
+        {
+          body: {
+            tasks,
+          },
+        }
+      );
+      setInput('');
+    }
+  };
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (input.trim() && status !== 'streaming') {
+        handleSubmit(e);
+      }
+    }
+  };
+
+  const formatTimestamp = (date: Date) => {
+    return date.toLocaleTimeString([], { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+  };
+
   return (
     <div
       className={cn(
@@ -57,37 +60,87 @@ export function AiChatSidebar() {
       )}>
       {/* Chat Messages */}
       <ScrollArea className="h-0 flex-1 px-2">
-        <div className="space-y-4">
-          {mockMessages.map((message) => (
+        <div className="space-y-4 py-2">
+          {messages.map((message) => (
             <div
               key={message.id}
               className={cn(
                 'flex gap-3',
-                message.type === 'user' && 'flex-row-reverse',
+                message.role === 'user' && 'flex-row-reverse',
               )}>
               <div
                 className={cn(
                   'flex flex-col gap-1 max-w-[80%]',
-                  message.type === 'user' && 'items-end',
+                  message.role === 'user' && 'items-end',
                 )}>
                 <div
                   className={cn(
-                    'text-sm',
-                    message.type === 'user' && 'bg-muted px-3 py-2 rounded-sm',
+                    'text-sm px-3 py-2 rounded-lg',
+                    message.role === 'user' 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'bg-muted',
                   )}>
-                  <div className="whitespace-pre-wrap">{message.content}</div>
+                  <div className="whitespace-pre-wrap">
+                    {message.parts?.map((part, index) => {
+                       if (part.type === 'text') {
+                         return <span key={index}>{part.text}</span>;
+                       }
+                       return null;
+                     })
+                    }
+                  </div>
+                </div>
+                <div className="text-xs text-muted-foreground px-1">
+                  {formatTimestamp(new Date())}
                 </div>
               </div>
             </div>
           ))}
+          {status === 'streaming' && (
+            <div className="flex gap-3">
+              <div className="flex flex-col gap-1 max-w-[80%]">
+                <div className="text-sm px-3 py-2 rounded-lg bg-muted">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" 
+                         style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" 
+                         style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" 
+                         style={{ animationDelay: '300ms' }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {error && (
+            <div className="text-red-500 text-sm p-3 bg-red-50 rounded-lg">
+              Error: {error.message}
+            </div>
+          )}
         </div>
       </ScrollArea>
       {/* Input Area */}
-      <div className={cn('flex items-center gap-2 h-24')}>
-        <Textarea
-          placeholder="Ask me anything about your tasks..."
-          className="resize-none h-full"
-        />
+      <div className={cn('flex flex-col gap-2 p-2')}>
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <Textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Ask me anything about your tasks..."
+            className="resize-none min-h-[40px] max-h-[120px] flex-1 leading-tight"
+            disabled={status === 'streaming'}
+          />
+          <Button 
+            type="submit" 
+            disabled={!input.trim() || status === 'streaming'}
+            size="sm"
+            className="self-end">
+            Send
+          </Button>
+        </form>
+        <div className="text-xs text-muted-foreground px-1">
+          Press Enter to send, Shift+Enter for new line
+        </div>
       </div>
     </div>
   );
