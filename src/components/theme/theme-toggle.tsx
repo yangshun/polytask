@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 import { Button } from '~/components/ui/button';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
@@ -11,14 +11,16 @@ import {
   themeToggleCommandData,
 } from './theme-commands';
 
+const emptySubscribe = () => () => {};
+
 export function ThemeToggle() {
   const dispatch = useAppDispatch();
   const theme = useAppSelector((state) => state.theme.mode);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   function handleThemeToggle() {
     const newTheme = theme === 'light' ? 'dark' : 'light';
