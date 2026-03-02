@@ -49,14 +49,17 @@ export function CommandPalette() {
   // Group commands by their group property
   const groupedCommands = commands
     .filter((command) => command.commandPalette)
-    .reduce((acc, command) => {
-      const group = command.group || 'general';
-      if (!acc[group]) {
-        acc[group] = [];
-      }
-      acc[group].push(command);
-      return acc;
-    }, {} as Record<string, typeof commands>);
+    .reduce(
+      (acc, command) => {
+        const group = command.group || 'general';
+        if (!acc[group]) {
+          acc[group] = [];
+        }
+        acc[group].push(command);
+        return acc;
+      },
+      {} as Record<string, typeof commands>,
+    );
 
   // TODO: Implement group ranking
   const groups = Object.entries(groupedCommands).sort(([a], [b]) =>

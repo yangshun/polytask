@@ -120,4 +120,7 @@ Polytask is organized around commands as first-class primitives.
 - `pnpm dev` — start dev server (Turbopack)
 - `pnpm build` — production build
 - `pnpm start` — start production server
-- `pnpm lint` — run ESLint
+- `pnpm lint` — run Oxlint
+- `pnpm fmt` — run Oxfmt
+- `pnpm tc` — run type checking
+- `pnpm check` — run linting and type checking

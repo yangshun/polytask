@@ -94,127 +94,134 @@ export function TaskItem({
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
-        <div ref={rootRef}>
-          <div
-            className={cn(
-              'group flex items-center gap-3',
-              'pl-3 pr-4 py-2.5',
-              isSelected ? 'bg-accent/50' : 'hover:bg-accent/25',
-            )}
-            onClick={() => {
-              setTimeout(() => {
-                dispatch(setSelectedTask(task.id));
-              }, 0);
-            }}>
-            {isPriorityVisible && (
-              <Popover open={priorityOpen} onOpenChange={setPriorityOpen}>
-                <PopoverTrigger asChild>
-                  <button
-                    className="shrink-0 text-xs font-medium px-0.5 py-0.5"
-                    aria-label="Change priority">
-                    <TaskPriorityIcon priority={task.priority} />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent side="right" className="w-32 p-0">
-                  <TaskPriorityCombobox
-                    onSelect={(priority) => {
-                      onPriorityChange(priority);
-                      setPriorityOpen(false);
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            )}
-            {isIdVisible && (
-              <span className="text-xs text-muted-foreground font-mono font-medium w-14">
-                {task.id}
-              </span>
-            )}
-            {isStatusVisible && (
-              <Popover open={statusOpen} onOpenChange={setStatusOpen}>
-                <PopoverTrigger asChild>
-                  <button className="shrink-0" aria-label="Change task status">
-                    <TaskStatusIcon status={task.status} size="lg" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent side="right" className="w-36 p-0">
-                  <TaskStatusCombobox
-                    onSelect={(status) => {
-                      onStatusChange(status);
-                      setStatusOpen(false);
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            )}
-            {isTitleVisible && (
-              <div className="flex-1 min-w-0">
-                <span
-                  className={cn(
-                    'text-sm font-medium',
-                    task.status === 'done' &&
-                      'line-through text-muted-foreground',
-                  )}>
-                  {task.title}
-                </span>
-              </div>
-            )}
-            {isLabelsVisible && task.labels && task.labels.length > 0 && (
-              <div className="flex items-center gap-2">
-                {task.labels?.slice(0, 2).map((label) => (
-                  <Badge
-                    key={label}
-                    variant="outline"
-                    className="text-xs px-1.5 py-0">
-                    {label}
-                  </Badge>
-                ))}
-                {task.labels && task.labels.length > 2 && (
-                  <Badge variant="outline" className="text-xs px-1.5 py-0">
-                    +{task.labels.length - 2}
-                  </Badge>
-                )}
-              </div>
-            )}
-            {isAssigneeVisible && task.assignee && (
-              <Popover open={assigneeOpen} onOpenChange={setAssigneeOpen}>
-                <PopoverTrigger asChild>
-                  <button
-                    className="shrink-0"
-                    aria-expanded={assigneeOpen}
-                    aria-label="Change assignee">
-                    <img
-                      src={task.assignee?.avatar}
-                      alt={task.assignee?.name}
-                      className="size-6 rounded-full"
-                    />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent side="right" className="w-48 p-0">
-                  <TaskAssigneeCombobox
-                    onSelect={(assigneeId) => {
-                      onAssigneeChange(assigneeId);
-                      setAssigneeOpen(false);
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            )}
-            {isCreatedAtVisible && (
+        <div
+          ref={rootRef}
+          role="button"
+          tabIndex={0}
+          className={cn(
+            'group flex w-full items-center gap-3 text-left',
+            'pl-3 pr-4 py-2.5',
+            isSelected ? 'bg-accent/50' : 'hover:bg-accent/25',
+          )}
+          onClick={() => {
+            setTimeout(() => {
+              dispatch(setSelectedTask(task.id));
+            }, 0);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              dispatch(setSelectedTask(task.id));
+            }
+          }}>
+          {isPriorityVisible && (
+            <Popover open={priorityOpen} onOpenChange={setPriorityOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  className="shrink-0 text-xs font-medium px-0.5 py-0.5"
+                  aria-label="Change priority">
+                  <TaskPriorityIcon priority={task.priority} />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="right" className="w-32 p-0">
+                <TaskPriorityCombobox
+                  onSelect={(priority) => {
+                    onPriorityChange(priority);
+                    setPriorityOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          )}
+          {isIdVisible && (
+            <span className="text-xs text-muted-foreground font-mono font-medium w-14">
+              {task.id}
+            </span>
+          )}
+          {isStatusVisible && (
+            <Popover open={statusOpen} onOpenChange={setStatusOpen}>
+              <PopoverTrigger asChild>
+                <button className="shrink-0" aria-label="Change task status">
+                  <TaskStatusIcon status={task.status} size="lg" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="right" className="w-36 p-0">
+                <TaskStatusCombobox
+                  onSelect={(status) => {
+                    onStatusChange(status);
+                    setStatusOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          )}
+          {isTitleVisible && (
+            <div className="flex-1 min-w-0">
               <span
-                className="text-xs text-muted-foreground w-16 text-right font-medium"
-                title={`Created ${formatTaskTimestamp(task.createdAt)}`}>
-                {formatTaskDate(task.createdAt)}
+                className={cn(
+                  'text-sm font-medium',
+                  task.status === 'done' &&
+                    'line-through text-muted-foreground',
+                )}>
+                {task.title}
               </span>
-            )}
-            {isUpdatedAtVisible && (
-              <span
-                className="text-xs text-muted-foreground w-16 text-right font-medium"
-                title={`Updated ${formatTaskTimestamp(task.updatedAt)}`}>
-                {formatTaskDate(task.updatedAt)}
-              </span>
-            )}
-          </div>
+            </div>
+          )}
+          {isLabelsVisible && task.labels && task.labels.length > 0 && (
+            <div className="flex items-center gap-2">
+              {task.labels?.slice(0, 2).map((label) => (
+                <Badge
+                  key={label}
+                  variant="outline"
+                  className="text-xs px-1.5 py-0">
+                  {label}
+                </Badge>
+              ))}
+              {task.labels && task.labels.length > 2 && (
+                <Badge variant="outline" className="text-xs px-1.5 py-0">
+                  +{task.labels.length - 2}
+                </Badge>
+              )}
+            </div>
+          )}
+          {isAssigneeVisible && task.assignee && (
+            <Popover open={assigneeOpen} onOpenChange={setAssigneeOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  className="shrink-0"
+                  aria-expanded={assigneeOpen}
+                  aria-label="Change assignee">
+                  <img
+                    src={task.assignee?.avatar}
+                    alt={task.assignee?.name}
+                    className="size-6 rounded-full"
+                  />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="right" className="w-48 p-0">
+                <TaskAssigneeCombobox
+                  onSelect={(assigneeId) => {
+                    onAssigneeChange(assigneeId);
+                    setAssigneeOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          )}
+          {isCreatedAtVisible && (
+            <span
+              className="text-xs text-muted-foreground w-16 text-right font-medium"
+              title={`Created ${formatTaskTimestamp(task.createdAt)}`}>
+              {formatTaskDate(task.createdAt)}
+            </span>
+          )}
+          {isUpdatedAtVisible && (
+            <span
+              className="text-xs text-muted-foreground w-16 text-right font-medium"
+              title={`Updated ${formatTaskTimestamp(task.updatedAt)}`}>
+              {formatTaskDate(task.updatedAt)}
+            </span>
+          )}
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-52">
