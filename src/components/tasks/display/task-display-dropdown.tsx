@@ -141,10 +141,7 @@ export function TaskDisplayDropdown() {
           Display
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        align="end"
-        className="w-56 p-0"
-        onEscapeKeyDown={() => setOpen(false)}>
+      <PopoverContent align="end" className="w-56 p-0">
         <div className="flex items-center gap-3 p-3">
           <div className="flex flex-1 items-center gap-1">
             <RiArrowUpDownLine className="size-4 text-muted-foreground" />
