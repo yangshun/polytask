@@ -2,6 +2,8 @@
 
 import { useChat } from '@ai-sdk/react';
 import { KeyboardEvent, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { ScrollArea } from '~/components/ui/scroll-area';
 import { Textarea } from '~/components/ui/textarea';
 import { Button } from '~/components/ui/button';
@@ -80,14 +82,55 @@ export function AiChatSidebar() {
                       ? 'bg-primary text-primary-foreground'
                       : 'bg-muted',
                   )}>
-                  <div className="whitespace-pre-wrap">
-                    {message.parts?.map((part, index) => {
-                      if (part.type === 'text') {
-                        return <span key={index}>{part.text}</span>;
-                      }
-                      return null;
-                    })}
-                  </div>
+                  {message.role === 'user' ? (
+                    <div className="whitespace-pre-wrap">
+                      {message.parts?.map((part, index) => {
+                        if (part.type === 'text') {
+                          return <span key={index}>{part.text}</span>;
+                        }
+                        return null;
+                      })}
+                    </div>
+                  ) : (
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        p: ({ children }) => (
+                          <p className="mb-2 last:mb-0">{children}</p>
+                        ),
+                        ul: ({ children }) => (
+                          <ul className="mb-2 list-disc pl-4 last:mb-0">
+                            {children}
+                          </ul>
+                        ),
+                        ol: ({ children }) => (
+                          <ol className="mb-2 list-decimal pl-4 last:mb-0">
+                            {children}
+                          </ol>
+                        ),
+                        li: ({ children }) => (
+                          <li className="mb-0.5">{children}</li>
+                        ),
+                        strong: ({ children }) => (
+                          <strong className="font-semibold">{children}</strong>
+                        ),
+                        code: ({ children }) => (
+                          <code className="rounded bg-black/10 px-1 py-0.5 font-mono text-xs dark:bg-white/10">
+                            {children}
+                          </code>
+                        ),
+                        pre: ({ children }) => (
+                          <pre className="mb-2 overflow-x-auto rounded bg-black/10 p-2 font-mono text-xs last:mb-0 dark:bg-white/10">
+                            {children}
+                          </pre>
+                        ),
+                      }}>
+                      {message.parts
+                        ?.filter((part) => part.type === 'text')
+                        .map((part) => (part.type === 'text' ? part.text : ''))
+                        .join('')}
+                    </ReactMarkdown>
+                  )}
                 </div>
                 <div className="text-xs text-muted-foreground px-1">
                   {formatTimestamp(new Date())}
