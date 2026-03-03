@@ -1,4 +1,4 @@
-import { google } from '@ai-sdk/google';
+import { openai } from '@ai-sdk/openai';
 import { convertToModelMessages, streamText } from 'ai';
 
 export const runtime = 'edge';
@@ -32,7 +32,7 @@ Guidelines:
     }
 
     const result = streamText({
-      model: google('gemini-1.5-flash'),
+      model: openai('gpt-5.2'),
       system: systemPrompt,
       messages: await convertToModelMessages(messages),
     });
