@@ -16,11 +16,7 @@ import { TaskItem } from '~/components/tasks/task-item';
 import { TaskToolbar } from '~/components/tasks/task-toolbar';
 import { TaskDetails } from '~/components/tasks/task-details';
 import { ScrollArea } from '~/components/ui/scroll-area';
-import {
-  Group as PanelGroup,
-  Panel,
-  Separator as PanelResizeHandle,
-} from 'react-resizable-panels';
+import { Group as PanelGroup, Panel, Separator } from 'react-resizable-panels';
 import { useEffect } from 'react';
 import {
   taskSelectNextCommandCreator,
@@ -119,19 +115,16 @@ export function TaskList() {
         <TaskToolbar />
       </div>
       <div className="h-0 grow">
-        <PanelGroup orientation="horizontal">
+        <PanelGroup>
           {isDesktop ? (
             <>
-              <Panel
-                id="desktop-list"
-                minSize={50}
-                defaultSize={hasSelection ? 70 : 100}>
+              <Panel id="desktop-list" minSize={50} defaultSize={70}>
                 {renderListSection()}
               </Panel>
               {selectedTask && (
                 <>
-                  <PanelResizeHandle className="w-px bg-border cursor-col-resize" />
-                  <Panel id="desktop-details" minSize={20}>
+                  <Separator className="w-px bg-border cursor-col-resize" />
+                  <Panel id="desktop-details" minSize={20} defaultSize={30}>
                     {taskDetails}
                   </Panel>
                 </>
