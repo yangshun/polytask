@@ -16,7 +16,6 @@
     "@ai-sdk/google": "^3.0.36",
     "@ai-sdk/react": "^3.0.110",
     "@base-ui/react": "^1.2.0",
-    "@google/generative-ai": "^0.24.1",
     "@reduxjs/toolkit": "^2.11.2",
     "ai": "^6.0.108",
     "class-variance-authority": "^0.7.1",
