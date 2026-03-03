@@ -11,7 +11,7 @@ import { useAiChatContext } from './ai-chat-context';
 export function AiChatSidebar() {
   const { tasks } = useAiChatContext();
   const [input, setInput] = useState('');
-  
+
   const { messages, sendMessage, status, error } = useChat({
     id: 'ai-chat',
     onError: (error) => {
@@ -28,7 +28,7 @@ export function AiChatSidebar() {
           body: {
             tasks,
           },
-        }
+        },
       );
       setInput('');
     }
@@ -44,10 +44,10 @@ export function AiChatSidebar() {
   };
 
   const formatTimestamp = (date: Date) => {
-    return date.toLocaleTimeString([], { 
-      hour: '2-digit', 
+    return date.toLocaleTimeString([], {
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: true 
+      hour12: true,
     });
   };
 
@@ -76,18 +76,17 @@ export function AiChatSidebar() {
                 <div
                   className={cn(
                     'text-sm px-3 py-2 rounded-lg',
-                    message.role === 'user' 
-                      ? 'bg-primary text-primary-foreground' 
+                    message.role === 'user'
+                      ? 'bg-primary text-primary-foreground'
                       : 'bg-muted',
                   )}>
                   <div className="whitespace-pre-wrap">
                     {message.parts?.map((part, index) => {
-                       if (part.type === 'text') {
-                         return <span key={index}>{part.text}</span>;
-                       }
-                       return null;
-                     })
-                    }
+                      if (part.type === 'text') {
+                        return <span key={index}>{part.text}</span>;
+                      }
+                      return null;
+                    })}
                   </div>
                 </div>
                 <div className="text-xs text-muted-foreground px-1">
@@ -101,12 +100,18 @@ export function AiChatSidebar() {
               <div className="flex flex-col gap-1 max-w-[80%]">
                 <div className="text-sm px-3 py-2 rounded-lg bg-muted">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" 
-                         style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" 
-                         style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" 
-                         style={{ animationDelay: '300ms' }} />
+                    <div
+                      className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
+                      style={{ animationDelay: '0ms' }}
+                    />
+                    <div
+                      className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
+                      style={{ animationDelay: '150ms' }}
+                    />
+                    <div
+                      className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
+                      style={{ animationDelay: '300ms' }}
+                    />
                   </div>
                 </div>
               </div>
@@ -130,8 +135,8 @@ export function AiChatSidebar() {
             className="resize-none min-h-[40px] max-h-[120px] flex-1 leading-tight"
             disabled={status === 'streaming'}
           />
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={!input.trim() || status === 'streaming'}
             size="sm"
             className="self-end">

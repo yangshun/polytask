@@ -1,7 +1,6 @@
 import { google } from '@ai-sdk/google';
 import { convertToModelMessages, streamText } from 'ai';
 
-
 export const runtime = 'edge';
 
 export async function POST(req: Request) {
@@ -35,7 +34,7 @@ Guidelines:
     const result = streamText({
       model: google('gemini-1.5-flash'),
       system: systemPrompt,
-      messages: convertToModelMessages(messages),
+      messages: await convertToModelMessages(messages),
     });
     return result.toUIMessageStreamResponse();
   } catch (error) {

@@ -22,9 +22,7 @@ export function AiChatProvider({ children }: AiChatProviderProps) {
   };
 
   return (
-    <AiChatContext.Provider value={value}>
-      {children}
-    </AiChatContext.Provider>
+    <AiChatContext.Provider value={value}>{children}</AiChatContext.Provider>
   );
 }
 

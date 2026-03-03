@@ -13,34 +13,34 @@
     "tc": "tsc --noEmit"
   },
   "dependencies": {
-    "@ai-sdk/google": "^2.0.11",
-    "@ai-sdk/react": "^2.0.26",
+    "@ai-sdk/google": "^3.0.36",
+    "@ai-sdk/react": "^3.0.110",
     "@base-ui/react": "^1.2.0",
     "@google/generative-ai": "^0.24.1",
-    "@reduxjs/toolkit": "^2.8.2",
-    "ai": "^5.0.26",
+    "@reduxjs/toolkit": "^2.11.2",
+    "ai": "^6.0.108",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "next": "16.1.6",
-    "next-themes": "^0.4.4",
+    "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
-    "react-resizable-panels": "^3.0.4",
+    "react-resizable-panels": "^4.7.0",
     "redux-undo": "^1.1.0",
-    "tailwind-merge": "^2.5.4"
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "^25.3.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "oxfmt": "^0.35.0",
-    "oxlint": "^1.50.0",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.15.1+sha512.34e538c329b5553014ca8e8f4535997f96180a1d0f614339357449935350d924e22f8614682191264ec33d1462ac21561aff97f6bb18065351c162c7e8f6de67"
 }
