@@ -5,11 +5,12 @@ import { ThemeToggle } from '~/components/theme/theme-toggle';
 import { CommandPalette } from '~/components/commands/command-palette';
 import { GlobalCommands } from '~/components/global/global-commands';
 import { AiChatSidebar } from '~/components/ai/ai-chat-sidebar';
+import { AiChatProvider } from '~/components/ai/ai-chat-context';
 import { useAppSelector } from '~/store/hooks';
 import { selectAiChatSidebarVisible } from '~/store/features/display/display-selectors';
 import { cn } from '~/lib/utils';
 import { RiGithubFill } from 'react-icons/ri';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Group as PanelGroup, Panel, Separator } from 'react-resizable-panels';
 
 export default function Home() {
   const aiChatSidebarVisible = useAppSelector(selectAiChatSidebarVisible);
@@ -38,15 +39,17 @@ export default function Home() {
         <GlobalCommands />
       </div>
       <div className={cn('px-2 pb-2 grow h-0')}>
-        <PanelGroup direction="horizontal">
-          <Panel defaultSize={100}>
+        <PanelGroup>
+          <Panel minSize={50} defaultSize={70}>
             <TaskList />
           </Panel>
           {aiChatSidebarVisible && (
             <>
-              <PanelResizeHandle className="w-px cursor-col-resize px-1" />
-              <Panel defaultSize={30} minSize={20} maxSize={50}>
-                <AiChatSidebar />
+              <Separator className="w-px cursor-col-resize px-1" />
+              <Panel defaultSize={25} minSize={20}>
+                <AiChatProvider>
+                  <AiChatSidebar />
+                </AiChatProvider>
               </Panel>
             </>
           )}
