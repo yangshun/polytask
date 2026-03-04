@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "check": "pnpm fmt && pnpm lint && pnpm tc",
+    "check": "pnpm format && pnpm lint && pnpm tc",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "lint": "oxlint",
-    "fmt": "oxfmt --write .",
-    "fmt:check": "oxfmt .",
+    "lint:fix": "oxlint --fix",
     "tc": "tsgo --noEmit"
   },
   "dependencies": {
