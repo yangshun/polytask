@@ -13,5 +13,4 @@ export type Command = CommandData &
     commandPalette: boolean;
   }>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CommandCreator = (params?: any) => Command;

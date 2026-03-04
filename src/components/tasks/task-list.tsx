@@ -36,7 +36,6 @@ export function TaskList() {
 
   const selectedTask: TaskObject | null = useAppSelector(selectSelectedTask);
   const selectedTaskId = useAppSelector(selectSelectedTaskId);
-  const hasSelection = !!selectedTaskId;
   const isDesktop = useMediaQuery('(min-width: 1024px)', true);
 
   function handleDeleteTask(id: string) {
