@@ -119,3 +119,7 @@
 #root {
   margin: auto;
 }
+
+strong {
+  font-weight: 500;
+}
