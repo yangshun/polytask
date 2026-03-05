@@ -24,11 +24,8 @@ import {
 } from '~/store/features/tasks/tasks-slice';
 import { selectRawTasks } from '~/store/features/tasks/tasks-selectors';
 import { assignees } from '~/data/mock-assignees';
-import type {
-  TaskRaw,
-  TaskStatus,
-  TaskPriority,
-} from '~/components/tasks/types';
+import type { TaskRaw } from '~/components/tasks/types';
+import type { ToolName, ToolInputMap } from '~/components/ai/tool-types';
 
 function generateTaskId(tasks: TaskRaw[]): string {
   const max = tasks.reduce((acc, task) => {
@@ -47,7 +44,7 @@ function ToolInvocationBadge({
   input,
   state,
 }: {
-  toolName: string;
+  toolName: ToolName;
   input: Record<string, unknown>;
   state: string;
 }) {
@@ -155,63 +152,74 @@ export function AiChatSidebar() {
     },
     onToolCall: async ({ toolCall }) => {
       const tc = toolCall;
-      const i = (tc.input ?? {}) as Record<string, unknown>;
+      const toolName = tc.toolName as ToolName;
       let output: unknown = { success: false };
 
-      if (tc.toolName === 'getTasks') {
-        output = { tasks: rawTasks };
-      } else if (tc.toolName === 'createTask') {
-        const newTask: TaskRaw = {
-          id: generateTaskId(rawTasks),
-          title: i.title as string,
-          description: i.description as string | undefined,
-          status: (i.status as TaskStatus) ?? 'todo',
-          priority: (i.priority as TaskPriority) ?? 1,
-          labels: (i.labels as string[]) ?? [],
-          assigneeId: i.assigneeId as string | undefined,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        dispatch(addTask(newTask));
-        output = { success: true, task: newTask };
-      } else if (tc.toolName === 'updateTask') {
-        const { id, ...updates } = i as { id: string } & Partial<
-          Omit<TaskRaw, 'id'>
-        >;
-        dispatch(reduxUpdateTask({ id, updates }));
-        output = { success: true };
-      } else if (tc.toolName === 'deleteTask') {
-        dispatch(reduxDeleteTask(i.id as string));
-        output = { success: true };
-      } else if (tc.toolName === 'assignTask') {
-        dispatch(
-          reduxAssignTask({
-            id: i.id as string,
-            assigneeId: i.assigneeId as string,
-          }),
-        );
-        output = { success: true };
-      } else if (tc.toolName === 'unassignTask') {
-        dispatch(
-          reduxUpdateTask({
-            id: i.id as string,
-            updates: { assigneeId: undefined },
-          }),
-        );
-        output = { success: true };
-      } else if (tc.toolName === 'addTaskLabel') {
-        dispatch(
-          reduxAddTaskLabel({ id: i.id as string, label: i.label as string }),
-        );
-        output = { success: true };
-      } else if (tc.toolName === 'removeTaskLabel') {
-        dispatch(
-          reduxRemoveTaskLabel({
-            id: i.id as string,
-            label: i.label as string,
-          }),
-        );
-        output = { success: true };
+      switch (toolName) {
+        case 'getTasks': {
+          output = { tasks: rawTasks };
+          break;
+        }
+        case 'createTask': {
+          const input = tc.input as ToolInputMap['createTask'];
+          const newTask: TaskRaw = {
+            id: generateTaskId(rawTasks),
+            title: input.title,
+            description: input.description,
+            status: input.status ?? 'todo',
+            priority: input.priority ?? 1,
+            labels: input.labels ?? [],
+            assigneeId: input.assigneeId,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+          dispatch(addTask(newTask));
+          output = { success: true, task: newTask };
+          break;
+        }
+        case 'updateTask': {
+          const { id, ...updates } = tc.input as ToolInputMap['updateTask'];
+          dispatch(reduxUpdateTask({ id, updates }));
+          output = { success: true };
+          break;
+        }
+        case 'deleteTask': {
+          const input = tc.input as ToolInputMap['deleteTask'];
+          dispatch(reduxDeleteTask(input.id));
+          output = { success: true };
+          break;
+        }
+        case 'assignTask': {
+          const input = tc.input as ToolInputMap['assignTask'];
+          dispatch(
+            reduxAssignTask({ id: input.id, assigneeId: input.assigneeId }),
+          );
+          output = { success: true };
+          break;
+        }
+        case 'unassignTask': {
+          const input = tc.input as ToolInputMap['unassignTask'];
+          dispatch(
+            reduxUpdateTask({
+              id: input.id,
+              updates: { assigneeId: undefined },
+            }),
+          );
+          output = { success: true };
+          break;
+        }
+        case 'addTaskLabel': {
+          const input = tc.input as ToolInputMap['addTaskLabel'];
+          dispatch(reduxAddTaskLabel({ id: input.id, label: input.label }));
+          output = { success: true };
+          break;
+        }
+        case 'removeTaskLabel': {
+          const input = tc.input as ToolInputMap['removeTaskLabel'];
+          dispatch(reduxRemoveTaskLabel({ id: input.id, label: input.label }));
+          output = { success: true };
+          break;
+        }
       }
 
       // Defer addToolOutput to avoid a deadlock with SerialJobExecutor.
@@ -302,7 +310,7 @@ export function AiChatSidebar() {
                         }
 
                         if (isToolUIPart(part)) {
-                          const toolName = getToolName(part);
+                          const toolName = getToolName(part) as ToolName;
                           const toolPart = part as any;
 
                           return (

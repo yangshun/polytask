@@ -5,7 +5,10 @@ import {
   MdSignalCellular4Bar,
 } from 'react-icons/md';
 import { TbLineDashed } from 'react-icons/tb';
-import type { TaskPriority } from '~/components/tasks/types';
+import {
+  taskPrioritySchema,
+  type TaskPriority,
+} from '~/components/tasks/types';
 
 export const taskPriorityRecord: Record<
   TaskPriority,
@@ -36,4 +39,6 @@ export const taskPriorityRecord: Record<
   },
 };
 
-export const taskPriorityList = [0, 1, 2, 3, 4] as const;
+export const taskPriorityList = taskPrioritySchema.options.map(
+  (opt) => opt.value,
+);

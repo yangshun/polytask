@@ -1,92 +1,9 @@
 import { openai } from '@ai-sdk/openai';
-import { convertToModelMessages, streamText, tool } from 'ai';
-import { z } from 'zod';
+import { convertToModelMessages, streamText } from 'ai';
 import { assignees } from '~/data/mock-assignees';
+import { tools } from '~/components/ai/tool-types';
 
 export const runtime = 'edge';
-
-const taskId = z.string().describe('The task ID (e.g. MUL-101)');
-
-const taskStatus = z.enum([
-  'todo',
-  'in-progress',
-  'in-review',
-  'done',
-  'cancelled',
-]);
-
-const taskPriority = z
-  .number()
-  .int()
-  .min(0)
-  .max(4)
-  .describe('0=no priority, 1=low, 2=medium, 3=high, 4=urgent');
-
-const tools = {
-  getTasks: tool({
-    description:
-      'Retrieve the current list of tasks. Call this whenever you need to look up tasks, answer questions about them, or before modifying them.',
-    inputSchema: z.object({}),
-  }),
-  createTask: tool({
-    description: 'Create a new task.',
-    inputSchema: z.object({
-      title: z.string().describe('The task title'),
-      description: z.string().optional().describe('Optional task description'),
-      status: taskStatus.optional().default('todo'),
-      priority: taskPriority.optional().default(1),
-      labels: z.array(z.string()).optional().describe('Optional labels'),
-      assigneeId: z
-        .string()
-        .optional()
-        .describe('Optional assignee ID to assign on creation'),
-    }),
-  }),
-  updateTask: tool({
-    description:
-      'Update an existing task. Use to change title, description, status, or priority.',
-    inputSchema: z.object({
-      id: taskId,
-      title: z.string().optional(),
-      description: z.string().optional(),
-      status: taskStatus.optional(),
-      priority: taskPriority.optional(),
-    }),
-  }),
-  deleteTask: tool({
-    description: 'Permanently delete a task.',
-    inputSchema: z.object({ id: taskId }),
-  }),
-  assignTask: tool({
-    description: 'Assign a task to one of the available team members.',
-    inputSchema: z.object({
-      id: taskId,
-      assigneeId: z
-        .string()
-        .describe(
-          `ID of the assignee. Available: ${assignees.map((a) => `${a.id}=${a.name}`).join(', ')}`,
-        ),
-    }),
-  }),
-  unassignTask: tool({
-    description: 'Remove the current assignee from a task.',
-    inputSchema: z.object({ id: taskId }),
-  }),
-  addTaskLabel: tool({
-    description: 'Add a label/tag to a task.',
-    inputSchema: z.object({
-      id: taskId,
-      label: z.string().describe('The label to add'),
-    }),
-  }),
-  removeTaskLabel: tool({
-    description: 'Remove a label/tag from a task.',
-    inputSchema: z.object({
-      id: taskId,
-      label: z.string().describe('The label to remove'),
-    }),
-  }),
-};
 
 export async function POST(req: Request) {
   try {
@@ -99,7 +16,7 @@ export async function POST(req: Request) {
 
     const systemPrompt = `You are an AI assistant for a task management app called Polytask.
 
-Tasks have: title, description, status (todo, in-progress, in-review, done, cancelled), priority (0=none, 1=low, 2=medium, 3=high, 4=urgent), assignee, and labels.
+Tasks have: title, description, status (todo, in-progress, in-review, done, cancelled), priority (0=none, 1=urgent, 2=high, 3=medium, 4=low), assignee, and labels.
 
 Available team members:
 ${assigneeList}

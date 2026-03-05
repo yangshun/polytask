@@ -1,11 +1,24 @@
-export type TaskStatus =
-  | 'todo'
-  | 'in-progress'
-  | 'in-review'
-  | 'done'
-  | 'cancelled';
+import { z } from 'zod';
 
-export type TaskPriority = 0 | 1 | 2 | 3 | 4;
+export const taskStatusSchema = z.enum([
+  'todo',
+  'in-progress',
+  'in-review',
+  'done',
+  'cancelled',
+]);
+
+export type TaskStatus = z.infer<typeof taskStatusSchema>;
+
+export const taskPrioritySchema = z.union([
+  z.literal(0),
+  z.literal(1),
+  z.literal(2),
+  z.literal(3),
+  z.literal(4),
+]);
+
+export type TaskPriority = z.infer<typeof taskPrioritySchema>;
 
 export interface TaskAssignee {
   id: string;
