@@ -23,6 +23,11 @@ const taskPriority = z
   .describe('0=no priority, 1=low, 2=medium, 3=high, 4=urgent');
 
 const tools = {
+  getTasks: tool({
+    description:
+      'Retrieve the current list of tasks. Call this whenever you need to look up tasks, answer questions about them, or before modifying them.',
+    inputSchema: z.object({}),
+  }),
   createTask: tool({
     description: 'Create a new task.',
     inputSchema: z.object({
@@ -86,7 +91,7 @@ const tools = {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages, tasks } = body;
+    const { messages } = body;
 
     const assigneeList = assignees
       .map((a) => `  - ID ${a.id}: ${a.name}`)
@@ -99,10 +104,9 @@ Tasks have: title, description, status (todo, in-progress, in-review, done, canc
 Available team members:
 ${assigneeList}
 
-Current tasks:
-${tasks ? JSON.stringify(tasks, null, 2) : 'No tasks available'}
-
 Guidelines:
+- Don't use any headings in the response
+- Call getTasks to retrieve the current task list whenever you need to reference, query, or modify tasks
 - Use your tools to directly create, update, delete, assign, or label tasks when asked
 - Reference tasks by ID or title
 - Be concise — confirm actions briefly after completing them`;

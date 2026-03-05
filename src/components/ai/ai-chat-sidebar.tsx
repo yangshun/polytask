@@ -1,7 +1,11 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { getToolName, isToolUIPart } from 'ai';
+import {
+  getToolName,
+  isToolUIPart,
+  lastAssistantMessageIsCompleteWithToolCalls,
+} from 'ai';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -9,7 +13,6 @@ import { ScrollArea } from '~/components/ui/scroll-area';
 import { Textarea } from '~/components/ui/textarea';
 import { Button } from '~/components/ui/button';
 import { cn } from '~/lib/utils';
-import { useAiChatContext } from './ai-chat-context';
 import { useAppDispatch, useAppSelector } from '~/store/hooks';
 import {
   addTask,
@@ -49,23 +52,68 @@ function ToolInvocationBadge({
   state: string;
 }) {
   const isPending = state === 'input-streaming' || state === 'input-available';
+  const entityClassName = 'font-medium text-foreground';
 
   const label = (() => {
     switch (toolName) {
+      case 'getTasks':
+        return `${isPending ? 'Retrieving' : 'Retrieved'} tasks`;
       case 'createTask':
-        return `${isPending ? 'Creating' : 'Created'} task: ${input.title}`;
+        return (
+          <>
+            {isPending ? 'Creating' : 'Created'} task:{' '}
+            <strong className={entityClassName}>{input.title as string}</strong>
+          </>
+        );
       case 'updateTask':
-        return `${isPending ? 'Updating' : 'Updated'} task ${input.id}`;
+        return (
+          <>
+            {isPending ? 'Updating' : 'Updated'} task{' '}
+            <strong className={entityClassName}>{input.id as string}</strong>
+          </>
+        );
       case 'deleteTask':
-        return `${isPending ? 'Deleting' : 'Deleted'} task ${input.id}`;
+        return (
+          <>
+            {isPending ? 'Deleting' : 'Deleted'} task{' '}
+            <strong className={entityClassName}>{input.id as string}</strong>
+          </>
+        );
       case 'assignTask':
-        return `${isPending ? 'Assigning' : 'Assigned'} ${input.id} to ${assigneeName(input.assigneeId)}`;
+        return (
+          <>
+            {isPending ? 'Assigning' : 'Assigned'}{' '}
+            <strong className={entityClassName}>{input.id as string}</strong> to{' '}
+            <strong className={entityClassName}>
+              {assigneeName(input.assigneeId)}
+            </strong>
+          </>
+        );
       case 'unassignTask':
-        return `${isPending ? 'Unassigning' : 'Unassigned'} ${input.id}`;
+        return (
+          <>
+            {isPending ? 'Unassigning' : 'Unassigned'}{' '}
+            <strong className={entityClassName}>{input.id as string}</strong>
+          </>
+        );
       case 'addTaskLabel':
-        return `${isPending ? 'Adding' : 'Added'} label "${input.label}" to ${input.id}`;
+        return (
+          <>
+            {isPending ? 'Adding' : 'Added'} label "
+            <strong className={entityClassName}>{input.label as string}</strong>
+            " to{' '}
+            <strong className={entityClassName}>{input.id as string}</strong>
+          </>
+        );
       case 'removeTaskLabel':
-        return `${isPending ? 'Removing' : 'Removed'} label "${input.label}" from ${input.id}`;
+        return (
+          <>
+            {isPending ? 'Removing' : 'Removed'} label "
+            <strong className={entityClassName}>{input.label as string}</strong>
+            " from{' '}
+            <strong className={entityClassName}>{input.id as string}</strong>
+          </>
+        );
       default:
         return toolName;
     }
@@ -74,21 +122,20 @@ function ToolInvocationBadge({
   return (
     <div
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
-        'bg-primary/10 text-primary my-1',
+        'inline-flex items-center gap-3',
+        'text-muted-foreground my-1.5',
       )}>
       {isPending ? (
-        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+        <span className="size-2 animate-pulse rounded-full bg-muted" />
       ) : (
-        <span>✓</span>
+        <span className="size-2 rounded-full bg-green-500" />
       )}
-      {label}
+      <span>{label}</span>
     </div>
   );
 }
 
 export function AiChatSidebar() {
-  const { tasks } = useAiChatContext();
   const rawTasks = useAppSelector(selectRawTasks);
   const dispatch = useAppDispatch();
   const [input, setInput] = useState('');
@@ -102,6 +149,7 @@ export function AiChatSidebar() {
 
   const { messages, sendMessage, addToolOutput, status, error } = useChat({
     id: 'ai-chat',
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     onError: (err) => {
       console.error('Chat error:', err);
     },
@@ -110,7 +158,9 @@ export function AiChatSidebar() {
       const i = (tc.input ?? {}) as Record<string, unknown>;
       let output: unknown = { success: false };
 
-      if (tc.toolName === 'createTask') {
+      if (tc.toolName === 'getTasks') {
+        output = { tasks: rawTasks };
+      } else if (tc.toolName === 'createTask') {
         const newTask: TaskRaw = {
           id: generateTaskId(rawTasks),
           title: i.title as string,
@@ -190,12 +240,7 @@ export function AiChatSidebar() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (input.trim() && status !== 'streaming') {
-      sendMessage(
-        { text: input.trim() },
-        {
-          body: { tasks },
-        },
-      );
+      sendMessage({ text: input.trim() });
       setInput('');
     }
   }
@@ -233,7 +278,7 @@ export function AiChatSidebar() {
                 )}>
                 <div
                   className={cn(
-                    'text-xs',
+                    'text-sm',
                     message.role === 'user' &&
                       'px-2 py-1.5 border border-muted rounded-md',
                   )}>
@@ -252,7 +297,7 @@ export function AiChatSidebar() {
                         if (part.type === 'text') {
                           return (
                             <div
-                              className="prose prose-invert prose-sm text-[12px] text-foreground"
+                              className="prose prose-invert prose-sm text-foreground"
                               key={index}>
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {part.text}
@@ -321,7 +366,7 @@ export function AiChatSidebar() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Ask me anything about your tasks..."
+            placeholder="Ask anything about your tasks"
             className="resize-none min-h-10 max-h-30 flex-1 leading-tight"
           />
           <Button type="submit" disabled={!input.trim()} size="sm">
