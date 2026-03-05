@@ -1,18 +1,24 @@
 # Polytask
 
-A client-only, Linear-inspired task manager that demonstrates how to build a web app centered around commands. The app showcases a command registry integrated with a command palette, global keyboard shortcuts, and Redux for state management.
+A demo of a client-only, Linear-inspired web app centered around commands. 
+
+The commands registry forms the backbone for the following modern features:
+
+- **Keyboard shortcuts**: Global and locally-scoped
+- **Command palette**: Search for a relevant command taking into account current scope
+- **AI chat**: Commands are exposed as tools
 
 > [!NOTE]  
-> This project is a client-only demo. It ships mock data and focuses on the command architecture rather than persistence. To make it production-ready, add a backend, authentication, and replace mock data with API integrations.
+> This project is a client-only demo. It uses mock data and focuses on the command architecture rather than persistence. To make it production-ready, add a backend, authentication, and replace mock data with API integrations.
 
 ## Features
 
 - Command palette powered by a centralized command registry
-- Global keyboard shortcuts mapped to commands
+- Global keyboard shortcuts mapped to commands, with scope
 - Redux Toolkit state management with undo/redo support
 - Task list with filters, statuses, priorities, assignees, and details view
 - Theme switching (light/dark) with system preference support
-- Accessible UI built on Radix UI primitives
+- Accessible UI built on Base UI primitives
 
 ## Tech stack
 
@@ -20,7 +26,7 @@ A client-only, Linear-inspired task manager that demonstrates how to build a web
 - Styling: Tailwind CSS v4, tailwind-merge, class-variance-authority
 - State: Redux Toolkit, React Redux, redux-undo
 - Commands UI: cmdk (command palette)
-- UI Primitives: Radix UI (Dialog, Popover, Tooltip, Dropdown, Context Menu, Scroll Area, Label)
+- UI Primitives: Base UI (Dialog, Popover, Tooltip, Dropdown, Context Menu, Scroll Area, Label)
 - Theming: next-themes
 
 ## Getting started
@@ -28,7 +34,7 @@ A client-only, Linear-inspired task manager that demonstrates how to build a web
 ### Prerequisites
 
 - Node.js 22+ (recommended)
-- pnpm 8+ (project uses pnpm via `packageManager`)
+- pnpm 10+ (project uses pnpm via `packageManager`)
 
 ### Installation
 
