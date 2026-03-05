@@ -255,12 +255,7 @@ export function AiChatSidebar() {
   }
 
   return (
-    <div
-      className={cn(
-        'flex flex-col gap-2 h-full',
-        'rounded-sm',
-        'bg-background',
-      )}>
+    <div className={cn('flex flex-col h-full', 'rounded-sm', 'bg-background')}>
       {/* Chat Messages */}
       <ScrollArea className="h-0 flex-1 px-2">
         <div className="space-y-4 py-2">
@@ -358,16 +353,36 @@ export function AiChatSidebar() {
           )}
         </div>
       </ScrollArea>
+      {messages.length <= 2 && (
+        <div className="flex flex-col gap-2 p-2">
+          {[
+            'Summarize the task statuses',
+            "What are Mike's tasks?",
+            'Assign Lisa a new task to update the README, with high priority',
+            'Reassign all pending tasks to Jane',
+          ].map((prompt) => (
+            <button
+              key={prompt}
+              type="button"
+              className="text-left text-sm px-3 py-2 rounded-md border border-muted hover:bg-muted/25 transition-colors cursor-pointer"
+              onClick={() => {
+                sendMessage({ text: prompt });
+              }}>
+              {prompt}
+            </button>
+          ))}
+        </div>
+      )}
       {/* Input Area */}
-      <div className={cn('flex flex-col gap-2 p-2')}>
+      <div className={cn('flex flex-col gap-2 px-2 pt-2')}>
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Textarea
             autoFocus={true}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Ask anything about your tasks"
-            className="resize-none min-h-10 max-h-30 flex-1 leading-tight"
+            placeholder="Ask anything about your tasks or perform actions"
+            className="resize-none max-h-30 flex-1 leading-tight"
           />
           <Button type="submit" disabled={!input.trim()} size="sm">
             Send
