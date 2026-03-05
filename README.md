@@ -1,6 +1,6 @@
 # Polytask
 
-A demo of a client-only, Linear-inspired web app centered around commands. 
+A demo of a client-only, Linear-inspired web app centered around commands.
 
 The commands registry forms the backbone for the following modern features:
 

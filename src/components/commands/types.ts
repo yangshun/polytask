@@ -2,7 +2,7 @@ export type CommandData = Readonly<{
   id: string;
   name: string;
   description?: string;
-  group?: 'theme' | 'tasks';
+  group?: 'general' | 'theme' | 'tasks';
   icon: React.ElementType;
   shortcut?: string;
 }>;

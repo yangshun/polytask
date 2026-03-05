@@ -7,6 +7,7 @@ import {
   themeSetLightCommandCreator,
   themeSetDarkCommandCreator,
 } from '~/components/theme/theme-commands';
+import { aiChatToggleCommandCreator } from '~/components/ai/ai-chat-commands';
 
 // Technically it can just be a hook
 export function GlobalCommands() {
@@ -17,12 +18,14 @@ export function GlobalCommands() {
     const unregisterToggle = registerCommand(themeToggleCommandCreator());
     const unregisterLight = registerCommand(themeSetLightCommandCreator());
     const unregisterDark = registerCommand(themeSetDarkCommandCreator());
+    const unregisterAiChat = registerCommand(aiChatToggleCommandCreator());
 
     // Cleanup on unmount
     return () => {
       unregisterToggle();
       unregisterLight();
       unregisterDark();
+      unregisterAiChat();
     };
   }, [registerCommand]);
 

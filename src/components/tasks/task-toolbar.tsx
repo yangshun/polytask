@@ -7,7 +7,8 @@ import { useCommands } from '~/components/commands/commands-context';
 import { TaskDisplayDropdown } from '~/components/tasks/display/task-display-dropdown';
 import { toggleAiChatSidebar } from '~/store/features/display/display-slice';
 import { selectAiChatSidebarVisible } from '~/store/features/display/display-selectors';
-import { RiArrowRightDoubleLine, RiSparkling2Fill } from 'react-icons/ri';
+import { RiArrowRightDoubleLine } from 'react-icons/ri';
+import { aiChatToggleCommandData } from '~/components/ai/ai-chat-commands';
 
 import {
   selectTasksCanRedo,
@@ -73,14 +74,17 @@ export function TaskToolbar() {
         <TaskDisplayDropdown />
         <Button
           variant={'ghost'}
-          aria-label="Toggle AI Chat"
-          tooltip="Toggle AI Chat"
+          aria-label={aiChatToggleCommandData.name}
+          tooltip={aiChatToggleCommandData.name}
+          shortcut={aiChatToggleCommandData.shortcut}
           size="sm"
           onClick={() => {
             dispatch(toggleAiChatSidebar());
           }}
           icon={
-            aiChatSidebarVisible ? RiArrowRightDoubleLine : RiSparkling2Fill
+            aiChatSidebarVisible
+              ? RiArrowRightDoubleLine
+              : aiChatToggleCommandData.icon
           }>
           {aiChatSidebarVisible ? undefined : 'Chat'}
         </Button>
