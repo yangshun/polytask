@@ -1,7 +1,7 @@
 import { RiMacbookLine, RiMoonLine, RiSunLine } from 'react-icons/ri';
-import type { CommandCreator, CommandData } from '~/components/commands/types';
-import { setTheme, toggleTheme } from '~/store/features/theme/theme-slice';
-import { store } from '~/store/store';
+import type { CommandCreator, CommandData } from '@/components/commands/types';
+import { setTheme, toggleTheme } from '@/store/features/theme/theme-slice';
+import { store } from '@/store/store';
 
 // Toggle theme
 export const themeToggleCommandData: CommandData = {

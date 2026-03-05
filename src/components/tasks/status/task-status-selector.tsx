@@ -1,18 +1,18 @@
-import { TaskStatus } from '~/components/tasks/types';
-import { Button } from '~/components/ui/button';
+import { TaskStatus } from '@/components/tasks/types';
+import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from '~/components/ui/popover';
+} from '@/components/ui/popover';
 
 import { TaskStatusIcon } from './task-status-icon';
-import { cn } from '~/lib/utils';
+import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { TaskStatusCombobox } from './task-status-combobox';
 import { taskStatusRecord } from './task-status-list';
 import { taskStatusOpenCommandCreator } from '../task-commands';
-import { useCommands } from '~/components/commands/commands-context';
+import { useCommands } from '@/components/commands/commands-context';
 
 export type TaskStatusSelectorProps = {
   commandScope?: string;

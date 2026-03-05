@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Slot } from '~/lib/slot';
+import { Slot } from '@/lib/slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from '~/lib/utils';
+import { cn } from '@/lib/utils';
 import { Tooltip, TooltipTrigger, TooltipContent } from './tooltip';
 import { ShortcutKeys } from '../shortcuts/shortcut-keys';
 

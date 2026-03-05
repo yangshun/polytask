@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Button } from '~/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '~/components/ui/popover';
-import { Label } from '~/components/ui/label';
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
+} from '@/components/ui/popover';
+import { Label } from '@/components/ui/label';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   toggleFieldVisibility,
   TaskDisplayField,
@@ -17,21 +17,21 @@ import {
   setFieldsSortBy,
   toggleFieldsSortDirection,
   resetFieldsToDefault,
-} from '~/store/features/tasks/tasks-slice';
+} from '@/store/features/tasks/tasks-slice';
 import {
   selectVisibleFields,
   selectFieldLabels,
   selectSortBy,
   selectSortDirection,
-} from '~/store/features/tasks/tasks-selectors';
-import { cn } from '~/lib/utils';
-import { useCommands } from '~/components/commands/commands-context';
+} from '@/store/features/tasks/tasks-selectors';
+import { cn } from '@/lib/utils';
+import { useCommands } from '@/components/commands/commands-context';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { RiArrowUpDownLine } from 'react-icons/ri';
 import { FaSortAmountDown, FaSortAmountUpAlt } from 'react-icons/fa';
 import {

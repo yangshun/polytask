@@ -1,7 +1,7 @@
 import { RiSparkling2Fill } from 'react-icons/ri';
-import type { CommandCreator, CommandData } from '~/components/commands/types';
-import { toggleAiChatSidebar } from '~/store/features/display/display-slice';
-import { store } from '~/store/store';
+import type { CommandCreator, CommandData } from '@/components/commands/types';
+import { toggleAiChatSidebar } from '@/store/features/display/display-slice';
+import { store } from '@/store/store';
 
 export const aiChatToggleCommandData: CommandData = {
   id: 'ai.chat.toggle',

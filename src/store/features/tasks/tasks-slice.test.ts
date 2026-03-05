@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { TaskRaw } from '~/components/tasks/types';
+import { TaskRaw } from '@/components/tasks/types';
 import {
   tasksSlice,
   addTask,
@@ -38,7 +38,15 @@ function makeState(overrides: Partial<TasksState> = {}): TasksState {
   return {
     tasks: [],
     selectedTaskId: null,
-    visibleFields: ['priority', 'id', 'status', 'title', 'assignee', 'createdAt', 'updatedAt'],
+    visibleFields: [
+      'priority',
+      'id',
+      'status',
+      'title',
+      'assignee',
+      'createdAt',
+      'updatedAt',
+    ],
     sortBy: 'id',
     sortDirection: 'desc',
     sortFieldHidden: false,
@@ -154,10 +162,7 @@ describe('tasks-slice reducers', () => {
   describe('label operations', () => {
     it('adds a label to a task', () => {
       const state = makeState({ tasks: [makeTask()] });
-      const next = reducer(
-        state,
-        addTaskLabel({ id: 'TST-1', label: 'bug' }),
-      );
+      const next = reducer(state, addTaskLabel({ id: 'TST-1', label: 'bug' }));
       expect(next.tasks[0].labels).toContain('bug');
     });
 
@@ -165,10 +170,7 @@ describe('tasks-slice reducers', () => {
       const state = makeState({
         tasks: [makeTask({ labels: ['bug'] })],
       });
-      const next = reducer(
-        state,
-        addTaskLabel({ id: 'TST-1', label: 'bug' }),
-      );
+      const next = reducer(state, addTaskLabel({ id: 'TST-1', label: 'bug' }));
       expect(next.tasks[0].labels).toEqual(['bug']);
     });
 
@@ -263,7 +265,11 @@ describe('tasks-slice reducers', () => {
   describe('sorting', () => {
     it('sorts by id ascending', () => {
       const state = makeState({
-        tasks: [makeTask({ id: 'TST-3' }), makeTask({ id: 'TST-1' }), makeTask({ id: 'TST-2' })],
+        tasks: [
+          makeTask({ id: 'TST-3' }),
+          makeTask({ id: 'TST-1' }),
+          makeTask({ id: 'TST-2' }),
+        ],
         sortBy: 'id',
         sortDirection: 'desc',
       });
@@ -273,7 +279,11 @@ describe('tasks-slice reducers', () => {
 
     it('sorts by id descending', () => {
       const state = makeState({
-        tasks: [makeTask({ id: 'TST-1' }), makeTask({ id: 'TST-3' }), makeTask({ id: 'TST-2' })],
+        tasks: [
+          makeTask({ id: 'TST-1' }),
+          makeTask({ id: 'TST-3' }),
+          makeTask({ id: 'TST-2' }),
+        ],
         sortBy: 'id',
         sortDirection: 'asc',
       });

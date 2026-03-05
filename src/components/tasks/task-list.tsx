@@ -1,21 +1,21 @@
 'use client';
 
-import { cn } from '~/lib/utils';
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { cn } from '@/lib/utils';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   assignTask,
   deleteTask,
   updateTask,
-} from '~/store/features/tasks/tasks-slice';
+} from '@/store/features/tasks/tasks-slice';
 import {
   selectAllTasks,
   selectSelectedTask,
   selectSelectedTaskId,
-} from '~/store/features/tasks/tasks-selectors';
-import { TaskItem } from '~/components/tasks/task-item';
-import { TaskToolbar } from '~/components/tasks/task-toolbar';
-import { TaskDetails } from '~/components/tasks/task-details';
-import { ScrollArea } from '~/components/ui/scroll-area';
+} from '@/store/features/tasks/tasks-selectors';
+import { TaskItem } from '@/components/tasks/task-item';
+import { TaskToolbar } from '@/components/tasks/task-toolbar';
+import { TaskDetails } from '@/components/tasks/task-details';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Group as PanelGroup, Panel, Separator } from 'react-resizable-panels';
 import { useEffect } from 'react';
 import {
@@ -23,11 +23,11 @@ import {
   taskSelectPreviousCommandCreator,
   taskUnselectCommandCreator,
 } from './task-commands';
-import { useCommands } from '~/components/commands/commands-context';
-import { TaskStatusSummary } from '~/components/tasks/status/task-status-summary';
-import type { TaskObject } from '~/components/tasks/types';
-import { TaskEmptyState } from '~/components/tasks/task-empty-state';
-import { useMediaQuery } from '~/lib/use-media-query';
+import { useCommands } from '@/components/commands/commands-context';
+import { TaskStatusSummary } from '@/components/tasks/status/task-status-summary';
+import type { TaskObject } from '@/components/tasks/types';
+import { TaskEmptyState } from '@/components/tasks/task-empty-state';
+import { useMediaQuery } from '@/lib/use-media-query';
 
 export function TaskList() {
   const { registerCommand } = useCommands();

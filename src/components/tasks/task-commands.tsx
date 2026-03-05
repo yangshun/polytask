@@ -13,15 +13,15 @@ import {
   RiRefreshLine,
 } from 'react-icons/ri';
 
-import type { CommandCreator, CommandData } from '~/components/commands/types';
+import type { CommandCreator, CommandData } from '@/components/commands/types';
 import {
   clearSelectedTask,
   deleteTask,
   resetFieldsToDefault,
   selectNextTask,
   selectPreviousTask,
-} from '~/store/features/tasks/tasks-slice';
-import { store } from '~/store/store';
+} from '@/store/features/tasks/tasks-slice';
+import { store } from '@/store/store';
 
 // Undo
 export const taskUndoCommandData: CommandData = {

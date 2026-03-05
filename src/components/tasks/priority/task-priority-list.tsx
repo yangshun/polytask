@@ -8,7 +8,7 @@ import { TbLineDashed } from 'react-icons/tb';
 import {
   taskPrioritySchema,
   type TaskPriority,
-} from '~/components/tasks/types';
+} from '@/components/tasks/types';
 
 export const taskPriorityRecord: Record<
   TaskPriority,

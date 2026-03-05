@@ -7,9 +7,9 @@ import {
   CommandItem,
   CommandEmpty,
   CommandGroup,
-} from '~/components/ui/command';
+} from '@/components/ui/command';
 
-import { assignees } from '~/data/mock-assignees';
+import { assignees } from '@/data/mock-assignees';
 
 type Props = {
   onSelect: (assigneeId: string) => void;

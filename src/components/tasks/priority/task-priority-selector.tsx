@@ -1,17 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { TaskPriority } from '~/components/tasks/types';
-import { Button } from '~/components/ui/button';
+import type { TaskPriority } from '@/components/tasks/types';
+import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '~/components/ui/popover';
-import { cn } from '~/lib/utils';
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 import { TaskPriorityIcon } from './task-priority-icon';
 import { TaskPriorityCombobox } from './task-priority-combobox';
 import { taskPriorityRecord } from './task-priority-list';
 import { taskPriorityOpenCommandCreator } from '../task-commands';
-import { useCommands } from '~/components/commands/commands-context';
+import { useCommands } from '@/components/commands/commands-context';
 
 type Props = Readonly<{
   commandScope?: string;

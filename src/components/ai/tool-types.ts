@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { tool } from 'ai';
-import { assignees } from '~/data/mock-assignees';
-import { taskStatusSchema, taskPrioritySchema } from '~/components/tasks/types';
+import { assignees } from '@/data/mock-assignees';
+import { taskStatusSchema, taskPrioritySchema } from '@/components/tasks/types';
 
 const taskId = z.string().describe('The task ID (e.g. MUL-101)');
 

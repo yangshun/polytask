@@ -9,11 +9,11 @@ import {
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ScrollArea } from '~/components/ui/scroll-area';
-import { Textarea } from '~/components/ui/textarea';
-import { Button } from '~/components/ui/button';
-import { cn } from '~/lib/utils';
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   addTask,
   updateTask as reduxUpdateTask,
@@ -21,11 +21,11 @@ import {
   assignTask as reduxAssignTask,
   addTaskLabel as reduxAddTaskLabel,
   removeTaskLabel as reduxRemoveTaskLabel,
-} from '~/store/features/tasks/tasks-slice';
-import { selectRawTasks } from '~/store/features/tasks/tasks-selectors';
-import { assignees } from '~/data/mock-assignees';
-import type { TaskRaw } from '~/components/tasks/types';
-import type { ToolName, ToolInputMap } from '~/components/ai/tool-types';
+} from '@/store/features/tasks/tasks-slice';
+import { selectRawTasks } from '@/store/features/tasks/tasks-selectors';
+import { assignees } from '@/data/mock-assignees';
+import type { TaskRaw } from '@/components/tasks/types';
+import type { ToolName, ToolInputMap } from '@/components/ai/tool-types';
 
 function generateTaskId(tasks: TaskRaw[]): string {
   const max = tasks.reduce((acc, task) => {

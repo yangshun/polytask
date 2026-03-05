@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Textarea } from '~/components/ui/textarea';
+import { Textarea } from '@/components/ui/textarea';
 
 export type TaskDescriptionFieldProps = {
   value: string;

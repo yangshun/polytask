@@ -1,12 +1,12 @@
-import { TaskObject } from '~/components/tasks/types';
-import { Button } from '~/components/ui/button';
+import { TaskObject } from '@/components/tasks/types';
+import { Button } from '@/components/ui/button';
 import { TaskStatusSelector } from './status/task-status-selector';
 import { TaskAssigneeSelector } from './assignee/task-assignee-selector';
 import { TaskDescriptionField } from './description/task-description-field';
 import { TaskTitleField } from './title/task-title-field';
 
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { assignTask, updateTask } from '~/store/features/tasks/tasks-slice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { assignTask, updateTask } from '@/store/features/tasks/tasks-slice';
 import {
   taskDeleteCommandCreator,
   taskSelectNextCommandCreator,
@@ -15,12 +15,12 @@ import {
 } from './task-commands';
 import { useCommands } from '../commands/commands-context';
 import { useEffect, useMemo } from 'react';
-import { cn } from '~/lib/utils';
+import { cn } from '@/lib/utils';
 import { TaskPrioritySelector } from './priority/task-priority-selector';
 import {
   selectHasNextTask,
   selectHasPreviousTask,
-} from '~/store/features/tasks/tasks-selectors';
+} from '@/store/features/tasks/tasks-selectors';
 import { RiCloseLine } from 'react-icons/ri';
 
 export type TaskDetailsProps = {

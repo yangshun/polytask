@@ -2,9 +2,9 @@
 
 import { useSyncExternalStore } from 'react';
 
-import { Button } from '~/components/ui/button';
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { setTheme } from '~/store/features/theme/theme-slice';
+import { Button } from '@/components/ui/button';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { setTheme } from '@/store/features/theme/theme-slice';
 import {
   themeSetDarkCommandData,
   themeSetLightCommandData,

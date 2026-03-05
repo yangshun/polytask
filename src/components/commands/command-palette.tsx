@@ -10,9 +10,9 @@ import {
   CommandItem,
   CommandList,
   CommandShortcut,
-} from '~/components/ui/command';
-import { useCommands } from '~/components/commands/commands-context';
-import { cn } from '~/lib/utils';
+} from '@/components/ui/command';
+import { useCommands } from '@/components/commands/commands-context';
+import { cn } from '@/lib/utils';
 import { RiTerminalBoxLine } from 'react-icons/ri';
 import { ShortcutKeys } from '../shortcuts/shortcut-keys';
 

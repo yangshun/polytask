@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '~/lib/utils';
+import { cn } from '@/lib/utils';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -10,12 +10,12 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from '~/components/ui/context-menu';
-import { TaskObject, TaskStatus, TaskPriority } from '~/components/tasks/types';
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { selectIsFieldVisible } from '~/store/features/tasks/tasks-selectors';
-import { setSelectedTask } from '~/store/features/tasks/tasks-slice';
-import { Badge } from '~/components/ui/badge';
+} from '@/components/ui/context-menu';
+import { TaskObject, TaskStatus, TaskPriority } from '@/components/tasks/types';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { selectIsFieldVisible } from '@/store/features/tasks/tasks-selectors';
+import { setSelectedTask } from '@/store/features/tasks/tasks-slice';
+import { Badge } from '@/components/ui/badge';
 import { TaskStatusIcon } from './status/task-status-icon';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -30,7 +30,7 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from '~/components/ui/popover';
+} from '@/components/ui/popover';
 import { TaskPriorityCombobox } from './priority/task-priority-combobox';
 import { TaskPriorityIcon } from './priority/task-priority-icon';
 import {

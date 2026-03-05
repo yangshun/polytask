@@ -2,9 +2,9 @@
 
 import { TaskStatusIcon } from './task-status-icon';
 import { taskStatusRecord } from './task-status-list';
-import { useAppSelector } from '~/store/hooks';
-import { selectTaskCounts } from '~/store/features/tasks/tasks-selectors';
-import { cn } from '~/lib/utils';
+import { useAppSelector } from '@/store/hooks';
+import { selectTaskCounts } from '@/store/features/tasks/tasks-selectors';
+import { cn } from '@/lib/utils';
 
 export function TaskStatusSummary() {
   const taskCounts = useAppSelector(selectTaskCounts);

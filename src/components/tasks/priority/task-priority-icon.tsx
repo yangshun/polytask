@@ -1,6 +1,6 @@
-import { cn } from '~/lib/utils';
+import { cn } from '@/lib/utils';
 import { taskPriorityRecord } from './task-priority-list';
-import type { TaskPriority } from '~/components/tasks/types';
+import type { TaskPriority } from '@/components/tasks/types';
 
 interface TaskPriorityIconProps {
   priority: TaskPriority;

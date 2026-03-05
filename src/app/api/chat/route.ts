@@ -1,7 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { convertToModelMessages, streamText } from 'ai';
-import { assignees } from '~/data/mock-assignees';
-import { tools } from '~/components/ai/tool-types';
+import { assignees } from '@/data/mock-assignees';
+import { tools } from '@/components/ai/tool-types';
 
 export const runtime = 'edge';
 

@@ -1,12 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { assignees } from '~/data/mock-assignees';
-import { RootState } from '~/store/store';
+import { assignees } from '@/data/mock-assignees';
+import { RootState } from '@/store/store';
 import {
   TaskRaw,
   TaskObject,
   TaskStatus,
   TaskPriority,
-} from '~/components/tasks/types';
+} from '@/components/tasks/types';
 import { TaskDisplayField, TaskSortDirection } from './tasks-slice';
 
 function augmentTaskWithAssignee(task?: TaskRaw | null): TaskObject | null {

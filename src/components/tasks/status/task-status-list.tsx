@@ -5,7 +5,7 @@ import {
   RiProgress4Line,
   RiProgress6Line,
 } from 'react-icons/ri';
-import { TaskStatus } from '~/components/tasks/types';
+import { TaskStatus } from '@/components/tasks/types';
 
 export const taskStatusRecord: Record<
   TaskStatus,

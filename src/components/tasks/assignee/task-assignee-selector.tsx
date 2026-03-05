@@ -3,13 +3,13 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from '~/components/ui/popover';
+} from '@/components/ui/popover';
 
-import { Button } from '~/components/ui/button';
-import { useCommands } from '~/components/commands/commands-context';
+import { Button } from '@/components/ui/button';
+import { useCommands } from '@/components/commands/commands-context';
 import { taskAssigneeOpenCommandCreator } from '../task-commands';
 import { TaskAssigneeCombobox } from './task-assignee-combobox';
-import { assignees } from '~/data/mock-assignees';
+import { assignees } from '@/data/mock-assignees';
 
 export type TaskAssigneeSelectorProps = {
   commandScope?: string;

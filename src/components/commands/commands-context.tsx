@@ -9,9 +9,9 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import { Command } from '~/components/commands/types';
+import { Command } from '@/components/commands/types';
 import { commandsRegistry, ScopeConfig, ScopeParam } from './commands-registry';
-import { useKeyboardShortcuts } from '~/components/shortcuts/use-keyboard-shortcuts';
+import { useKeyboardShortcuts } from '@/components/shortcuts/use-keyboard-shortcuts';
 
 interface CommandsContextValue {
   commands: Command[];

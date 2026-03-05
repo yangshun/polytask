@@ -1,7 +1,7 @@
 import undoable, { groupByActionTypes } from 'redux-undo';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TaskPriority, TaskRaw, TaskStatus } from '~/components/tasks/types';
-import { mockTasks } from '~/data/mock-tasks';
+import { TaskPriority, TaskRaw, TaskStatus } from '@/components/tasks/types';
+import { mockTasks } from '@/data/mock-tasks';
 
 export type TaskDisplayField =
   | 'id'

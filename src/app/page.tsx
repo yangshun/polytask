@@ -1,14 +1,14 @@
 'use client';
 
-import { TaskList } from '~/components/tasks/task-list';
-import { ThemeToggle } from '~/components/theme/theme-toggle';
-import { CommandPalette } from '~/components/commands/command-palette';
-import { GlobalCommands } from '~/components/global/global-commands';
-import { AiChatSidebar } from '~/components/ai/ai-chat-sidebar';
-import { AiChatProvider } from '~/components/ai/ai-chat-context';
-import { useAppSelector } from '~/store/hooks';
-import { selectAiChatSidebarVisible } from '~/store/features/display/display-selectors';
-import { cn } from '~/lib/utils';
+import { TaskList } from '@/components/tasks/task-list';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { CommandPalette } from '@/components/commands/command-palette';
+import { GlobalCommands } from '@/components/global/global-commands';
+import { AiChatSidebar } from '@/components/ai/ai-chat-sidebar';
+import { AiChatProvider } from '@/components/ai/ai-chat-context';
+import { useAppSelector } from '@/store/hooks';
+import { selectAiChatSidebarVisible } from '@/store/features/display/display-selectors';
+import { cn } from '@/lib/utils';
 import { RiGithubFill } from 'react-icons/ri';
 import { Group as PanelGroup, Panel, Separator } from 'react-resizable-panels';
 

@@ -1,19 +1,19 @@
 'use client';
 
-import { Button } from '~/components/ui/button';
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { TaskCreateDialog } from '~/components/tasks/create/task-create-dialog';
-import { useCommands } from '~/components/commands/commands-context';
-import { TaskDisplayDropdown } from '~/components/tasks/display/task-display-dropdown';
-import { toggleAiChatSidebar } from '~/store/features/display/display-slice';
-import { selectAiChatSidebarVisible } from '~/store/features/display/display-selectors';
+import { Button } from '@/components/ui/button';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { TaskCreateDialog } from '@/components/tasks/create/task-create-dialog';
+import { useCommands } from '@/components/commands/commands-context';
+import { TaskDisplayDropdown } from '@/components/tasks/display/task-display-dropdown';
+import { toggleAiChatSidebar } from '@/store/features/display/display-slice';
+import { selectAiChatSidebarVisible } from '@/store/features/display/display-selectors';
 import { RiArrowRightDoubleLine } from 'react-icons/ri';
-import { aiChatToggleCommandData } from '~/components/ai/ai-chat-commands';
+import { aiChatToggleCommandData } from '@/components/ai/ai-chat-commands';
 
 import {
   selectTasksCanRedo,
   selectTasksCanUndo,
-} from '~/store/features/tasks/tasks-selectors';
+} from '@/store/features/tasks/tasks-selectors';
 import {
   taskRedoCommandCreator,
   taskUndoCommandCreator,

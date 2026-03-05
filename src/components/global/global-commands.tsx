@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useCommands } from '~/components/commands/commands-context';
+import { useCommands } from '@/components/commands/commands-context';
 import {
   themeToggleCommandCreator,
   themeSetLightCommandCreator,
   themeSetDarkCommandCreator,
-} from '~/components/theme/theme-commands';
-import { aiChatToggleCommandCreator } from '~/components/ai/ai-chat-commands';
+} from '@/components/theme/theme-commands';
+import { aiChatToggleCommandCreator } from '@/components/ai/ai-chat-commands';
 
 // Technically it can just be a hook
 export function GlobalCommands() {

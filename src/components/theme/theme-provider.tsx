@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { ThemeProvider as NextThemesProvider, useTheme } from 'next-themes';
 import type { ThemeProviderProps } from 'next-themes';
 
-import { useAppSelector } from '~/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 
 // Internal component to sync Redux with next-themes
 function ThemeSync() {

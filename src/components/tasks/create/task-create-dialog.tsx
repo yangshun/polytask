@@ -6,23 +6,23 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '~/components/ui/dialog';
-import { Button } from '~/components/ui/button';
-import { TaskTitleField } from '~/components/tasks/title/task-title-field';
-import { TaskDescriptionField } from '~/components/tasks/description/task-description-field';
-import { TaskStatusSelector } from '~/components/tasks/status/task-status-selector';
-import { TaskAssigneeSelector } from '~/components/tasks/assignee/task-assignee-selector';
-import { useAppDispatch, useAppSelector } from '~/store/hooks';
-import { addTask, setSelectedTask } from '~/store/features/tasks/tasks-slice';
-import { selectAllTasks } from '~/store/features/tasks/tasks-selectors';
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { TaskTitleField } from '@/components/tasks/title/task-title-field';
+import { TaskDescriptionField } from '@/components/tasks/description/task-description-field';
+import { TaskStatusSelector } from '@/components/tasks/status/task-status-selector';
+import { TaskAssigneeSelector } from '@/components/tasks/assignee/task-assignee-selector';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { addTask, setSelectedTask } from '@/store/features/tasks/tasks-slice';
+import { selectAllTasks } from '@/store/features/tasks/tasks-selectors';
 import type {
   TaskRaw,
   TaskStatus,
   TaskPriority,
-} from '~/components/tasks/types';
+} from '@/components/tasks/types';
 import { TaskPrioritySelector } from '../priority/task-priority-selector';
 import { taskCreateDialogOpenCommandCreator } from '../task-commands';
-import { useCommands } from '~/components/commands/commands-context';
+import { useCommands } from '@/components/commands/commands-context';
 
 function getTodayDateString() {
   return new Date().toISOString().slice(0, 10);

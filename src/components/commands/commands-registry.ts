@@ -1,4 +1,4 @@
-import { Command } from '~/components/commands/types';
+import { Command } from '@/components/commands/types';
 
 type CommandId = string;
 type ScopeName = string;

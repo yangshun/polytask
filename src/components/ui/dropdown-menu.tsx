@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 
-import { cn } from '~/lib/utils';
+import { cn } from '@/lib/utils';
 import { RiArrowRightSLine, RiCheckLine, RiCircleLine } from 'react-icons/ri';
 
 function DropdownMenu({

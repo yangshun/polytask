@@ -1,7 +1,7 @@
-import { cn } from '~/lib/utils';
+import { cn } from '@/lib/utils';
 
 import { taskStatusRecord } from './task-status-list';
-import { TaskStatus } from '~/components/tasks/types';
+import { TaskStatus } from '@/components/tasks/types';
 
 interface TaskStatusIconProps {
   status: TaskStatus;

@@ -5,8 +5,8 @@ import {
   CommandItem,
   CommandEmpty,
   CommandGroup,
-} from '~/components/ui/command';
-import { TaskStatus } from '~/components/tasks/types';
+} from '@/components/ui/command';
+import { TaskStatus } from '@/components/tasks/types';
 import { taskStatusList, taskStatusRecord } from './task-status-list';
 import { TaskStatusIcon } from './task-status-icon';
 import { useRef } from 'react';

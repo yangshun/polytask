@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Poppins } from 'next/font/google';
 
-import { ThemeProvider } from '~/components/theme/theme-provider';
-import { ReduxProvider } from '~/components/providers/redux-provider';
-import { CommandsProvider } from '~/components/commands/commands-context';
+import { ThemeProvider } from '@/components/theme/theme-provider';
+import { ReduxProvider } from '@/components/providers/redux-provider';
+import { CommandsProvider } from '@/components/commands/commands-context';
 
-import { cn } from '~/lib/utils';
+import { cn } from '@/lib/utils';
 import './globals.css';
-import { TooltipProvider } from '~/components/ui/tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

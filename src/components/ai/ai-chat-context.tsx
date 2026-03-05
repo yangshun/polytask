@@ -1,8 +1,8 @@
 'use client';
 
 import { createContext, useContext, ReactNode } from 'react';
-import { useAppSelector } from '~/store/hooks';
-import { selectAllTasks } from '~/store/features/tasks/tasks-selectors';
+import { useAppSelector } from '@/store/hooks';
+import { selectAllTasks } from '@/store/features/tasks/tasks-selectors';
 
 interface AiChatContextValue {
   tasks: ReturnType<typeof selectAllTasks>;

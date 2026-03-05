@@ -37,9 +37,7 @@ describe('CommandsRegistry', () => {
     it('unregisters a command', () => {
       commandsRegistry.register(makeCommand(), 'global');
       commandsRegistry.unregister('test-cmd', 'global');
-      expect(
-        commandsRegistry.getCommand('test-cmd', 'global'),
-      ).toBeUndefined();
+      expect(commandsRegistry.getCommand('test-cmd', 'global')).toBeUndefined();
     });
 
     it('getAllCommands returns all registered commands', () => {
