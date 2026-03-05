@@ -45,7 +45,7 @@ export default function Home() {
           </Panel>
           {aiChatSidebarVisible && (
             <>
-              <Separator className="w-px cursor-col-resize px-1" />
+              <Separator className="w-px cursor-col-resize px-0.5" />
               <Panel defaultSize={25} minSize={20}>
                 <AiChatProvider>
                   <AiChatSidebar />

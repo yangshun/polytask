@@ -96,7 +96,6 @@ export function AiChatSidebar() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Ref to break circular dep between useChat init and addToolOutput usage
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const addToolOutputRef = useRef<((...args: any[]) => Promise<void>) | null>(
     null,
   );
@@ -234,10 +233,9 @@ export function AiChatSidebar() {
                 )}>
                 <div
                   className={cn(
-                    'text-sm px-3 py-2 rounded-lg',
-                    message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted',
+                    'text-xs',
+                    message.role === 'user' &&
+                      'px-2 py-1.5 border border-muted rounded-md',
                   )}>
                   {message.role === 'user' ? (
                     <div className="whitespace-pre-wrap">
@@ -253,50 +251,20 @@ export function AiChatSidebar() {
                       {message.parts?.map((part, index) => {
                         if (part.type === 'text') {
                           return (
-                            <ReactMarkdown
-                              key={index}
-                              remarkPlugins={[remarkGfm]}
-                              components={{
-                                p: ({ children }) => (
-                                  <p className="mb-2 last:mb-0">{children}</p>
-                                ),
-                                ul: ({ children }) => (
-                                  <ul className="mb-2 list-disc pl-4 last:mb-0">
-                                    {children}
-                                  </ul>
-                                ),
-                                ol: ({ children }) => (
-                                  <ol className="mb-2 list-decimal pl-4 last:mb-0">
-                                    {children}
-                                  </ol>
-                                ),
-                                li: ({ children }) => (
-                                  <li className="mb-0.5">{children}</li>
-                                ),
-                                strong: ({ children }) => (
-                                  <strong className="font-semibold">
-                                    {children}
-                                  </strong>
-                                ),
-                                code: ({ children }) => (
-                                  <code className="rounded bg-black/10 px-1 py-0.5 font-mono text-xs dark:bg-white/10">
-                                    {children}
-                                  </code>
-                                ),
-                                pre: ({ children }) => (
-                                  <pre className="mb-2 overflow-x-auto rounded bg-black/10 p-2 font-mono text-xs last:mb-0 dark:bg-white/10">
-                                    {children}
-                                  </pre>
-                                ),
-                              }}>
-                              {part.text}
-                            </ReactMarkdown>
+                            <div
+                              className="prose prose-invert prose-sm text-[12px] text-foreground"
+                              key={index}>
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {part.text}
+                              </ReactMarkdown>
+                            </div>
                           );
                         }
+
                         if (isToolUIPart(part)) {
                           const toolName = getToolName(part);
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
                           const toolPart = part as any;
+
                           return (
                             <ToolInvocationBadge
                               key={index}
