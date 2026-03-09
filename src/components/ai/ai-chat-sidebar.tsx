@@ -7,6 +7,7 @@ import {
   lastAssistantMessageIsCompleteWithToolCalls,
 } from 'ai';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { RiCloseLine } from 'react-icons/ri';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -22,6 +23,7 @@ import {
   addTaskLabel as reduxAddTaskLabel,
   removeTaskLabel as reduxRemoveTaskLabel,
 } from '@/store/features/tasks/tasks-slice';
+import { setAiChatSidebarVisible } from '@/store/features/display/display-slice';
 import { selectRawTasks } from '@/store/features/tasks/tasks-selectors';
 import { assignees } from '@/data/mock-assignees';
 import type { TaskRaw } from '@/components/tasks/types';
@@ -264,6 +266,17 @@ export function AiChatSidebar() {
 
   return (
     <div className={cn('flex flex-col h-full', 'rounded-sm', 'bg-background')}>
+      <div className="flex items-center justify-end pt-2 lg:hidden">
+        <Button
+          variant="outline"
+          size="sm"
+          aria-label="Close AI chat"
+          icon={RiCloseLine}
+          onClick={() => {
+            dispatch(setAiChatSidebarVisible(false));
+          }}
+        />
+      </div>
       {/* Chat Messages */}
       <ScrollArea className="h-0 flex-1 px-2">
         <div className="space-y-4 py-2">

@@ -1,5 +1,8 @@
 'use client';
 
+import { RiGithubFill } from 'react-icons/ri';
+import { Group as PanelGroup, Panel, Separator } from 'react-resizable-panels';
+
 import { TaskList } from '@/components/tasks/task-list';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { CommandPalette } from '@/components/commands/command-palette';
@@ -9,10 +12,10 @@ import { AiChatProvider } from '@/components/ai/ai-chat-context';
 import { useAppSelector } from '@/store/hooks';
 import { selectAiChatSidebarVisible } from '@/store/features/display/display-selectors';
 import { cn } from '@/lib/utils';
-import { RiGithubFill } from 'react-icons/ri';
-import { Group as PanelGroup, Panel, Separator } from 'react-resizable-panels';
+import { useMediaQuery } from '@/lib/use-media-query';
 
 export default function Home() {
+  const isTabletAndAbove = useMediaQuery('(min-width: 1024px)', true);
   const aiChatSidebarVisible = useAppSelector(selectAiChatSidebarVisible);
 
   return (
@@ -40,18 +43,32 @@ export default function Home() {
       </div>
       <div className={cn('px-2 pb-2 grow h-0')}>
         <PanelGroup>
-          <Panel minSize={50} defaultSize={70}>
-            <TaskList />
-          </Panel>
-          {aiChatSidebarVisible && (
+          {isTabletAndAbove ? (
             <>
-              <Separator className="w-px cursor-col-resize px-0.5" />
-              <Panel defaultSize={25} minSize={20}>
+              <Panel minSize={50} defaultSize={70}>
+                <TaskList />
+              </Panel>
+              {aiChatSidebarVisible && (
+                <>
+                  <Separator className="w-px cursor-col-resize px-0.5" />
+                  <Panel defaultSize={25} minSize={20}>
+                    <AiChatProvider>
+                      <AiChatSidebar />
+                    </AiChatProvider>
+                  </Panel>
+                </>
+              )}
+            </>
+          ) : (
+            <Panel>
+              {aiChatSidebarVisible ? (
                 <AiChatProvider>
                   <AiChatSidebar />
                 </AiChatProvider>
-              </Panel>
-            </>
+              ) : (
+                <TaskList />
+              )}
+            </Panel>
           )}
         </PanelGroup>
       </div>

@@ -156,7 +156,7 @@ export function TaskItem({
             </Popover>
           )}
           {isTitleVisible && (
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 truncate">
               <span
                 className={cn(
                   'text-sm font-medium',
