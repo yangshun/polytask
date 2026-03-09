@@ -28,6 +28,23 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@theme {
+  --z-index-sticky: 20;
+  --z-index-fixed: 30;
+  --z-index-slideout-overlay: 40;
+  --z-index-slideout: 45;
+  --z-index-dialog-overlay: 50;
+  --z-index-dialog: 55;
+  --z-index-dropdown: 60;
+  --z-index-popover: 70;
+  --z-index-tooltip: 80;
+  --z-index-toast: 90;
+}
+
+@utility z-* {
+  z-index: --value(--z-index-*);
+}
+
 :root {
   --radius: 0.65rem;
   --background: oklch(1 0 0);

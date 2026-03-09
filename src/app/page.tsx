@@ -16,7 +16,7 @@ export default function Home() {
   const aiChatSidebarVisible = useAppSelector(selectAiChatSidebarVisible);
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen isolate">
       <div className="flex items-center justify-between gap-2 p-2">
         <h1
           className="text-xl font-semibold px-3"

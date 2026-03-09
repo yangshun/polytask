@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { RiTerminalBoxLine } from 'react-icons/ri';
 
 import {
   CommandDialog,
@@ -13,8 +14,7 @@ import {
 } from '@/components/ui/command';
 import { useCommands } from '@/components/commands/commands-context';
 import { cn } from '@/lib/utils';
-import { RiTerminalBoxLine } from 'react-icons/ri';
-import { ShortcutKeys } from '../shortcuts/shortcut-keys';
+import { ShortcutKeys } from '@/components/shortcuts/shortcut-keys';
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);

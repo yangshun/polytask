@@ -46,6 +46,13 @@ export function TaskTitleField({
 
   return (
     <div className="relative w-full text-xl font-bold">
+      {buffer.length === 0 && (
+        <div
+          className="pointer-events-none absolute top-0 py-1 text-muted-foreground"
+          aria-hidden={true}>
+          Enter task title...
+        </div>
+      )}
       <div
         tabIndex={0}
         contentEditable={true}
@@ -54,7 +61,7 @@ export function TaskTitleField({
         suppressContentEditableWarning
         ref={titleRef}
         className={cn(
-          'z-[1] w-full py-1',
+          'w-full py-1',
           'whitespace-nowrap',
           'focus-visible:border-none focus-visible:ring-transparent focus-visible:outline-0',
           'selection:bg-primary selection:text-primary-foreground',
@@ -63,13 +70,6 @@ export function TaskTitleField({
         onBlur={handleBlur}
         {...props}
       />
-      {buffer.length === 0 && (
-        <div
-          className="absolute top-0 text-muted-foreground pointer-events-none py-1"
-          aria-hidden={true}>
-          Enter task title...
-        </div>
-      )}
     </div>
   );
 }
