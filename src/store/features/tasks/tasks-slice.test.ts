@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
+import { ActionCreators as UndoActionCreators } from 'redux-undo';
 import { TaskRaw } from '@/components/tasks/types';
 import {
+  default as undoableTasksReducer,
   tasksSlice,
   addTask,
   updateTask,
   deleteTask,
   assignTask,
   addTaskLabel,
+  bulkEditTasks,
   removeTaskLabel,
   setSelectedTask,
   clearSelectedTask,
@@ -183,6 +186,64 @@ describe('tasks-slice reducers', () => {
         removeTaskLabel({ id: 'TST-1', label: 'bug' }),
       );
       expect(next.tasks[0].labels).toEqual(['feature']);
+    });
+  });
+
+  describe('bulkEditTasks', () => {
+    it('applies multiple edits in order', () => {
+      const state = makeState({
+        tasks: [makeTask({ id: 'TST-1' }), makeTask({ id: 'TST-2' })],
+      });
+      const createdTask = makeTask({
+        id: 'TST-3',
+        title: 'Created task',
+        labels: ['ops'],
+      });
+
+      const next = reducer(
+        state,
+        bulkEditTasks([
+          { type: 'update', id: 'TST-1', updates: { status: 'done' } },
+          { type: 'assign', id: 'TST-1', assigneeId: '5' },
+          { type: 'addLabel', id: 'TST-1', label: 'backend' },
+          { type: 'delete', id: 'TST-2' },
+          { type: 'create', task: createdTask },
+        ]),
+      );
+
+      expect(next.tasks.map((task) => task.id)).toEqual(['TST-3', 'TST-1']);
+      expect(next.tasks.find((task) => task.id === 'TST-1')).toMatchObject({
+        status: 'done',
+        assigneeId: '5',
+        labels: ['backend'],
+      });
+    });
+
+    it('creates a single undo step for grouped changes', () => {
+      const initial = undoableTasksReducer(undefined, { type: '@@INIT' });
+      const next = undoableTasksReducer(
+        initial,
+        bulkEditTasks([
+          { type: 'update', id: 'MUL-101', updates: { title: 'Bulk updated' } },
+          { type: 'addLabel', id: 'MUL-101', label: 'bulk' },
+        ]),
+      );
+      const undone = undoableTasksReducer(next, UndoActionCreators.undo());
+
+      expect(next.past).toHaveLength(1);
+      expect(
+        next.present.tasks.find((task) => task.id === 'MUL-101')?.title,
+      ).toBe('Bulk updated');
+      expect(
+        next.present.tasks.find((task) => task.id === 'MUL-101')?.labels,
+      ).toContain('bulk');
+      expect(
+        undone.present.tasks.find((task) => task.id === 'MUL-101')?.title,
+      ).not.toBe('Bulk updated');
+      expect(
+        undone.present.tasks.find((task) => task.id === 'MUL-101')?.labels ??
+          [],
+      ).not.toContain('bulk');
     });
   });
 

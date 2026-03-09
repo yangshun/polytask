@@ -43,6 +43,15 @@ export interface TasksState {
   sortFieldHidden: boolean;
 }
 
+export type TaskBulkEditOperation =
+  | { type: 'create'; task: TaskRaw }
+  | { type: 'update'; id: string; updates: Partial<TaskRaw> }
+  | { type: 'delete'; id: string }
+  | { type: 'assign'; id: string; assigneeId: string }
+  | { type: 'unassign'; id: string }
+  | { type: 'addLabel'; id: string; label: string }
+  | { type: 'removeLabel'; id: string; label: string };
+
 const defaultSortField: TaskSortField = 'id';
 const defaultSortDirection: TaskSortDirection = 'desc';
 
@@ -131,106 +140,212 @@ const initialState: TasksState = {
   sortFieldHidden: false,
 };
 
+function resortTasks(state: TasksState) {
+  state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
+}
+
+function addTaskToState(state: TasksState, task: TaskRaw) {
+  state.tasks.unshift(task);
+  resortTasks(state);
+}
+
+function updateTaskInState(
+  state: TasksState,
+  payload: { id: string; updates: Partial<TaskRaw> },
+  updatedAt: string = new Date().toISOString(),
+) {
+  const { id, updates } = payload;
+  const taskIndex = state.tasks.findIndex((task) => task.id === id);
+  if (taskIndex === -1) {
+    return;
+  }
+
+  state.tasks[taskIndex] = {
+    ...state.tasks[taskIndex],
+    ...updates,
+    updatedAt,
+  };
+  resortTasks(state);
+}
+
+function deleteTaskFromState(state: TasksState, taskIdToDelete: string) {
+  const currentIndex = state.tasks.findIndex(
+    (task) => task.id === taskIdToDelete,
+  );
+
+  if (state.selectedTaskId === taskIdToDelete) {
+    if (currentIndex !== -1 && state.tasks.length > 1) {
+      const nextIndex =
+        currentIndex < state.tasks.length - 1
+          ? currentIndex + 1
+          : currentIndex - 1;
+      state.selectedTaskId = state.tasks[nextIndex].id;
+    } else {
+      state.selectedTaskId = null;
+    }
+  }
+
+  state.tasks = state.tasks.filter((task) => task.id !== taskIdToDelete);
+}
+
+function assignTaskInState(
+  state: TasksState,
+  payload: { id: string; assigneeId: string },
+  updatedAt: string = new Date().toISOString(),
+) {
+  const { id, assigneeId } = payload;
+  const task = state.tasks.find((task) => task.id === id);
+
+  if (task == null) {
+    return;
+  }
+
+  task.assigneeId = assigneeId;
+  task.updatedAt = updatedAt;
+  resortTasks(state);
+}
+
+function unassignTaskInState(
+  state: TasksState,
+  id: string,
+  updatedAt: string = new Date().toISOString(),
+) {
+  const task = state.tasks.find((task) => task.id === id);
+
+  if (task == null) {
+    return;
+  }
+
+  task.assigneeId = undefined;
+  task.updatedAt = updatedAt;
+  resortTasks(state);
+}
+
+function addTaskLabelInState(
+  state: TasksState,
+  payload: { id: string; label: string },
+  updatedAt: string = new Date().toISOString(),
+) {
+  const { id, label } = payload;
+  const task = state.tasks.find((task) => task.id === id);
+
+  if (task == null) {
+    return;
+  }
+
+  if (!task.labels) {
+    task.labels = [];
+  }
+
+  if (!task.labels.includes(label)) {
+    task.labels.push(label);
+    task.updatedAt = updatedAt;
+    resortTasks(state);
+  }
+}
+
+function removeTaskLabelInState(
+  state: TasksState,
+  payload: { id: string; label: string },
+  updatedAt: string = new Date().toISOString(),
+) {
+  const { id, label } = payload;
+  const task = state.tasks.find((task) => task.id === id);
+
+  if (task == null || task.labels == null) {
+    return;
+  }
+
+  task.labels = task.labels.filter((label_) => label_ !== label);
+  task.updatedAt = updatedAt;
+}
+
+function applyTaskBulkEditOperation(
+  state: TasksState,
+  operation: TaskBulkEditOperation,
+  updatedAt: string = new Date().toISOString(),
+) {
+  switch (operation.type) {
+    case 'create':
+      addTaskToState(state, operation.task);
+      return;
+    case 'update':
+      updateTaskInState(
+        state,
+        { id: operation.id, updates: operation.updates },
+        updatedAt,
+      );
+      return;
+    case 'delete':
+      deleteTaskFromState(state, operation.id);
+      return;
+    case 'assign':
+      assignTaskInState(
+        state,
+        { id: operation.id, assigneeId: operation.assigneeId },
+        updatedAt,
+      );
+      return;
+    case 'unassign':
+      unassignTaskInState(state, operation.id, updatedAt);
+      return;
+    case 'addLabel':
+      addTaskLabelInState(
+        state,
+        { id: operation.id, label: operation.label },
+        updatedAt,
+      );
+      return;
+    case 'removeLabel':
+      removeTaskLabelInState(
+        state,
+        { id: operation.id, label: operation.label },
+        updatedAt,
+      );
+      return;
+  }
+}
+
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
     addTask: (state, action: PayloadAction<TaskRaw>) => {
-      state.tasks.unshift(action.payload);
-      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
+      addTaskToState(state, action.payload);
     },
     updateTask: (
       state,
       action: PayloadAction<{ id: string; updates: Partial<TaskRaw> }>,
     ) => {
-      const { id, updates } = action.payload;
-      const taskIndex = state.tasks.findIndex((task) => task.id === id);
-      if (taskIndex === -1) {
-        return;
-      }
-
-      state.tasks[taskIndex] = {
-        ...state.tasks[taskIndex],
-        ...updates,
-        updatedAt: new Date().toISOString(),
-      };
-      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
+      updateTaskInState(state, action.payload);
     },
     deleteTask: (state, action: PayloadAction<string>) => {
-      const taskIdToDelete = action.payload;
-      const currentIndex = state.tasks.findIndex(
-        (task) => task.id === taskIdToDelete,
-      );
-
-      // If the task being deleted is currently selected, select the next task
-      if (state.selectedTaskId === taskIdToDelete) {
-        if (currentIndex !== -1 && state.tasks.length > 1) {
-          // Try to select the next task, or the previous one if this is the last task
-          const nextIndex =
-            currentIndex < state.tasks.length - 1
-              ? currentIndex + 1
-              : currentIndex - 1;
-          state.selectedTaskId = state.tasks[nextIndex].id;
-        } else {
-          // No other tasks available, clear selection
-          state.selectedTaskId = null;
-        }
-      }
-
-      // Remove the task from the list
-      state.tasks = state.tasks.filter((task) => task.id !== taskIdToDelete);
+      deleteTaskFromState(state, action.payload);
     },
-    // Assignee operations
     assignTask: (
       state,
       action: PayloadAction<{ id: string; assigneeId: string }>,
     ) => {
-      const { id, assigneeId } = action.payload;
-      const task = state.tasks.find((task) => task.id === id);
-
-      if (task == null) {
-        return;
-      }
-
-      task.assigneeId = assigneeId;
-      task.updatedAt = new Date().toISOString();
-      state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
+      assignTaskInState(state, action.payload);
     },
-    // Labels operations
     addTaskLabel: (
       state,
       action: PayloadAction<{ id: string; label: string }>,
     ) => {
-      const { id, label } = action.payload;
-      const task = state.tasks.find((task) => task.id === id);
-
-      if (task == null) {
-        return;
-      }
-
-      if (!task.labels) {
-        task.labels = [];
-      }
-
-      if (!task.labels.includes(label)) {
-        task.labels.push(label);
-        task.updatedAt = new Date().toISOString();
-        state.tasks = sortTasks(state.tasks, state.sortBy, state.sortDirection);
-      }
+      addTaskLabelInState(state, action.payload);
     },
     removeTaskLabel: (
       state,
       action: PayloadAction<{ id: string; label: string }>,
     ) => {
-      const { id, label } = action.payload;
-      const task = state.tasks.find((task) => task.id === id);
+      removeTaskLabelInState(state, action.payload);
+    },
+    bulkEditTasks: (state, action: PayloadAction<TaskBulkEditOperation[]>) => {
+      const updatedAt = new Date().toISOString();
 
-      if (task == null || task.labels == null) {
-        return;
-      }
-
-      task.labels = task.labels.filter((label_) => label_ !== label);
-      task.updatedAt = new Date().toISOString();
+      action.payload.forEach((operation) => {
+        applyTaskBulkEditOperation(state, operation, updatedAt);
+      });
     },
     setSelectedTask: (state, action: PayloadAction<string | null>) => {
       state.selectedTaskId = action.payload;
@@ -366,6 +481,7 @@ export const {
   assignTask,
   addTaskLabel,
   removeTaskLabel,
+  bulkEditTasks,
   setSelectedTask,
   clearSelectedTask,
   selectNextTask,
@@ -378,6 +494,13 @@ export const {
   toggleFieldsSortDirection,
   resetFieldsToDefault,
 } = tasksSlice.actions;
+
+export function applyTaskBulkEdits(
+  state: TasksState,
+  operations: TaskBulkEditOperation[],
+) {
+  return tasksSlice.reducer(state, bulkEditTasks(operations));
+}
 
 const undoableTasks = undoable(tasksSlice.reducer, {
   groupBy: groupByActionTypes([selectNextTask.type, selectPreviousTask.type]),

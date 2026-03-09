@@ -16,15 +16,11 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
-  addTask,
-  updateTask as reduxUpdateTask,
-  deleteTask as reduxDeleteTask,
-  assignTask as reduxAssignTask,
-  addTaskLabel as reduxAddTaskLabel,
-  removeTaskLabel as reduxRemoveTaskLabel,
+  applyTaskBulkEdits,
+  bulkEditTasks,
+  TaskBulkEditOperation,
 } from '@/store/features/tasks/tasks-slice';
 import { setAiChatSidebarVisible } from '@/store/features/display/display-slice';
-import { selectRawTasks } from '@/store/features/tasks/tasks-selectors';
 import { assignees } from '@/data/mock-assignees';
 import type { TaskRaw } from '@/components/tasks/types';
 import type { ToolName, ToolInputMap } from '@/components/ai/tool-types';
@@ -135,37 +131,78 @@ function ToolInvocationBadge({
 }
 
 export function AiChatSidebar() {
-  const rawTasks = useAppSelector(selectRawTasks);
+  const tasksState = useAppSelector((state) => state.tasks.present);
   const dispatch = useAppDispatch();
   const [input, setInput] = useState('');
 
   const bottomRef = useRef<HTMLDivElement>(null);
+  const tasksStateRef = useRef(tasksState);
+  const projectedTasksStateRef = useRef(tasksState);
+  const pendingBulkEditsRef = useRef<TaskBulkEditOperation[]>([]);
 
   // Ref to break circular dep between useChat init and addToolOutput usage
   const addToolOutputRef = useRef<((...args: any[]) => Promise<void>) | null>(
     null,
   );
 
+  function queueBulkEdit(operation: TaskBulkEditOperation) {
+    const baseState =
+      pendingBulkEditsRef.current.length > 0
+        ? projectedTasksStateRef.current
+        : tasksStateRef.current;
+    const nextState = applyTaskBulkEdits(baseState, [operation]);
+
+    projectedTasksStateRef.current = nextState;
+    pendingBulkEditsRef.current.push(operation);
+  }
+
+  function discardPendingBulkEdits() {
+    pendingBulkEditsRef.current = [];
+    projectedTasksStateRef.current = tasksStateRef.current;
+  }
+
+  function flushPendingBulkEdits() {
+    if (pendingBulkEditsRef.current.length === 0) {
+      return;
+    }
+
+    const operations = pendingBulkEditsRef.current;
+    const nextState = projectedTasksStateRef.current;
+
+    pendingBulkEditsRef.current = [];
+    tasksStateRef.current = nextState;
+    projectedTasksStateRef.current = nextState;
+    dispatch(bulkEditTasks(operations));
+  }
+
   const { messages, sendMessage, addToolOutput, status, error } = useChat({
     id: 'ai-chat',
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+    onFinish: () => {
+      flushPendingBulkEdits();
+    },
     onError: (err) => {
+      discardPendingBulkEdits();
       console.error('Chat error:', err);
     },
     onToolCall: async ({ toolCall }) => {
       const tc = toolCall;
       const toolName = tc.toolName as ToolName;
       let output: unknown = { success: false };
+      const projectedTasks =
+        pendingBulkEditsRef.current.length > 0
+          ? projectedTasksStateRef.current.tasks
+          : tasksStateRef.current.tasks;
 
       switch (toolName) {
         case 'getTasks': {
-          output = { tasks: rawTasks };
+          output = { tasks: projectedTasks };
           break;
         }
         case 'createTask': {
           const input = tc.input as ToolInputMap['createTask'];
           const newTask: TaskRaw = {
-            id: generateTaskId(rawTasks),
+            id: generateTaskId(projectedTasks),
             title: input.title,
             description: input.description,
             status: input.status ?? 'todo',
@@ -175,50 +212,51 @@ export function AiChatSidebar() {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           };
-          dispatch(addTask(newTask));
+          queueBulkEdit({ type: 'create', task: newTask });
           output = { success: true, task: newTask };
           break;
         }
         case 'updateTask': {
           const { id, ...updates } = tc.input as ToolInputMap['updateTask'];
-          dispatch(reduxUpdateTask({ id, updates }));
+          queueBulkEdit({ type: 'update', id, updates });
           output = { success: true };
           break;
         }
         case 'deleteTask': {
           const input = tc.input as ToolInputMap['deleteTask'];
-          dispatch(reduxDeleteTask(input.id));
+          queueBulkEdit({ type: 'delete', id: input.id });
           output = { success: true };
           break;
         }
         case 'assignTask': {
           const input = tc.input as ToolInputMap['assignTask'];
-          dispatch(
-            reduxAssignTask({ id: input.id, assigneeId: input.assigneeId }),
-          );
+          queueBulkEdit({
+            type: 'assign',
+            id: input.id,
+            assigneeId: input.assigneeId,
+          });
           output = { success: true };
           break;
         }
         case 'unassignTask': {
           const input = tc.input as ToolInputMap['unassignTask'];
-          dispatch(
-            reduxUpdateTask({
-              id: input.id,
-              updates: { assigneeId: undefined },
-            }),
-          );
+          queueBulkEdit({ type: 'unassign', id: input.id });
           output = { success: true };
           break;
         }
         case 'addTaskLabel': {
           const input = tc.input as ToolInputMap['addTaskLabel'];
-          dispatch(reduxAddTaskLabel({ id: input.id, label: input.label }));
+          queueBulkEdit({ type: 'addLabel', id: input.id, label: input.label });
           output = { success: true };
           break;
         }
         case 'removeTaskLabel': {
           const input = tc.input as ToolInputMap['removeTaskLabel'];
-          dispatch(reduxRemoveTaskLabel({ id: input.id, label: input.label }));
+          queueBulkEdit({
+            type: 'removeLabel',
+            id: input.id,
+            label: input.label,
+          });
           output = { success: true };
           break;
         }
@@ -246,6 +284,14 @@ export function AiChatSidebar() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'instant' });
   }, [messages, status]);
+
+  useEffect(() => {
+    tasksStateRef.current = tasksState;
+
+    if (pendingBulkEditsRef.current.length === 0) {
+      projectedTasksStateRef.current = tasksState;
+    }
+  }, [tasksState]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
